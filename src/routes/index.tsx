@@ -46,9 +46,10 @@ function Index() {
         </a>
       </div>
 
-      <Link to="/parent" className="mt-10 text-sm text-muted-foreground underline underline-offset-4">
-        Parents: view learning progress
-      </Link>
+      <div className="mt-10 flex gap-6 text-sm text-muted-foreground">
+        <Link to="/parent" className="underline underline-offset-4">Parent Dashboard</Link>
+        <Link to="/teacher" className="underline underline-offset-4">Teacher Dashboard</Link>
+      </div>
     </main>
   );
 }

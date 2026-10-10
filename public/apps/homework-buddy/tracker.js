@@ -1,10 +1,23 @@
-// BrainBoost Buddy progress tracker — stores each child's activity on this device for the parent dashboard (/parent).
+// Shared kid tracker for BrainBoost Buddy and ArtBuddy — stores each child's activity on this device for 7 days (parent /parent, teacher /teacher).
 (function () {
   var KEY = "bb_progress_v1";
   function load() {
     try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
   }
-  function save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
+  var WEEK = 7 * 24 * 3600 * 1000;
+  function prune(d) {
+    var cut = Date.now() - WEEK;
+    Object.keys(d.log || {}).forEach(function (k) { d.log[k] = d.log[k].filter(function (e) { return e.t >= cut; }); });
+  }
+  function save(d) {
+    prune(d);
+    try { localStorage.setItem(KEY, JSON.stringify(d)); }
+    catch (e) {
+      // storage full: drop the oldest drawings first
+      Object.keys(d.log).forEach(function (k) { var i = d.log[k].findIndex(function (x) { return x.img; }); if (i >= 0) d.log[k].splice(i, 1); });
+      try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e2) {}
+    }
+  }
   function data() {
     var d = load();
     d.children = d.children || [];
@@ -22,7 +35,13 @@
     record: function (role, text, subject) {
       if (!active) return;
       var d = data();
-      (d.log[active] = d.log[active] || []).push({ t: Date.now(), role: role, text: String(text || "").slice(0, 8000), subject: subject || "" });
+      (d.log[active] = d.log[active] || []).push({ t: Date.now(), app: "brainboost", role: role, text: String(text || "").slice(0, 8000), subject: subject || "" });
+      save(d);
+    },
+    drawing: function (name, img) {
+      if (!active) return;
+      var d = data();
+      (d.log[active] = d.log[active] || []).push({ t: Date.now(), app: "artbuddy", role: "drawing", text: String(name || "Drawing"), subject: "Art", img: img });
       save(d);
     }
   };
@@ -45,11 +64,11 @@
     o.id = "bbPick";
     var html = '<div class="card"><h2>Who\'s learning today?</h2>';
     if (!d.children.length) {
-      html += "<p>No profiles yet. Ask a parent to add you in the Parent Dashboard.</p>";
+      html += "<p>No profiles yet. Ask a parent or teacher to add you.</p>";
     } else {
       html += "<p>Tap your name to start.</p><div class=\"kids\"></div>";
     }
-    html += '<a href="/parent" target="_top">Parent Dashboard</a></div>';
+    html += '<a href="/parent" target="_top">Parent Dashboard</a> · <a href="/teacher" target="_top">Teacher Dashboard</a></div>';
     o.innerHTML = html;
     var kids = o.querySelector(".kids");
     d.children.forEach(function (c) {
@@ -59,7 +78,7 @@
       b.onclick = function () {
         active = c.id;
         try { sessionStorage.setItem("bb_active_child", c.id); } catch (e) {}
-        try { if (localStorage.getItem("bb-name") !== c.name) { localStorage.setItem("bb-name", c.name); location.reload(); return; } } catch (e) {}
+        try { if (window.BB_RELOAD_ON_NAME !== false && localStorage.getItem("bb-name") !== c.name) { localStorage.setItem("bb-name", c.name); if (window.BB_RELOAD_ON_NAME !== false) { location.reload(); return; } } } catch (e) {}
         o.remove();
         badge();
       };
