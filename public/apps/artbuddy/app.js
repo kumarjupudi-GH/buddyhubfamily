@@ -324,6 +324,7 @@
     LS.earned = d.tier; S.stars += d.tier;
     LS.newBadges = BADGES.filter(b => b.test(S) && !before.has(b.id));
     LS.img = LS.inked ? composite(400) : null;
+    if (LS.inked && window.BBTrack) window.BBTrack.drawing(LS.l.name, composite(300));
     if (LS.inked) { S.gallery.unshift({ id: Date.now(), name: LS.l.name, lesson: LS.l.id, img: composite(300), date: new Date().toISOString() }); S.gallery = S.gallery.slice(0, 24); }
     saveState(); go('done');
   }
