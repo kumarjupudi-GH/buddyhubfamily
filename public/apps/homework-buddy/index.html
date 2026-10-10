@@ -1413,7 +1413,7 @@ textarea { box-sizing: border-box; }
           if (opts.signal.aborted) { fail("cancelled", "cancelled"); return; }
           opts.signal.addEventListener("abort", function () { fail("cancelled", "cancelled"); });
         }
-        fetch("/api/chat", {
+        fetch("/api/public/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ messages: msgs }),

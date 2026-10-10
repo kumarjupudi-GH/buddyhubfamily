@@ -10,33 +10,69 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
+import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
+import { Route as ApiPublicTeachRouteImport } from './routes/api/public/teach'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicChatRoute = ApiPublicChatRouteImport.update({
+  id: '/api/public/chat',
+  path: '/api/public/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
+  id: '/api/public/health',
+  path: '/api/public/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicTeachRoute = ApiPublicTeachRouteImport.update({
+  id: '/api/public/teach',
+  path: '/api/public/teach',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
+  '/api/public/teach': typeof ApiPublicTeachRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
+  '/api/public/teach': typeof ApiPublicTeachRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
+  '/api/public/teach': typeof ApiPublicTeachRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/api/public/chat' | '/api/public/health' | '/api/public/teach'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/api/public/chat' | '/api/public/health' | '/api/public/teach'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/public/chat'
+    | '/api/public/health'
+    | '/api/public/teach'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiPublicChatRoute: typeof ApiPublicChatRoute
+  ApiPublicHealthRoute: typeof ApiPublicHealthRoute
+  ApiPublicTeachRoute: typeof ApiPublicTeachRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +84,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/chat': {
+      id: '/api/public/chat'
+      path: '/api/public/chat'
+      fullPath: '/api/public/chat'
+      preLoaderRoute: typeof ApiPublicChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/health': {
+      id: '/api/public/health'
+      path: '/api/public/health'
+      fullPath: '/api/public/health'
+      preLoaderRoute: typeof ApiPublicHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/teach': {
+      id: '/api/public/teach'
+      path: '/api/public/teach'
+      fullPath: '/api/public/teach'
+      preLoaderRoute: typeof ApiPublicTeachRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiPublicChatRoute: ApiPublicChatRoute,
+  ApiPublicHealthRoute: ApiPublicHealthRoute,
+  ApiPublicTeachRoute: ApiPublicTeachRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

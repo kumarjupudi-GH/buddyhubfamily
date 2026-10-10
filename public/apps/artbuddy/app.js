@@ -278,7 +278,7 @@
   async function askAI(kind, question) {
     const { l, plan, i } = LS;
     try {
-      const r = await fetch('/api/teach', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      const r = await fetch('/api/public/teach', { method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ kind, lesson: l.name, step: plan[i].t, instruction: plan[i].say, difficulty: diff().label, question: question || '' }) });
       if (!r.ok) throw new Error('no ai'); const j = await r.json(); return j.text || null;
     } catch (e) { return null; }
@@ -370,6 +370,6 @@
   });
   document.addEventListener('change', e => { if (e.target.id === 'trace') $('#stage').classList.toggle('trace', e.target.checked); });
 
-  fetch('/api/health').then(r => r.ok ? r.json() : null).then(j => { AI.ok = !!(j && j.ai); }).catch(() => { });
+  fetch('/api/public/health').then(r => r.ok ? r.json() : null).then(j => { AI.ok = !!(j && j.ai); }).catch(() => { });
   render();
 })();
