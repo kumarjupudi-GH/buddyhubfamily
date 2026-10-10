@@ -59,7 +59,7 @@
       b.onclick = function () {
         active = c.id;
         try { sessionStorage.setItem("bb_active_child", c.id); } catch (e) {}
-        try { localStorage.setItem("bbb_name", c.name); } catch (e) {}
+        try { if (localStorage.getItem("bb-name") !== c.name) { localStorage.setItem("bb-name", c.name); location.reload(); return; } } catch (e) {}
         o.remove();
         badge();
       };
