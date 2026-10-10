@@ -7,7 +7,7 @@ export async function askClaude(options: {
   messages: Array<{ role: "user" | "assistant"; content: string }>;
   maxTokens: number;
 }): Promise<{ text: string; truncated: boolean }> {
-  const apiKey = process.env.LOVABLE_API_KEY;
+  const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) {
     throw Object.assign(new Error("AI is not configured."), { status: 500 });
   }

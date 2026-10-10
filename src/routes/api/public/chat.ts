@@ -25,8 +25,8 @@ function normalizeMessages(raw: unknown) {
     else merged.push({ role: m.role, content: m.content });
   }
   const out = merged.slice(-MAX_TURNS);
-  while (out.length && out[0].role !== "user") out.shift();
-  while (out.length && out[out.length - 1].role !== "user") out.pop();
+  while (out.length && out[0]?.role !== "user") out.shift();
+  while (out.length && out[out.length - 1]?.role !== "user") out.pop();
   return out.length ? out : null;
 }
 
