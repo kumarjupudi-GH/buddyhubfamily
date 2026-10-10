@@ -165,7 +165,7 @@ function TeacherPage() {
         </section>
 
         <div className="mt-6 flex gap-2">
-          {[["all", "Everything"], ["questions", "🧠 Questions"], ["art", "🎨 Drawings"]].map(([k, l]) => (
+          {([["all", "Everything"], ["questions", "🧠 Questions"], ["art", "🎨 Drawings"]] as const).map(([k, l]) => (
             <button key={k} onClick={() => setFilter(k)} className={`rounded-full px-4 py-1.5 text-sm ${filter === k ? "bg-primary text-primary-foreground" : "border border-border text-foreground"}`}>{l}</button>
           ))}
         </div>
