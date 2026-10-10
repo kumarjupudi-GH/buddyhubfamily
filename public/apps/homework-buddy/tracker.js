@@ -64,11 +64,11 @@
     o.id = "bbPick";
     var html = '<div class="card"><h2>Who\'s learning today?</h2>';
     if (!d.children.length) {
-      html += "<p>No profiles yet. Ask a parent to add you in the Parent Dashboard.</p>";
+      html += "<p>No profiles yet. Ask a parent or teacher to add you.</p>";
     } else {
       html += "<p>Tap your name to start.</p><div class=\"kids\"></div>";
     }
-    html += '<a href="/parent" target="_top">Parent Dashboard</a></div>';
+    html += '<a href="/parent" target="_top">Parent Dashboard</a> · <a href="/teacher" target="_top">Teacher Dashboard</a></div>';
     o.innerHTML = html;
     var kids = o.querySelector(".kids");
     d.children.forEach(function (c) {
