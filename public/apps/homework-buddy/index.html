@@ -545,7 +545,6 @@ textarea { box-sizing: border-box; }
   </div>
 </div>
 
-<script src="tracker.js"></script>
 <script>
 (function () {
   var MAX_TURNS = 24;
@@ -965,7 +964,6 @@ textarea { box-sizing: border-box; }
       });
       body.innerHTML = render(res.text);
       turns.push({ role: "assistant", content: res.text });
-      if (window.BBTrack) window.BBTrack.record("assistant", res.text, subject);
       if (res.truncated) {
         var n = document.createElement("p");
         n.className = "note";
@@ -1019,7 +1017,6 @@ textarea { box-sizing: border-box; }
     cancelVoice();
     lastViaVoice = !!viaVoice;
     turns.push({ role: "user", content: text });
-    if (window.BBTrack) window.BBTrack.record("user", text, subject);
     addUser(text);
     ask();
     return true;

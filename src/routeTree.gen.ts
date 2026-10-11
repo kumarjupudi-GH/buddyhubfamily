@@ -10,8 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ParentRouteImport } from './routes/parent'
-import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as ApiPublicTeachRouteImport } from './routes/api/public/teach'
@@ -19,16 +17,6 @@ import { Route as ApiPublicTeachRouteImport } from './routes/api/public/teach'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ParentRoute = ParentRouteImport.update({
-  id: '/parent',
-  path: '/parent',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeacherRoute = TeacherRouteImport.update({
-  id: '/teacher',
-  path: '/teacher',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicChatRoute = ApiPublicChatRouteImport.update({
@@ -49,16 +37,12 @@ const ApiPublicTeachRoute = ApiPublicTeachRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/parent': typeof ParentRoute
-  '/teacher': typeof TeacherRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/parent': typeof ParentRoute
-  '/teacher': typeof TeacherRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
@@ -66,8 +50,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/parent': typeof ParentRoute
-  '/teacher': typeof TeacherRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
@@ -75,25 +57,12 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/parent'
-    | '/teacher'
-    | '/api/public/chat'
-    | '/api/public/health'
-    | '/api/public/teach'
+    '/' | '/api/public/chat' | '/api/public/health' | '/api/public/teach'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/parent'
-    | '/teacher'
-    | '/api/public/chat'
-    | '/api/public/health'
-    | '/api/public/teach'
+  to: '/' | '/api/public/chat' | '/api/public/health' | '/api/public/teach'
   id:
     | '__root__'
     | '/'
-    | '/parent'
-    | '/teacher'
     | '/api/public/chat'
     | '/api/public/health'
     | '/api/public/teach'
@@ -101,8 +70,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ParentRoute: typeof ParentRoute
-  TeacherRoute: typeof TeacherRoute
   ApiPublicChatRoute: typeof ApiPublicChatRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicTeachRoute: typeof ApiPublicTeachRoute
@@ -115,20 +82,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/parent': {
-      id: '/parent'
-      path: '/parent'
-      fullPath: '/parent'
-      preLoaderRoute: typeof ParentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/teacher': {
-      id: '/teacher'
-      path: '/teacher'
-      fullPath: '/teacher'
-      preLoaderRoute: typeof TeacherRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/chat': {
@@ -157,8 +110,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ParentRoute: ParentRoute,
-  TeacherRoute: TeacherRoute,
   ApiPublicChatRoute: ApiPublicChatRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicTeachRoute: ApiPublicTeachRoute,
