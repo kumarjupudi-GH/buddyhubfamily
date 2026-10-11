@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { Home, Users, GraduationCap } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,7 +24,16 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-16 text-center">
+    <div className="flex min-h-screen flex-col bg-background md:flex-row">
+      <aside className="border-b border-sidebar-border bg-sidebar px-5 py-6 text-sidebar-foreground md:w-60 md:shrink-0 md:border-r md:border-b-0">
+        <Link to="/" className="text-xl font-bold">BuddyHub</Link>
+        <nav aria-label="Homepage panel" className="mt-6 flex flex-wrap gap-2 md:flex-col">
+          <Button asChild variant="ghost" className="justify-start"><Link to="/"><Home />Home</Link></Button>
+          <Button asChild variant="ghost" className="justify-start"><Link to="/parent"><Users />Parent Dashboard</Link></Button>
+          <Button asChild variant="ghost" className="justify-start"><Link to="/teacher"><GraduationCap />Teacher Dashboard</Link></Button>
+        </nav>
+      </aside>
+    <main className="flex min-w-0 flex-1 flex-col items-center justify-center px-6 py-16 text-center">
       <div className="text-6xl" aria-hidden="true">👋</div>
       <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-foreground sm:text-6xl">
         Welcome, Buddy!
@@ -32,24 +43,23 @@ function Index() {
       </p>
 
       <div className="mt-10 flex w-full max-w-md flex-col gap-4 sm:max-w-xl sm:flex-row">
+        <Button asChild className="h-auto flex-1 whitespace-normal rounded-lg px-6 py-5 text-xl font-bold">
         <a
           href="/apps/homework-buddy/index.html"
-          className="flex-1 rounded-2xl bg-primary px-6 py-5 text-xl font-bold text-primary-foreground shadow-md transition hover:-translate-y-1 hover:shadow-lg"
         >
           🧠 BrainBoost Buddy
         </a>
+        </Button>
+        <Button asChild variant="outline" className="h-auto flex-1 whitespace-normal rounded-lg px-6 py-5 text-xl font-bold">
         <a
           href="/apps/artbuddy/index.html"
-          className="flex-1 rounded-2xl border-2 border-primary bg-card px-6 py-5 text-xl font-bold text-card-foreground shadow-md transition hover:-translate-y-1 hover:shadow-lg"
         >
           🎨 ArtBuddy
         </a>
+        </Button>
       </div>
 
-      <div className="mt-10 flex gap-6 text-sm text-muted-foreground">
-        <Link to="/parent" className="underline underline-offset-4">Parent Dashboard</Link>
-        <Link to="/teacher" className="underline underline-offset-4">Teacher Dashboard</Link>
-      </div>
     </main>
+    </div>
   );
 }

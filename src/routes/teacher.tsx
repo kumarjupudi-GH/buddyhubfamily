@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/teacher")({
   head: () => ({
@@ -45,6 +46,7 @@ function TeacherPage() {
   const [name, setName] = useState("");
   const [grade, setGrade] = useState("3");
   const [filter, setFilter] = useState("all");
+  const [report, setReport] = useState(false);
 
   useEffect(() => setStore(read()), []);
   const update = (fn: (d: Store) => void) => {
@@ -58,7 +60,7 @@ function TeacherPage() {
     if (!store) return [];
     const cut = Date.now() - WEEK;
     const byGrade: Record<string, Record<string, { child: Child; e: Entry }[]>> = {};
-    store.children.forEach((c) => {
+    [{ id: "__independent__", name: "Independent activity" }, ...store.children].forEach((c: Child) => {
       (store.log[c.id] || [])
         .filter((e) => e.t >= cut && (e.role === "user" || e.role === "drawing"))
         .filter((e) => filter === "all" || (filter === "art" ? e.role === "drawing" : e.role === "user"))
@@ -80,10 +82,11 @@ function TeacherPage() {
     e.preventDefault();
     if (!/^\d{4,8}$/.test(pin)) return setErr("Use 4 to 8 digits.");
     const h = await hash(pin);
-    if (!store!.teacherPin) {
+    if (!store) return;
+    if (!store.teacherPin) {
       update((d) => (d.teacherPin = h));
       setUnlocked(true);
-    } else if (store!.teacherPin === h) setUnlocked(true);
+    } else if (store.teacherPin === h) setUnlocked(true);
     else setErr("Wrong PIN.");
     setPin("");
   }
@@ -126,6 +129,10 @@ function TeacherPage() {
           </div>
           <Link to="/" className="rounded-md border border-border px-3 py-2 text-sm text-foreground">Home</Link>
         </div>
+        <Button className="mt-6" onClick={() => { setStore(read()); setReport(true); }}>
+          {report ? "Refresh progress report" : "Generate progress report"}
+        </Button>
+        {report && <>
 
         <section className="mt-6 rounded-2xl border border-border bg-card p-5">
           <h2 className="font-semibold text-card-foreground">Students</h2>
@@ -160,7 +167,7 @@ function TeacherPage() {
                 </select>
               </span>
             ))}
-            {store.children.length === 0 && <p className="text-sm text-muted-foreground">Add students — they pick their name when opening either app.</p>}
+            {store.children.length === 0 && <p className="text-sm text-muted-foreground">No student profiles. Unassigned activity is grouped below.</p>}
           </div>
         </section>
 
@@ -204,6 +211,7 @@ function TeacherPage() {
             </div>
           </section>
         ))}
+        </>}
       </div>
     </main>
   );
