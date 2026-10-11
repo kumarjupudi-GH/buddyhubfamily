@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep the shared static-app tracker UI-free and record unassigned activity separately from child profiles, so independent launches never require dashboard enrollment.
+- Generate dashboard reports only after an explicit request; dashboard navigation stays in the homepage sidebar to avoid interrupting either app.

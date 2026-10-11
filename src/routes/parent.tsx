@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/parent")({
   head: () => ({
@@ -23,7 +24,7 @@ const KEY = "bb_progress_v1";
 function read(): Store {
   try {
     const d = JSON.parse(localStorage.getItem(KEY) || "{}");
-    return { pin: d.pin, children: d.children || [], log: d.log || {} };
+    return { ...d, children: d.children || [], log: d.log || {} };
   } catch {
     return { children: [], log: {} };
   }
@@ -66,6 +67,7 @@ function ParentPage() {
   const [err, setErr] = useState("");
   const [newName, setNewName] = useState("");
   const [sel, setSel] = useState<string | null>(null);
+  const [report, setReport] = useState(false);
 
   useEffect(() => setStore(read()), []);
   const update = (fn: (d: Store) => void) => {
@@ -81,10 +83,11 @@ function ParentPage() {
     e.preventDefault();
     if (!/^\d{4,8}$/.test(pin)) return setErr("Use 4 to 8 digits.");
     const h = await hash(pin);
-    if (!store!.pin) {
+    if (!store) return;
+    if (!store.pin) {
       update((d) => (d.pin = h));
       setUnlocked(true);
-    } else if (store!.pin === h) setUnlocked(true);
+    } else if (store.pin === h) setUnlocked(true);
     else setErr("Wrong PIN.");
     setPin("");
   }
@@ -117,7 +120,8 @@ function ParentPage() {
     );
   }
 
-  const child = store.children.find((c) => c.id === sel);
+  const learners = [{ id: "__independent__", name: "Independent activity" }, ...store.children];
+  const child = learners.find((c) => c.id === sel);
 
   return (
     <main className="min-h-screen bg-background px-6 py-10">
@@ -132,6 +136,10 @@ function ParentPage() {
             <Link to="/" className="rounded-md border border-border px-3 py-2 text-sm text-foreground">Home</Link>
           </div>
         </div>
+        <Button className="mt-6" onClick={() => { setStore(read()); setReport(true); }}>
+          {report ? "Refresh progress report" : "Generate progress report"}
+        </Button>
+        {report && <>
 
         <form
           className="mt-6 flex gap-2"
@@ -153,11 +161,11 @@ function ParentPage() {
         </form>
 
         {store.children.length === 0 && (
-          <p className="mt-8 text-center text-muted-foreground">Add a child above. They'll pick their name when they open BrainBoost Buddy.</p>
+            <p className="mt-8 text-center text-muted-foreground">No child profiles. Unassigned activity appears below.</p>
         )}
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {store.children.map((c) => {
+          {learners.map((c) => {
             const s = stats(store.log[c.id] || []);
             const max = Math.max(1, ...s.week.map((w) => w.n));
             return (
@@ -193,6 +201,7 @@ function ParentPage() {
           update((d) => { d.children = d.children.filter((x) => x.id !== child.id); delete d.log[child.id]; });
           setSel(null);
         }} />}
+        </>}
       </div>
     </main>
   );
