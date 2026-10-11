@@ -1400,7 +1400,7 @@ textarea { box-sizing: border-box; }
   updateMeBtn();
   addBot(render(greeting()), "hint");
   autosize();
-  if (!profile.grade) setMe(true);
+  // Name and grade stay optional, opened only with the About you control.
 
   // ---- how BrainBoost Buddy reaches Claude
   // 1) Inside Claude (published page): the viewer's own Claude account, through window.claude "sample".
