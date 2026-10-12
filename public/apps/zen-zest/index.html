@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zen &amp; Zest</title>
+<meta name="description" content="Zen & Zest: a cheerful family wellness buddy for healthy eating, gentle yoga, sleep and calm-down breaks.">
+<style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Fredoka:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="../buddy-shared/buddy.css">
+</head>
+<body>
+<script>
+window.BUDDY = {
+  id: "zen",
+  name: "Zen & Zest",
+  tagline: "Nourish well. Move gently. Feel great.",
+  emoji: "🧘",
+  accent: "#0f7a6a", onAccent: "#ffffff",
+  accentDark: "#5fd4bd", onAccentDark: "#06231e",
+  placeholder: "Ask about healthy eating, yoga, sleep, or calm-down breaks.",
+  greeting: function (nickname, audience) {
+    return "Namaste" + (nickname ? ", " + nickname : "") + "! Ready to stretch, snack smart, or build a healthy habit? Tell me who is joining (kid, teen, or grown-up) and how much time you have.";
+  },
+  subjects: [
+    { s: "Nutrition", label: "Nutrition", icon: '<path d="M12 7c-2-3-7-2-7 3 0 5 4 10 7 10s7-5 7-10c0-5-5-6-7-3z"/><path d="M12 7c0-2 1-4 3-4"/>' },
+    { s: "Yoga", label: "Yoga", icon: '<circle cx="12" cy="4.5" r="2"/><path d="M12 7v6M5 10l7 2 7-2M8 21l4-8 4 8"/>' },
+    { s: "Sleep", label: "Sleep", icon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>' },
+    { s: "Stress relief", label: "Stress relief", icon: '<path d="M3 12c3-4 6-4 9 0s6 4 9 0"/><path d="M3 17c3-4 6-4 9 0s6 4 9 0"/><path d="M3 7c3-4 6-4 9 0s6 4 9 0"/>' },
+    { s: "Healthy habits", label: "Healthy habits", icon: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 16l2 2 4-4"/>' },
+    { s: "Wellness tip", label: "Wellness tip", tip: true }
+  ],
+  power: [
+    { label: "Quick yoga", p: "Give me a short yoga routine for: ", desc: "Gentle moves, one pose at a time" },
+    { label: "Snack idea", p: "Give me a healthy snack idea for: ", desc: "Simple and tasty" },
+    { label: "Habit plan", p: "Help me build a simple habit plan for: ", desc: "Small steps that stick" },
+    { label: "Calm down", p: "Guide me through a short calming break for: ", desc: "Breathing and stretching" },
+    { label: "Explain", p: "Explain this simply: ", desc: "Plain words, no jargon" }
+  ],
+  tips: [
+    "Drink a glass of water when you wake up. Your body is a little thirsty after a night of sleep.",
+    "Take three slow breaths before a busy moment. Breathe in for four, out for six.",
+    "Stand up and stretch for one minute every hour of screen time.",
+    "Try to add one colorful fruit or vegetable to each meal. Every color counts."
+  ],
+  disclaimer: "Zen & Zest is an AI and can make mistakes. For medical, allergy, or diet concerns, ask a doctor or registered dietitian.",
+  endpoint: "/api/public/buddy-chat"
+};
+</script>
+<script src="../buddy-shared/buddy.js"></script>
+</body>
+</html>
