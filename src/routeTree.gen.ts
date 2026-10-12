@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicBuddyChatRouteImport } from './routes/api/public/buddy-chat'
 import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as ApiPublicTeachRouteImport } from './routes/api/public/teach'
@@ -17,6 +18,11 @@ import { Route as ApiPublicTeachRouteImport } from './routes/api/public/teach'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicBuddyChatRoute = ApiPublicBuddyChatRouteImport.update({
+  id: '/api/public/buddy-chat',
+  path: '/api/public/buddy-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicChatRoute = ApiPublicChatRouteImport.update({
@@ -37,12 +43,14 @@ const ApiPublicTeachRoute = ApiPublicTeachRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
@@ -50,6 +58,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
@@ -57,12 +66,22 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/api/public/chat' | '/api/public/health' | '/api/public/teach'
+    | '/'
+    | '/api/public/buddy-chat'
+    | '/api/public/chat'
+    | '/api/public/health'
+    | '/api/public/teach'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/chat' | '/api/public/health' | '/api/public/teach'
+  to:
+    | '/'
+    | '/api/public/buddy-chat'
+    | '/api/public/chat'
+    | '/api/public/health'
+    | '/api/public/teach'
   id:
     | '__root__'
     | '/'
+    | '/api/public/buddy-chat'
     | '/api/public/chat'
     | '/api/public/health'
     | '/api/public/teach'
@@ -70,6 +89,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiPublicBuddyChatRoute: typeof ApiPublicBuddyChatRoute
   ApiPublicChatRoute: typeof ApiPublicChatRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicTeachRoute: typeof ApiPublicTeachRoute
@@ -82,6 +102,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/buddy-chat': {
+      id: '/api/public/buddy-chat'
+      path: '/api/public/buddy-chat'
+      fullPath: '/api/public/buddy-chat'
+      preLoaderRoute: typeof ApiPublicBuddyChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/chat': {
@@ -110,6 +137,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiPublicBuddyChatRoute: ApiPublicBuddyChatRoute,
   ApiPublicChatRoute: ApiPublicChatRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicTeachRoute: ApiPublicTeachRoute,
