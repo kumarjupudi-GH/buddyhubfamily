@@ -420,3 +420,12 @@ textarea { box-sizing: border-box; }
 .vnote .mfine.big { font-size: 13.5px; color: var(--ink); }
 .vbtns { display: flex; gap: 8px; flex-wrap: wrap; }
 @media (max-width: 560px) { .composer { flex-wrap: wrap; } .composer textarea { flex: 1 1 100%; } .composer .btn.primary { flex: 1; } }
+
+/* ---- family buddy overrides: accent comes from window.BUDDY */
+:root { --accent: var(--b-acc, #2748d6) !important; --on-accent: var(--b-on, #ffffff) !important; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --accent: var(--b-acc-d, #8aa6ff) !important; --on-accent: var(--b-on-d, #0e1526) !important; }
+}
+:root[data-theme="dark"] { --accent: var(--b-acc-d, #8aa6ff) !important; --on-accent: var(--b-on-d, #0e1526) !important; }
+.mascot.badge { width: 64px; height: 64px; border-radius: 22px; display: grid; place-items: center; font-size: 36px; line-height: 1; background: var(--accent); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+@media (max-width: 600px) { .mascot.badge { width: 46px; height: 46px; font-size: 26px; border-radius: 16px; } }
