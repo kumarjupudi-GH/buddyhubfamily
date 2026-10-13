@@ -51,18 +51,25 @@ function piecePath(c: number, r: number, cols: number, rows: number) {
 
 function Piece({ app, c, r, cols, rows }: { app: BuddyApp; c: number; r: number; cols: number; rows: number }) {
   const href = app.href ?? `/coming-soon/${app.slug}`;
-  const cx = c * S + S / 2, cy = r * S + S / 2;
-  const words = app.name.replace(" Buddy", "").split(" ");
   return (
     <a href={href} className="puzzle-piece group" aria-label={`${app.name}: ${app.blurb}`}>
       <title>{`${app.name} — ${app.blurb}`}</title>
       <path d={piecePath(c, r, cols, rows)} style={{ fill: `var(${app.color})` }} className="stroke-background" strokeWidth={2.5} />
-      <text x={cx} y={cy - 8} textAnchor="middle" fontSize={30} aria-hidden="true">{app.emoji}</text>
+    </a>
+  );
+}
+
+function Label({ app, c, r }: { app: BuddyApp; c: number; r: number }) {
+  const cx = c * S + S / 2, cy = r * S + S / 2;
+  const words = app.name.replace(" Buddy", "").split(" ");
+  return (
+    <g aria-hidden="true" style={{ pointerEvents: "none" }}>
+      <text x={cx} y={cy - 8} textAnchor="middle" fontSize={30}>{app.emoji}</text>
       <text x={cx} y={cy + 20} textAnchor="middle" fontSize={words.join(" ").length > 12 ? 9.5 : 11.5} fontWeight={700} className="fill-puzzle-ink">
         {words.join(" ")}
       </text>
       <text x={cx} y={cy + 33} textAnchor="middle" fontSize={8} fontWeight={600} className="fill-puzzle-ink opacity-70">Buddy</text>
-    </a>
+    </g>
   );
 }
 
@@ -75,6 +82,9 @@ function Puzzle({ cols, className }: { cols: number; className: string }) {
         <g role="listitem" key={app.slug}>
           <Piece app={app} c={i % cols} r={Math.floor(i / cols)} cols={cols} rows={rows} />
         </g>
+      ))}
+      {BUDDY_APPS.map((app, i) => (
+        <Label key={app.slug} app={app} c={i % cols} r={Math.floor(i / cols)} />
       ))}
     </svg>
   );
