@@ -429,3 +429,4 @@ textarea { box-sizing: border-box; }
 :root[data-theme="dark"] { --accent: var(--b-acc-d, #8aa6ff) !important; --on-accent: var(--b-on-d, #0e1526) !important; }
 .mascot.badge { width: 64px; height: 64px; border-radius: 22px; display: grid; place-items: center; font-size: 36px; line-height: 1; background: var(--accent); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
 @media (max-width: 600px) { .mascot.badge { width: 46px; height: 46px; font-size: 26px; border-radius: 16px; } }
+a.btn{text-decoration:none;display:inline-flex;align-items:center;gap:4px}
