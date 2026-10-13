@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wrench &amp; Wonder</title>
+<meta name="description" content="Wrench &amp; Wonder: Fix it safely. Learn how it works.">
+<style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Fredoka:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="../buddy-shared/buddy.css">
+</head>
+<body>
+<script>
+window.BUDDY = {
+  id: "wrench",
+  name: "Wrench & Wonder",
+  tagline: "Fix it safely. Learn how it works.",
+  emoji: "🔧",
+  accent: "#b4381a", onAccent: "#ffffff",
+  accentDark: "#ff9a7a", onAccentDark: "#2b0b03",
+  placeholder: "Tell me the appliance, the model, and what it is doing.",
+  greeting: function (nickname, audience) { return "Hi" + (nickname ? ", " + nickname : "") + "! What's acting up today? Tell me the appliance, the brand or model if you have it, and what you've noticed. Safety first: we always unplug before touching anything inside."; },
+  subjects: [{"s": "Kitchen appliances", "label": "Kitchen"}, {"s": "Laundry", "label": "Laundry"}, {"s": "Plumbing", "label": "Plumbing"}, {"s": "Heating and cooling", "label": "Heating & cooling"}, {"s": "Maintenance", "label": "Maintenance"}, {"s": "tip", "label": "Quick tip", "tip": true}],
+  power: [{"label": "Troubleshoot", "p": "Help me troubleshoot this problem: ", "desc": "Simplest checks first"}, {"label": "Error code", "p": "What does this error code mean: ", "desc": "Read it out slowly"}, {"label": "Maintenance", "p": "Give me a maintenance schedule for: ", "desc": "Prevent problems"}, {"label": "Tools list", "p": "What tools do I need to fix: ", "desc": "Get ready"}, {"label": "Call a pro?", "p": "Should I call a professional for: ", "desc": "Know when to stop"}],
+  tips: ["Unplug or switch off the breaker before opening any appliance.", "Smell gas? Leave the house and call your gas company from outside.", "Clean your dryer lint filter every load to prevent fires.", "Change your furnace or AC filter every one to three months."],
+  disclaimer: "Wrench & Wonder is an AI and can make mistakes. It is not a licensed repair professional; for gas, electrical panels, or anything risky, call a pro.",
+  endpoint: "/api/public/buddy-chat"
+};
+</script>
+<script src="../buddy-shared/buddy.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sprout &amp; Sage</title>
+<meta name="description" content="Sprout &amp; Sage: Grow green. Grow together.">
+<style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Fredoka:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="../buddy-shared/buddy.css">
+</head>
+<body>
+<script>
+window.BUDDY = {
+  id: "sprout",
+  name: "Sprout & Sage",
+  tagline: "Grow green. Grow together.",
+  emoji: "🌱",
+  accent: "#2f7a1f", onAccent: "#ffffff",
+  accentDark: "#9be07f", onAccentDark: "#0b2404",
+  placeholder: "Ask about plant care, watering, pests, or what to grow.",
+  greeting: function (nickname, audience) { return "Hi" + (nickname ? ", " + nickname : "") + "! What's growing at your place? Tell me where you live or your climate, how much sun you get, and what you'd like to grow or fix."; },
+  subjects: [{"s": "Vegetables", "label": "Vegetables"}, {"s": "Flowers", "label": "Flowers"}, {"s": "Herbs", "label": "Herbs"}, {"s": "Houseplants", "label": "Houseplants"}, {"s": "Pests and problems", "label": "Pests & problems"}, {"s": "tip", "label": "Quick tip", "tip": true}],
+  power: [{"label": "Plant care", "p": "How do I care for: ", "desc": "Light, water, food"}, {"label": "Watering plan", "p": "Make a watering schedule for: ", "desc": "Not too much"}, {"label": "What's wrong?", "p": "Help me figure out what's wrong with: ", "desc": "Describe the leaves"}, {"label": "Season plan", "p": "What should I plant this season in: ", "desc": "Right time"}, {"label": "Kid project", "p": "Give me a fun kids garden project with: ", "desc": "Get growing"}],
+  tips: ["Water deeply and less often so roots grow strong.", "Check under leaves for pests once a week.", "Some plants are toxic to pets and kids, so check before you bring one home.", "Mulch keeps soil moist and keeps weeds down."],
+  disclaimer: "Sprout & Sage is an AI and can make mistakes. Always read and follow product labels for fertilizers and pest treatments.",
+  endpoint: "/api/public/buddy-chat"
+};
+</script>
+<script src="../buddy-shared/buddy.js"></script>
+</body>
+</html>

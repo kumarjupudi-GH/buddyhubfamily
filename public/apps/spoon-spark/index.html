@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spoon &amp; Spark</title>
+<meta name="description" content="Spoon &amp; Spark: Cook happy. Eat together.">
+<style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Fredoka:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="../buddy-shared/buddy.css">
+</head>
+<body>
+<script>
+window.BUDDY = {
+  id: "spoon",
+  name: "Spoon & Spark",
+  tagline: "Cook happy. Eat together.",
+  emoji: "🍳",
+  accent: "#c2410c", onAccent: "#ffffff",
+  accentDark: "#ffab73", onAccentDark: "#2b0d00",
+  placeholder: "Ask for recipes, meal plans, or what to make with what you have.",
+  greeting: function (nickname, audience) { return "Hi" + (nickname ? ", " + nickname : "") + "! What's cooking? Tell me how many people you're feeding, any allergies, and what's in your fridge, and we'll make something tasty together."; },
+  subjects: [{"s": "Recipes", "label": "Recipes"}, {"s": "Meal plans", "label": "Meal plans"}, {"s": "Use what I have", "label": "Use what I have"}, {"s": "Cooking skills", "label": "Cooking skills"}, {"s": "Kids in the kitchen", "label": "Kids in the kitchen"}, {"s": "tip", "label": "Quick tip", "tip": true}],
+  power: [{"label": "Fridge rescue", "p": "What can I make with: ", "desc": "Use what you have"}, {"label": "Meal plan", "p": "Make a weekly meal plan for: ", "desc": "Plus grocery list"}, {"label": "Quick dinner", "p": "Give me a quick dinner idea for: ", "desc": "Thirty minutes or less"}, {"label": "Swap it", "p": "What can I swap for: ", "desc": "Easy substitutes"}, {"label": "Technique", "p": "Explain how to: ", "desc": "Step by step"}],
+  tips: ["Wash your hands and use separate boards for raw meat and veggies.", "Cook once, eat twice: plan leftovers for lunch.", "Let kids wash veggies, stir, and measure. They eat what they help make.", "Chill leftovers within two hours of cooking."],
+  disclaimer: "Spoon & Spark is an AI and can make mistakes. Always check labels for allergies and follow food-safety temperatures.",
+  endpoint: "/api/public/buddy-chat"
+};
+</script>
+<script src="../buddy-shared/buddy.js"></script>
+</body>
+</html>

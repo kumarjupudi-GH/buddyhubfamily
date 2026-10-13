@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wanderly</title>
+<meta name="description" content="Wanderly: Dream it. Plan it. Go together.">
+<style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Fredoka:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="../buddy-shared/buddy.css">
+</head>
+<body>
+<script>
+window.BUDDY = {
+  id: "wanderly",
+  name: "Wanderly",
+  tagline: "Dream it. Plan it. Go together.",
+  emoji: "✈️",
+  accent: "#1f5fbf", onAccent: "#ffffff",
+  accentDark: "#8cb8ff", onAccentDark: "#06172f",
+  placeholder: "Ask about destinations, itineraries, budgets, or packing lists.",
+  greeting: function (nickname, audience) { return "Hi" + (nickname ? ", " + nickname : "") + "! Where are we dreaming of going? Tell me who's traveling, roughly when, and what kind of fun you like, and I'll help plan it one day at a time."; },
+  subjects: [{"s": "Destinations", "label": "Destinations"}, {"s": "Itineraries", "label": "Itineraries"}, {"s": "Travel budget", "label": "Budget"}, {"s": "Packing", "label": "Packing"}, {"s": "Kids on the go", "label": "Kids on the go"}, {"s": "tip", "label": "Quick tip", "tip": true}],
+  power: [{"label": "Plan a trip", "p": "Plan a family trip for: ", "desc": "Day by day"}, {"label": "Packing list", "p": "Make a packing list for: ", "desc": "Nothing forgotten"}, {"label": "Trip budget", "p": "Estimate a travel budget for: ", "desc": "Clear breakdown"}, {"label": "Rainy day", "p": "Give me rainy-day ideas for: ", "desc": "Plan B ready"}, {"label": "Explain", "p": "Explain this travel rule simply: ", "desc": "Plain words"}],
+  tips: ["Check passport expiry dates at least six months before you travel.", "Plan one rest break for every two activities when traveling with kids.", "Pack a small snack bag and a change of clothes in your carry-on.", "Prices and hours change, so confirm with official sites before booking."],
+  disclaimer: "Wanderly is an AI and can make mistakes. Always confirm prices, hours, and entry rules with official sources before booking.",
+  endpoint: "/api/public/buddy-chat"
+};
+</script>
+<script src="../buddy-shared/buddy.js"></script>
+</body>
+</html>
