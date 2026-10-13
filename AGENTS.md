@@ -9,5 +9,6 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- Keep the shared static-app tracker UI-free and record unassigned activity separately from child profiles, so independent launches never require dashboard enrollment.
-- Generate dashboard reports only after an explicit request; dashboard navigation stays in the homepage sidebar to avoid interrupting either app.
+- Apps under public/apps open independently with no profiles, trackers or dashboards, so any buddy works on its own.
+- New family buddies are a small index.html config on public/apps/buddy-shared engine, with personas server-side in src/lib/buddies.ts, so prompts stay private and buddies stay consistent.
+- The home puzzle is generated from src/lib/buddy-catalog.ts; a null href routes to /coming-soon/$slug so new buddies never break links.
