@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PennyPilot</title>
+<meta name="description" content="PennyPilot: Plan smart. Save steady. Worry less.">
+<style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Fredoka:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="../buddy-shared/buddy.css">
+</head>
+<body>
+<script>
+window.BUDDY = {
+  id: "penny",
+  name: "PennyPilot",
+  tagline: "Plan smart. Save steady. Worry less.",
+  emoji: "💰",
+  accent: "#9a5b00", onAccent: "#ffffff",
+  accentDark: "#ffc36b", onAccentDark: "#2a1800",
+  placeholder: "Ask about budgets, savings goals, or tracking expenses.",
+  greeting: function (nickname, audience) { return "Hi" + (nickname ? ", " + nickname : "") + "! Let's make your money plan feel easy. What would you like to work on today: a monthly budget, a savings goal, or cutting back on spending?"; },
+  subjects: [{"s": "Budgeting", "label": "Budgeting"}, {"s": "Savings", "label": "Savings"}, {"s": "Expenses", "label": "Expenses"}, {"s": "Debt payoff", "label": "Debt payoff"}, {"s": "Kids and money", "label": "Kids & money"}, {"s": "tip", "label": "Quick tip", "tip": true}],
+  power: [{"label": "Budget plan", "p": "Help me build a simple monthly budget for: ", "desc": "Needs, wants, savings"}, {"label": "Savings goal", "p": "Help me plan a savings goal for: ", "desc": "Step by step"}, {"label": "Cut costs", "p": "Give me ideas to cut costs on: ", "desc": "Small wins add up"}, {"label": "Kid lesson", "p": "Teach a kid-friendly money lesson about: ", "desc": "Fun and simple"}, {"label": "Explain", "p": "Explain this money idea simply: ", "desc": "Plain words, no jargon"}],
+  tips: ["Pay yourself first: move a little into savings right after payday.", "Track every expense for one week. Seeing it is the first step.", "Never share account numbers or passwords in any chat.", "Give kids three jars: spend, save, and share."],
+  disclaimer: "PennyPilot is an AI and can make mistakes. It is not a financial advisor; for taxes, investing, or big debt decisions, ask a professional.",
+  endpoint: "/api/public/buddy-chat"
+};
+</script>
+<script src="../buddy-shared/buddy.js"></script>
+</body>
+</html>

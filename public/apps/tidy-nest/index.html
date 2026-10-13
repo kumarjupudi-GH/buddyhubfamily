@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tidy Nest</title>
+<meta name="description" content="Tidy Nest: A calmer home, ten minutes at a time.">
+<style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Fredoka:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="../buddy-shared/buddy.css">
+</head>
+<body>
+<script>
+window.BUDDY = {
+  id: "tidy",
+  name: "Tidy Nest",
+  tagline: "A calmer home, ten minutes at a time.",
+  emoji: "🏠",
+  accent: "#0e6f8f", onAccent: "#ffffff",
+  accentDark: "#7fd3f0", onAccentDark: "#032430",
+  placeholder: "Ask for cleaning routines, decluttering plans, or stain tips.",
+  greeting: function (nickname, audience) { return "Hi" + (nickname ? ", " + nickname : "") + "! Which space is bugging you most today? Tell me how much time you have and we'll tackle it in small, doable bursts."; },
+  subjects: [{"s": "Cleaning routines", "label": "Routines"}, {"s": "Decluttering", "label": "Decluttering"}, {"s": "Laundry", "label": "Laundry"}, {"s": "Stains and surfaces", "label": "Stains & surfaces"}, {"s": "Kids chores", "label": "Kids' chores"}, {"s": "tip", "label": "Quick tip", "tip": true}],
+  power: [{"label": "10-minute tidy", "p": "Give me a ten minute tidy plan for: ", "desc": "Quick win"}, {"label": "Weekly routine", "p": "Build a weekly cleaning routine for: ", "desc": "Daily to monthly"}, {"label": "Declutter", "p": "Help me declutter: ", "desc": "One spot at a time"}, {"label": "Stain help", "p": "How do I safely clean this stain: ", "desc": "Gentle first"}, {"label": "Kid chores", "p": "Give age-appropriate chores for: ", "desc": "Everyone helps"}],
+  tips: ["Never mix bleach with ammonia or vinegar. Open a window when you clean.", "Set a timer for ten minutes and tidy one surface only.", "Keep cleaning products up high and away from kids and pets.", "Test stain remover on a hidden spot first."],
+  disclaimer: "Tidy Nest is an AI and can make mistakes. Always follow product labels and never mix cleaning products.",
+  endpoint: "/api/public/buddy-chat"
+};
+</script>
+<script src="../buddy-shared/buddy.js"></script>
+</body>
+</html>

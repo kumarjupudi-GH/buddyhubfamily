@@ -1,5 +1,5 @@
 # Roadmap
-- [x] Remove mandatory app profile prompts, move dashboard links to homepage left panel, and allow explicitly requested independent progress reports.
-- [x] Parent dashboard for BrainBoost Buddy (PIN, child profiles, questions, subjects, streaks, chat history — stored on device)
-- [x] New homepage: welcome message + buttons to BrainBoost Buddy, ArtBuddy (plus Parent Dashboard link)
+- [x] Family buddy engine + 8 buddies (Zen & Zest, PennyPilot, Wrench & Wonder, Wanderly, Nudge & Notes, Sprout & Sage, Spoon & Spark, Tidy Nest)
+- [x] Puzzle home page with 10 BuddyApps, Home button on buddies, coming-soon placeholder
+- [x] Remove leftover tracker reference from ArtBuddy
 - [ ] Split ArtBuddy into its own project (needs user: remix project — I can't create new projects)

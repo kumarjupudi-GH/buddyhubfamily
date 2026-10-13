@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ComingSoonSlugRouteImport } from './routes/coming-soon.$slug'
 import { Route as ApiPublicBuddyChatRouteImport } from './routes/api/public/buddy-chat'
 import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
@@ -18,6 +19,11 @@ import { Route as ApiPublicTeachRouteImport } from './routes/api/public/teach'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComingSoonSlugRoute = ComingSoonSlugRouteImport.update({
+  id: '/coming-soon/$slug',
+  path: '/coming-soon/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicBuddyChatRoute = ApiPublicBuddyChatRouteImport.update({
@@ -43,6 +49,7 @@ const ApiPublicTeachRoute = ApiPublicTeachRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -67,6 +76,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
     | '/api/public/health'
@@ -74,6 +84,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
     | '/api/public/health'
@@ -81,6 +92,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
     | '/api/public/health'
@@ -89,6 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ComingSoonSlugRoute: typeof ComingSoonSlugRoute
   ApiPublicBuddyChatRoute: typeof ApiPublicBuddyChatRoute
   ApiPublicChatRoute: typeof ApiPublicChatRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
@@ -102,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coming-soon/$slug': {
+      id: '/coming-soon/$slug'
+      path: '/coming-soon/$slug'
+      fullPath: '/coming-soon/$slug'
+      preLoaderRoute: typeof ComingSoonSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/buddy-chat': {
@@ -137,6 +157,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ComingSoonSlugRoute: ComingSoonSlugRoute,
   ApiPublicBuddyChatRoute: ApiPublicBuddyChatRoute,
   ApiPublicChatRoute: ApiPublicChatRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,

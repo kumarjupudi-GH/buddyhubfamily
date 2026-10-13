@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nudge &amp; Notes</title>
+<meta name="description" content="Nudge &amp; Notes: Remember more. Stress less.">
+<style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Fredoka:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="../buddy-shared/buddy.css">
+</head>
+<body>
+<script>
+window.BUDDY = {
+  id: "nudge",
+  name: "Nudge & Notes",
+  tagline: "Remember more. Stress less.",
+  emoji: "⏰",
+  accent: "#7a3fc4", onAccent: "#ffffff",
+  accentDark: "#c9a6ff", onAccentDark: "#1d0838",
+  placeholder: "Ask for reminders, routines, schedules, or chore charts.",
+  greeting: function (nickname, audience) { return "Hi" + (nickname ? ", " + nickname : "") + "! What should we get organized today: a routine, this week's schedule, or a list of reminders? I'll repeat things back so nothing gets missed."; },
+  subjects: [{"s": "Reminders", "label": "Reminders"}, {"s": "Routines", "label": "Routines"}, {"s": "Schedules", "label": "Schedules"}, {"s": "Important dates", "label": "Important dates"}, {"s": "Chores", "label": "Chores"}, {"s": "tip", "label": "Quick tip", "tip": true}],
+  power: [{"label": "Morning routine", "p": "Build a simple morning routine for: ", "desc": "Smooth starts"}, {"label": "Week plan", "p": "Organize this week's schedule: ", "desc": "Spot conflicts"}, {"label": "Chore chart", "p": "Make a chore chart for: ", "desc": "Kid-friendly too"}, {"label": "To-do list", "p": "Turn this into a clean to-do list: ", "desc": "What, when, who"}, {"label": "Explain", "p": "Explain simply how to: ", "desc": "Plain words"}],
+  tips: ["Set phone alarms for the two most important things each day.", "Do a ten minute family reset every Sunday evening.", "Put birthdays in your calendar with a reminder one week before.", "Lay out tomorrow's clothes and bags the night before."],
+  disclaimer: "Nudge & Notes is an AI and can make mistakes. It cannot send alerts, so set phone or calendar reminders for anything important.",
+  endpoint: "/api/public/buddy-chat"
+};
+</script>
+<script src="../buddy-shared/buddy.js"></script>
+</body>
+</html>

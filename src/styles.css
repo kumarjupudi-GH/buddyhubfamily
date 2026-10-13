@@ -19,6 +19,8 @@
  */
 
 @theme inline {
+  --font-display: "Fredoka", "Trebuchet MS", sans-serif;
+  --color-puzzle-ink: var(--puzzle-ink);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -95,6 +97,17 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+  --puzzle-ink: oklch(0.22 0.04 265);
+  --piece-1: oklch(0.82 0.13 85);
+  --piece-2: oklch(0.78 0.14 15);
+  --piece-3: oklch(0.82 0.11 170);
+  --piece-4: oklch(0.85 0.14 120);
+  --piece-5: oklch(0.78 0.13 45);
+  --piece-6: oklch(0.8 0.11 240);
+  --piece-7: oklch(0.78 0.12 300);
+  --piece-8: oklch(0.82 0.15 145);
+  --piece-9: oklch(0.82 0.13 60);
+  --piece-10: oklch(0.82 0.1 210);
 }
 
 .dark {
@@ -142,3 +155,11 @@
     color: var(--color-foreground);
   }
 }
+
+.puzzle-piece { cursor: pointer; outline: none; }
+.puzzle-piece path { transition: transform .25s ease, filter .25s ease; transform-box: fill-box; transform-origin: center; filter: drop-shadow(0 3px 4px oklch(0 0 0 / .15)); }
+.puzzle-piece text { pointer-events: none; transition: transform .25s ease; }
+.puzzle-piece:hover path, .puzzle-piece:focus-visible path { transform: scale(1.06) translateY(-2px); filter: drop-shadow(0 8px 10px oklch(0 0 0 / .25)) brightness(1.06); }
+.puzzle-piece:focus-visible path { stroke: var(--foreground); stroke-width: 4; }
+g[role="listitem"]:hover { position: relative; }
+@media (prefers-reduced-motion: reduce) { .puzzle-piece path { transition: none; } }
