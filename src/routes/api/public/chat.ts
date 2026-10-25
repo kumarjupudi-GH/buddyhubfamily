@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { askClaude } from "@/lib/ai-gateway";
+import { askClaude, checkAnswer } from "@/lib/ai-gateway";
 
 // BrainBoost Buddy homework chat endpoint (public app API).
 const SYSTEM_PROMPT = [
@@ -63,7 +63,11 @@ export const Route = createFileRoute("/api/public/chat")({
           if (!text.trim()) {
             return json(502, { error: { code: "upstream_error", message: "The AI sent an empty answer." } });
           }
-          return json(200, { text, truncated });
+          const check = await checkAnswer({
+            question: messages[messages.length - 1]?.content ?? "",
+            answer: text,
+          });
+          return json(200, { text, truncated, ...(check ? { check } : {}) });
         } catch (e: any) {
           const status = typeof e?.status === "number" ? e.status : 502;
           return json(status, {

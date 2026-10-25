@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { askClaude } from "@/lib/ai-gateway";
+import { askClaude, checkAnswer } from "@/lib/ai-gateway";
 
 // ArtBuddy AI art teacher endpoint (public app API).
 const SYSTEM = `You are ArtBuddy, a warm and cheerful art teacher inside a drawing app for kids aged 5-12.
@@ -50,7 +50,13 @@ export const Route = createFileRoute("/api/public/teach")({
             .replace(/https?:\/\/\S+/g, "")
             .trim()
             .slice(0, 260);
-          return json(200, { text: cleaned });
+          const check = cleaned
+            ? await checkAnswer({
+                question: kind === "chat" ? clean(body?.question, 140) : clean(body?.instruction, 160),
+                answer: cleaned,
+              })
+            : null;
+          return json(200, { text: cleaned, ...(check ? { check } : {}) });
         } catch {
           return json(502, { error: "AI unavailable" });
         }

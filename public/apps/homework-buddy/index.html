@@ -261,6 +261,8 @@ select {
 }
 .who { display: block; font: 700 12px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
 .note { margin-top: 8px; font-size: 14px; color: var(--muted); }
+.check { margin-top: 6px; font-size: 12.5px; color: var(--muted); opacity: .85; }
+.check.fix { opacity: 1; font-weight: 600; color: var(--accent); }
 .err { color: var(--danger); }
 .retry { margin-top: 10px; }
 .dots { display: inline-flex; gap: 5px; align-items: center; height: 24px; }
@@ -971,6 +973,7 @@ textarea { box-sizing: border-box; }
         body.appendChild(n);
       }
       decorateReply(body, res.text);
+      showCheck(body, res.check);
       speakReply(res.text, lastViaVoice);
     } catch (e) {
       setVoice("idle");
@@ -1339,6 +1342,15 @@ textarea { box-sizing: border-box; }
     });
     body.appendChild(b);
   }
+  function showCheck(body, check) {
+    if (!body || !check) return;
+    var p = document.createElement("p");
+    p.className = "check " + (check.ok ? "ok" : "fix");
+    p.textContent = check.ok
+      ? "✓ Double-checked by Google"
+      : "Google's double-check: " + (check.note || "This answer may need a second look — ask a grown-up.");
+    body.appendChild(p);
+  }
   function setVoiceOn(on, persist) {
     voiceOn = on;
     var svg = voiceBtn.querySelector("svg");
@@ -1429,7 +1441,7 @@ textarea { box-sizing: border-box; }
           }
           settled = true;
           if (opts.onText) { try { opts.onText({ text: x.j.text, delta: x.j.text }); } catch (e) {} }
-          resolve({ text: x.j.text, truncated: !!x.j.truncated, modelTierApplied: "default" });
+          resolve({ text: x.j.text, truncated: !!x.j.truncated, check: x.j.check || null, modelTierApplied: "default" });
         }).catch(function () { fail("upstream_error", "network error"); });
       });
     };

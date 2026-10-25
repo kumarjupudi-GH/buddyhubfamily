@@ -177,3 +177,5 @@ section{margin:22px 0}
   body{font-size:17px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.aicheck{font-size:11px;opacity:.75;margin-top:4px}
+.aicheck.fix{opacity:1;font-weight:600}

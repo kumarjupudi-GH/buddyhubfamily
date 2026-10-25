@@ -453,7 +453,7 @@
         }
         settled = true;
         if (opts.onText) { try { opts.onText({ text: x.j.text }); } catch (e) {} }
-        resolve({ text: x.j.text, truncated: !!x.j.truncated });
+        resolve({ text: x.j.text, truncated: !!x.j.truncated, check: x.j.check || null });
       }).catch(function () { fail("upstream_error", "network error"); });
     });
   }
@@ -478,6 +478,7 @@
         body.appendChild(n);
       }
       decorateReply(body, res.text);
+      showCheck(body, res.check);
       speakReply(res.text, lastViaVoice);
     } catch (e) {
       setVoice("idle");
@@ -834,6 +835,15 @@
       speakText(text);
     });
     body.appendChild(b);
+  }
+  function showCheck(body, check) {
+    if (!body || !check) return;
+    var p = document.createElement("p");
+    p.className = "check " + (check.ok ? "ok" : "fix");
+    p.textContent = check.ok
+      ? "✓ Double-checked by Google"
+      : "Google's double-check: " + (check.note || "This answer may need a second look — ask a grown-up.");
+    body.appendChild(p);
   }
   function setVoiceOn(on, persist) {
     voiceOn = on;

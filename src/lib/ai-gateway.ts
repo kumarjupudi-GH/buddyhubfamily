@@ -86,3 +86,51 @@ export async function askClaude(options: {
 
   return { text, truncated };
 }
+
+// Server-only helper: asks Google Gemini to double-check a buddy's answer to a
+// child. Returns null when the review cannot be completed (the original answer
+// is still shown without a check badge).
+export async function checkAnswer(options: {
+  question: string;
+  answer: string;
+}): Promise<{ ok: boolean; note: string | null } | null> {
+  const apiKey = process.env["LOVABLE_API_KEY"];
+  if (!apiKey) return null;
+  try {
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${apiKey}`,
+        "X-Lovable-AIG-SDK": "fetch",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-3.1-flash-lite",
+        max_tokens: 120,
+        messages: [
+          {
+            role: "user",
+            content: [
+              "You are double-checking another AI buddy's answer to a child (ages 5-18).",
+              "If the answer is accurate, safe and age-appropriate, reply with exactly: OK",
+              "If anything is factually wrong, unsafe, or confusing, reply with: FIX: followed by one short, kind, kid-friendly sentence that corrects it.",
+              "Never ask for personal information. No markdown.",
+              "",
+              "Child asked: " + options.question.slice(0, 500),
+              "Buddy answered: " + options.answer.slice(0, 1500),
+            ].join("\n"),
+          },
+        ],
+      }),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as any;
+    const text: string = data?.choices?.[0]?.message?.content?.trim?.() || "";
+    if (!text) return null;
+    if (/^ok\b/i.test(text)) return { ok: true, note: null };
+    const m = text.match(/^fix:\s*(.+)$/is);
+    return { ok: false, note: (m && m[1] ? m[1] : text).trim().slice(0, 200) };
+  } catch {
+    return null;
+  }
+}
