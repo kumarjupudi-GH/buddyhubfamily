@@ -64,7 +64,7 @@ export const Route = createFileRoute("/api/public/chat")({
             return json(502, { error: { code: "upstream_error", message: "The AI sent an empty answer." } });
           }
           const check = await checkAnswer({
-            question: messages[messages.length - 1].content,
+            question: messages[messages.length - 1]?.content ?? "",
             answer: text,
           });
           return json(200, { text, truncated, ...(check ? { check } : {}) });

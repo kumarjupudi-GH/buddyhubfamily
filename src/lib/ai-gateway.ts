@@ -129,7 +129,7 @@ export async function checkAnswer(options: {
     if (!text) return null;
     if (/^ok\b/i.test(text)) return { ok: true, note: null };
     const m = text.match(/^fix:\s*(.+)$/is);
-    return { ok: false, note: (m ? m[1] : text).trim().slice(0, 200) };
+    return { ok: false, note: (m && m[1] ? m[1] : text).trim().slice(0, 200) };
   } catch {
     return null;
   }
