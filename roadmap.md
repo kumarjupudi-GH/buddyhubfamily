@@ -5,3 +5,5 @@
 - [x] Google (Gemini) double-check on all answers — all ten buddies show a "Checked by Google" badge or a correction note
 - [x] Pictures/diagrams in answers — "Show me a picture" button on every buddy answer (except ArtBuddy, which already draws)
 - [ ] Split ArtBuddy into its own project (needs user: remix project — I can't create new projects)
+- [x] BrainBoost: Google Gemini (3.8 Flash) draws labeled diagrams for geometry/graph answers (auto) + "Draw a diagram" button
+- [ ] Publish latest changes (answer-check, pictures, diagrams)

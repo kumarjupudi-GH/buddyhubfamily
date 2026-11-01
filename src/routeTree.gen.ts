@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ComingSoonSlugRouteImport } from './routes/coming-soon.$slug'
 import { Route as ApiPublicBuddyChatRouteImport } from './routes/api/public/buddy-chat'
 import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
+import { Route as ApiPublicDiagramRouteImport } from './routes/api/public/diagram'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as ApiPublicPictureRouteImport } from './routes/api/public/picture'
 import { Route as ApiPublicTeachRouteImport } from './routes/api/public/teach'
@@ -37,6 +38,11 @@ const ApiPublicChatRoute = ApiPublicChatRouteImport.update({
   path: '/api/public/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicDiagramRoute = ApiPublicDiagramRouteImport.update({
+  id: '/api/public/diagram',
+  path: '/api/public/diagram',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
   id: '/api/public/health',
   path: '/api/public/health',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/diagram': typeof ApiPublicDiagramRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/picture': typeof ApiPublicPictureRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/diagram': typeof ApiPublicDiagramRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/picture': typeof ApiPublicPictureRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/diagram': typeof ApiPublicDiagramRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/picture': typeof ApiPublicPictureRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
+    | '/api/public/diagram'
     | '/api/public/health'
     | '/api/public/picture'
     | '/api/public/teach'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
+    | '/api/public/diagram'
     | '/api/public/health'
     | '/api/public/picture'
     | '/api/public/teach'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
+    | '/api/public/diagram'
     | '/api/public/health'
     | '/api/public/picture'
     | '/api/public/teach'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   ComingSoonSlugRoute: typeof ComingSoonSlugRoute
   ApiPublicBuddyChatRoute: typeof ApiPublicBuddyChatRoute
   ApiPublicChatRoute: typeof ApiPublicChatRoute
+  ApiPublicDiagramRoute: typeof ApiPublicDiagramRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicPictureRoute: typeof ApiPublicPictureRoute
   ApiPublicTeachRoute: typeof ApiPublicTeachRoute
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/diagram': {
+      id: '/api/public/diagram'
+      path: '/api/public/diagram'
+      fullPath: '/api/public/diagram'
+      preLoaderRoute: typeof ApiPublicDiagramRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/health': {
       id: '/api/public/health'
       path: '/api/public/health'
@@ -180,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComingSoonSlugRoute: ComingSoonSlugRoute,
   ApiPublicBuddyChatRoute: ApiPublicBuddyChatRoute,
   ApiPublicChatRoute: ApiPublicChatRoute,
+  ApiPublicDiagramRoute: ApiPublicDiagramRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicPictureRoute: ApiPublicPictureRoute,
   ApiPublicTeachRoute: ApiPublicTeachRoute,
