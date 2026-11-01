@@ -976,6 +976,7 @@ textarea { box-sizing: border-box; }
       decorateReply(body, res.text);
       showCheck(body, res.check);
       if (window.BuddyPicture) { var q = turns.length > 1 ? turns[turns.length - 2].content : ""; window.BuddyPicture.add(body, q, res.text); }
+      addDiagram(body, turns.length > 1 ? turns[turns.length - 2].content : "", res.text);
       speakReply(res.text, lastViaVoice);
     } catch (e) {
       setVoice("idle");
@@ -1343,6 +1344,41 @@ textarea { box-sizing: border-box; }
       speakText(text);
     });
     body.appendChild(b);
+  }
+  // ---- Google-drawn diagrams (geometry, graphs, number lines, fractions)
+  var DIAGRAM_RX = /triangle|angle|circle|radius|diameter|square|rectangle|polygon|perimeter|area|volume|geometry|pythag|graph|plot|slope|parabola|coordinate|axis|number line|fraction|shape|cube|cylinder|cone|sphere|degrees|parallel|perpendicular|symmetr|diagram|draw|visual|chart/i;
+  function addDiagram(body, question, answer) {
+    if (!body || !question) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "pic-btn";
+    btn.textContent = "📐 Draw a diagram";
+    var run = async function () {
+      btn.disabled = true;
+      btn.textContent = "📐 Drawing the diagram…";
+      try {
+        var r = await fetch("/api/public/diagram", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: String(question).slice(0, 500), answer: String(answer).slice(0, 2000) })
+        });
+        var j = await r.json().catch(function () { return {}; });
+        if (!r.ok || !j.svg) throw new Error(j.error || "Couldn't draw a diagram this time.");
+        var holder = document.createElement("div");
+        holder.innerHTML = renderFence("svg", j.svg) + '<p class="pic-note">Diagram drawn by Google Gemini — check the labels with your answer.</p>';
+        body.insertBefore(holder, btn);
+        btn.remove();
+        toBottom();
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = "📐 Try the diagram again";
+        btn.title = e.message;
+      }
+    };
+    btn.addEventListener("click", run);
+    body.appendChild(btn);
+    // Auto-draw for geometry / graph style questions when the answer has no drawing yet.
+    if (DIAGRAM_RX.test(question) && !/```svg/i.test(answer)) run();
   }
   function showCheck(body, check) {
     if (!body || !check) return;
