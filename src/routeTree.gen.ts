@@ -14,6 +14,7 @@ import { Route as ComingSoonSlugRouteImport } from './routes/coming-soon.$slug'
 import { Route as ApiPublicBuddyChatRouteImport } from './routes/api/public/buddy-chat'
 import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
+import { Route as ApiPublicPictureRouteImport } from './routes/api/public/picture'
 import { Route as ApiPublicTeachRouteImport } from './routes/api/public/teach'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,11 @@ const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
   path: '/api/public/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPictureRoute = ApiPublicPictureRouteImport.update({
+  id: '/api/public/picture',
+  path: '/api/public/picture',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicTeachRoute = ApiPublicTeachRouteImport.update({
   id: '/api/public/teach',
   path: '/api/public/teach',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/api/public/picture': typeof ApiPublicPictureRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/api/public/picture': typeof ApiPublicPictureRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
 }
 export interface FileRoutesById {
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/api/public/picture': typeof ApiPublicPictureRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
 }
 export interface FileRouteTypes {
@@ -80,6 +89,7 @@ export interface FileRouteTypes {
     | '/api/public/buddy-chat'
     | '/api/public/chat'
     | '/api/public/health'
+    | '/api/public/picture'
     | '/api/public/teach'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -88,6 +98,7 @@ export interface FileRouteTypes {
     | '/api/public/buddy-chat'
     | '/api/public/chat'
     | '/api/public/health'
+    | '/api/public/picture'
     | '/api/public/teach'
   id:
     | '__root__'
@@ -96,6 +107,7 @@ export interface FileRouteTypes {
     | '/api/public/buddy-chat'
     | '/api/public/chat'
     | '/api/public/health'
+    | '/api/public/picture'
     | '/api/public/teach'
   fileRoutesById: FileRoutesById
 }
@@ -105,6 +117,7 @@ export interface RootRouteChildren {
   ApiPublicBuddyChatRoute: typeof ApiPublicBuddyChatRoute
   ApiPublicChatRoute: typeof ApiPublicChatRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
+  ApiPublicPictureRoute: typeof ApiPublicPictureRoute
   ApiPublicTeachRoute: typeof ApiPublicTeachRoute
 }
 
@@ -145,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/picture': {
+      id: '/api/public/picture'
+      path: '/api/public/picture'
+      fullPath: '/api/public/picture'
+      preLoaderRoute: typeof ApiPublicPictureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/teach': {
       id: '/api/public/teach'
       path: '/api/public/teach'
@@ -161,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicBuddyChatRoute: ApiPublicBuddyChatRoute,
   ApiPublicChatRoute: ApiPublicChatRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
+  ApiPublicPictureRoute: ApiPublicPictureRoute,
   ApiPublicTeachRoute: ApiPublicTeachRoute,
 }
 export const routeTree = rootRouteImport

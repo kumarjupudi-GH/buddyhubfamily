@@ -479,6 +479,7 @@
       }
       decorateReply(body, res.text);
       showCheck(body, res.check);
+      if (window.BuddyPicture) { var q = turns.length > 1 ? turns[turns.length - 2].content : ""; window.BuddyPicture.add(body, q, res.text); }
       speakReply(res.text, lastViaVoice);
     } catch (e) {
       setVoice("idle");
