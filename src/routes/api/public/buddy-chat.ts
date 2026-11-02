@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { askClaude, checkAnswer } from "@/lib/ai-gateway";
+import { bestAnswer } from "@/lib/ai-gateway";
 import { BUDDY_PROMPTS } from "@/lib/buddies";
 
 // Family buddies chat endpoint (public app API). Persona comes from BUDDY_PROMPTS.
@@ -57,20 +57,15 @@ export const Route = createFileRoute("/api/public/buddy-chat")({
           });
         }
         try {
-          const { text, truncated } = await askClaude({
-            model: "anthropic/claude-sonnet-5",
+          const { text, truncated, source, check } = await bestAnswer({
+            claudeModel: "anthropic/claude-sonnet-5",
+            geminiModel: "google/gemini-3.8-flash",
             system: BUDDY_PROMPTS[buddy] + "\n\n" + SAFETY,
             messages,
             maxTokens: 1024,
-          });
-          if (!text.trim()) {
-            return json(502, { error: { code: "upstream_error", message: "The AI sent an empty answer." } });
-          }
-          const check = await checkAnswer({
             question: messages[messages.length - 1]?.content ?? "",
-            answer: text,
           });
-          return json(200, { text, truncated, ...(check ? { check } : {}) });
+          return json(200, { text, truncated, source, ...(check ? { check } : {}) });
         } catch (e: any) {
           const status = typeof e?.status === "number" ? e.status : 502;
           return json(status, {

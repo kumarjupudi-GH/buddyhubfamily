@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { askClaude, checkAnswer } from "@/lib/ai-gateway";
+import { bestAnswer } from "@/lib/ai-gateway";
 
 // ArtBuddy AI art teacher endpoint (public app API).
 const SYSTEM = `You are ArtBuddy, a warm and cheerful art teacher inside a drawing app for kids aged 5-12.
@@ -39,8 +39,10 @@ export const Route = createFileRoute("/api/public/teach")({
             ? 'The child pressed "Help me!". Explain this step in a simpler, different way and encourage them.'
             : `The child asked a question:\n<child_message>${clean(body?.question, 140)}</child_message>\nAnswer helpfully about drawing.`;
         try {
-          const { text } = await askClaude({
-            model: "anthropic/claude-haiku-4-5",
+          const { text, source, check } = await bestAnswer({
+            claudeModel: "anthropic/claude-haiku-4-5",
+            geminiModel: "google/gemini-3.1-flash-lite",
+            question: kind === "chat" ? clean(body?.question, 140) : clean(body?.instruction, 160),
             system: SYSTEM,
             messages: [{ role: "user", content: `${ctx}\n\n${task}` }],
             maxTokens: 150,
@@ -50,13 +52,7 @@ export const Route = createFileRoute("/api/public/teach")({
             .replace(/https?:\/\/\S+/g, "")
             .trim()
             .slice(0, 260);
-          const check = cleaned
-            ? await checkAnswer({
-                question: kind === "chat" ? clean(body?.question, 140) : clean(body?.instruction, 160),
-                answer: cleaned,
-              })
-            : null;
-          return json(200, { text: cleaned, ...(check ? { check } : {}) });
+          return json(200, { text: cleaned, source, ...(cleaned && check ? { check } : {}) });
         } catch {
           return json(502, { error: "AI unavailable" });
         }
