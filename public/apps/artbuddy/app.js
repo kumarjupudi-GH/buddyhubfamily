@@ -378,7 +378,7 @@
     const { l, plan, i } = LS;
     try {
       const r = await fetch('/api/public/teach', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kind, lesson: l.name, step: plan[i].t, instruction: plan[i].say, difficulty: diff().label, question: question || '' }) });
+        body: JSON.stringify({ kind, lesson: l.name, step: plan[i].t, instruction: plan[i].say, difficulty: diff().label, age: age().id, question: question || '' }) });
       if (!r.ok) throw new Error('no ai'); const j = await r.json(); return j.text ? { text: j.text, check: j.check || null, source: j.source || null } : null;
     } catch (e) { return null; }
   }
@@ -396,6 +396,7 @@
   }
   async function ask(q) {
     q = q.trim(); if (!q) return;
+    if (LS && LS.free) return freeAsk(q);
     bubble('🤔 Let me think…');
     const ai = AI.ok ? await askAI('chat', q) : null;
     if (ai) return bubble(esc(ai.text) + checkHtml(ai.check, ai.source));
@@ -444,6 +445,12 @@
       case 'search': return doSearch(v);
       case 'lesson': return go('intro', { id: v });
       case 'diff': S.diff = +v; saveState(); return render();
+      case 'age': { S.age = v; saveState(); if (V.name !== 'free') return render(); const keep = LS.inked ? cv.el.toDataURL('image/png') : null; app.innerHTML = free(); initFree(keep); toast(age().emoji + ' Teaching for ' + age().label); return; }
+      case 'free': return startFree();
+      case 'fskill': return freeSkill(+v);
+      case 'fidea': return freeIdea();
+      case 'fhelp': return freeHelp();
+      case 'fspeak': return sayText(LS.lastSay || '');
       case 'start': return startLesson(v);
       case 'leave': return go('intro', { id: LS.l.id });
       case 'next': if (LS.i >= LS.plan.length - 1) return finish(); LS.i++; return updateStep(1);
