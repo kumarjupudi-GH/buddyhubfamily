@@ -15,6 +15,29 @@
     { id: 'medium', label: 'Medium', emoji: '🌳', tier: 3, hint: 'Patterns & shading' },
     { id: 'challenge', label: 'Challenge Me', emoji: '🚀', tier: 4, hint: 'All the details' }
   ];
+  /* Age groups: the AI teacher adapts words, depth and length to each learner. */
+  const AGES = [
+    { id: 'kinder', label: 'Kinder', emoji: '🧸', hint: 'Ages 4–6' },
+    { id: 'elementary', label: 'Elementary', emoji: '🎒', hint: 'Ages 6–10' },
+    { id: 'middle', label: 'Middle', emoji: '📐', hint: 'Ages 11–13' },
+    { id: 'high', label: 'High School', emoji: '🎓', hint: 'Ages 14–18' },
+    { id: 'adult', label: 'Adult', emoji: '☕', hint: 'Grown-ups' },
+    { id: 'senior', label: 'Senior', emoji: '🌻', hint: 'Relaxed pace' }
+  ];
+  const FREE = {
+    kinder: { ideas: ['a big happy sun', 'a rainbow', 'your favorite fruit', 'a fish in the sea', 'a smiling flower', 'a little house'],
+      skills: [['Circles and lines', 'Draw a big circle. Now add lines all around it. You made a sun!'], ['Colors', 'Pick your favorite color and fill a whole shape. Then try a new color next to it!'], ['Dots and patterns', 'Make dots, dots, dots! Then stripes. Patterns are fun!']] },
+    elementary: { ideas: ['a robot with funny arms', 'your dream treehouse', 'a dragon eating ice cream', 'a city at night', 'a pet you wish you had', 'an underwater castle'],
+      skills: [['Shapes to animals', 'Start with an oval body and a circle head. Add triangle ears and lines for legs.'], ['Big and small', 'Draw something big in front and small things far away. Small looks far!'], ['Mixing colors', 'Color lightly in yellow, then add blue on top. You made green!']] },
+    middle: { ideas: ['a street with one-point perspective', 'your shoe from real life', 'a comic panel of your day', 'a creature mixing two animals', 'a landscape at sunset', 'a cozy room'],
+      skills: [['One-point perspective', '1. Draw a horizon line and one dot on it. 2. Draw a square. 3. Connect its corners to the dot. Now it is a 3D box!'], ['Light and shadow', '1. Pick where the light comes from. 2. Shade the opposite side darker. 3. Add a shadow on the ground.'], ['Warm and cool colors', 'Warm colors (red, orange) seem close. Cool colors (blue, purple) seem far. Try both in one picture.']] },
+    high: { ideas: ['a self-portrait in three values', 'a still life from your desk', 'a hand in different poses', 'a two-point perspective building', 'a mood piece using only cool colors', 'thirty-second gesture figures'],
+      skills: [['Value scale', '1. Draw five boxes. 2. Fill them from white to darkest black. 3. Use only those five values in your next sketch.'], ['Rule of thirds', '1. Imagine a 3 by 3 grid. 2. Place your main subject on a crossing point. 3. Leave breathing room on the other side.'], ['Gesture drawing', '1. Set a 30-second timer. 2. Draw one flowing line for the spine. 3. Add quick shapes for the limbs. Repeat ten times.']] },
+    adult: { ideas: ['your coffee mug with shading', 'a view from your window', 'a loose botanical sketch', 'a portrait of a loved one', 'a quick urban sketch', 'an abstract piece about your week'],
+      skills: [['Measuring proportions', '1. Hold your pencil at arm’s length. 2. Use the head or object width as your unit. 3. Compare everything to that unit before drawing.'], ['Negative space', '1. Look at the shapes BETWEEN objects. 2. Draw only those gaps. 3. The objects appear on their own.'], ['Soft blending', '1. Lay down light strokes in one direction. 2. Build darker layers slowly. 3. Smudge gently for smooth tones.']] },
+    senior: { ideas: ['a garden flower, slowly', 'a favorite place from memory', 'a calming pattern of waves', 'a cup of tea by the window', 'birds on a branch', 'a peaceful landscape'],
+      skills: [['Mindful lines', '1. Choose a thick brush. 2. Draw slow, loose waves across the page. 3. Breathe out with each line. Rest your hand anytime.'], ['Drawing from memory', '1. Close your eyes and picture a place you love. 2. Draw the biggest shapes first. 3. Add one detail that makes you smile.'], ['Simple flowers', '1. Draw a small circle center. 2. Add five rounded petals around it. 3. A curved line for the stem and two leaves.']] }
+  };
   const SHAPE_ICON = { oval: '⬭ Oval', circle: '⚪ Circle', triangle: '🔺 Triangle', rectangle: '▬ Rectangle', square: '⬜ Square', line: '╱ Line', curve: '〰️ Curve', dot: '⚫ Dot', cloud: '☁️ Cloud' };
   const COLORS = ['#2b2b3a', '#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#a855f7', '#ec4899', '#8b5a2b'];
   const SIZES = [6, 12, 24];
@@ -31,7 +54,7 @@
 
   /* ---------- persistent state ---------- */
   const KEY = 'artbuddy.v1';
-  const fresh = () => ({ diff: 0, stars: 0, done: {}, gallery: [], last: null });
+  const fresh = () => ({ diff: 0, age: 'elementary', stars: 0, done: {}, gallery: [], last: null });
   function loadState() { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === 'object') return Object.assign(fresh(), s); } catch (e) { } return fresh(); }
   function saveState() {
     try { localStorage.setItem(KEY, JSON.stringify(S)); }
@@ -39,6 +62,9 @@
   }
   let S = loadState();
   const diff = () => DIFFS[S.diff] || DIFFS[0];
+  const age = () => AGES.find(a => a.id === S.age) || AGES[1];
+  const agePills = () => `<div class="diffs ages" role="radiogroup" aria-label="Who is drawing?">${AGES.map(a =>
+    `<button class="diff ${a.id === age().id ? 'on' : ''}" role="radio" aria-checked="${a.id === age().id}" data-a="age" data-v="${a.id}"><span class="em">${a.emoji}</span>${a.label}<small>${a.hint}</small></button>`).join('')}</div>`;
 
   /* ---------- lesson plan & SVG rendering ---------- */
   function buildPlan(l, d) {
@@ -72,9 +98,10 @@
 
   function go(name, extra) { V = Object.assign({ name }, extra); render(); window.scrollTo(0, 0); }
   function render() {
-    const fn = { home, category, results, intro, lesson, done, art, tech }[V.name] || home;
+    const fn = { home, category, results, intro, lesson, done, art, tech, free }[V.name] || home;
     app.innerHTML = fn();
     if (V.name === 'lesson') initLesson();
+    if (V.name === 'free') initFree();
     if (V.name === 'done') confetti();
   }
   function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600); }
@@ -102,6 +129,8 @@
       <form id="sf" class="search" autocomplete="off"><input id="q" type="text" maxlength="60" placeholder="Try: tiger, rocket, flower…" aria-label="What do you want to draw?">
       <button class="btn orange big" type="submit">Let’s go! 🔍</button></form>
       <div class="sugg">${sugg.map(s => `<button class="chip" data-a="search" data-v="${s}">${esc(s)}</button>`).join('')}</div></div></section>
+    <section><h2>Who’s drawing today?</h2>${agePills()}</section>
+    <section><button class="card tile freetile" data-a="free"><span style="font-size:44px">🖌️</span><span>Free Draw with a ${esc(age().label)} art teacher<small>Draw anything you like. Get ideas, learn skills and ask questions at your level.</small></span></button></section>
     <section><h2>How tricky should it be?</h2>${diffPills()}</section>
     <section><h2>Pick something to draw</h2><div class="cats">${CATS.map(c => `<button class="cat" style="background:${c.color}" data-a="cat" data-v="${c.id}"><span class="em">${c.emoji}</span>${c.name}</button>`).join('')}</div></section>
     <section class="two">
@@ -189,6 +218,22 @@
   function tech() {
     return `<div>${topbar(true)}<section><h1>🎨 Drawing tricks</h1><p>Every trick has a fun lesson to practice it.</p><div class="tgrid">${TECHS.map(t => `<button class="card tcard" data-a="lesson" data-v="${t.lesson}"><div class="em">${t.emoji}</div><h3>${esc(t.name)}</h3><div>${esc(t.tip)}</div><div class="meta" style="color:var(--purple);font-weight:600;margin-top:6px">Practice: ${byId(t.lesson).emoji} ${esc(byId(t.lesson).name)}</div></button>`).join('')}</div></section></div>`;
   }
+  function free() {
+    const a = age(), f = FREE[a.id];
+    return `<div><div class="lhead"><button class="btn ghost" data-a="home" aria-label="Home">🏠</button><h2>🖌️ Free Draw</h2><span class="chip">${a.emoji} ${esc(a.label)}</span></div>
+    <section style="margin-top:10px">${agePills()}</section>
+    <div class="work">
+      <section class="card panel"><h3>🎓 Your art teacher</h3>
+        <p style="margin:4px 0 8px">Pick a skill to learn at your level:</p>
+        <div class="ideas">${f.skills.map((s, i) => `<button class="chip" data-a="fskill" data-v="${i}">${esc(s[0])}</button>`).join('')}</div>
+        <div class="fcoach" id="fcoach"></div>
+        <p style="margin:12px 0 0;display:flex;gap:8px;flex-wrap:wrap"><button class="btn orange" data-a="fidea">💡 Give me an idea</button><button class="btn teal" data-a="fhelp">🙋 I’m stuck</button><button class="chip" data-a="fspeak" aria-label="Read it to me">🔊 Read to me</button></p></section>
+      <section class="card panel"><h3>✏️ Your canvas</h3>
+        <div class="stage" id="stage"><canvas id="cv" width="600" height="600" aria-label="Free drawing canvas"></canvas></div>
+        ${toolbar()}</section></div>
+    <div class="teacher"><div class="mascot small bounce" aria-hidden="true">✏️</div><div style="flex:1"><div class="bubble" id="bubble"></div>
+      <form class="ask" id="askf" autocomplete="off"><input id="askq" maxlength="200" placeholder="Ask your art teacher anything about drawing…" aria-label="Ask ArtBuddy"><button class="chip" type="submit">Ask</button></form></div></div></div>`;
+  }
 
   /* ---------- search ---------- */
   const STOP = new Set('i want to draw a an the please how can do you me teach show let us lets my some learn make would like drawing picture of'.split(' '));
@@ -231,7 +276,7 @@
     go('lesson');
   }
   const cv = { el: null, ctx: null, tool: 'pen', color: COLORS[0], size: SIZES[1], states: [], idx: 0, down: false, lx: 0, ly: 0 };
-  function initLesson() {
+  function initCanvas() {
     cv.el = $('#cv'); cv.ctx = cv.el.getContext('2d'); cv.tool = 'pen'; cv.color = COLORS[0]; cv.size = SIZES[1];
     cv.ctx.lineCap = cv.ctx.lineJoin = 'round';
     cv.states = [cv.ctx.getImageData(0, 0, cv.el.width, cv.el.height)]; cv.idx = 0;
@@ -245,7 +290,55 @@
     cv.el.addEventListener('pointermove', e => { if (!cv.down) return; e.preventDefault(); const [x, y] = pos(e); line(cv.lx, cv.ly, x, y); cv.lx = x; cv.ly = y; });
     const up = () => { if (!cv.down) return; cv.down = false; LS.inked = true; pushState(); };
     cv.el.addEventListener('pointerup', up); cv.el.addEventListener('pointercancel', up);
-    updateStep(0);
+  }
+  function initLesson() { initCanvas(); updateStep(0); }
+
+  /* ---------- free draw (any age) ---------- */
+  const fmt = t => esc(t).replace(/\n/g, '<br>');
+  function startFree() {
+    LS = { l: { id: 'free', name: 'Free Draw' }, free: true, inked: false, skill: '', lastSay: '' };
+    go('free');
+  }
+  function initFree(keep) {
+    initCanvas();
+    if (keep) { const img = new Image(); img.onload = () => { cv.ctx.drawImage(img, 0, 0); pushState(); }; img.src = keep; LS.inked = true; }
+    const a = age();
+    coach(`Welcome, ${a.id === 'kinder' || a.id === 'elementary' ? 'artist' : 'friend'}! This is your blank canvas. Draw anything you like, pick a skill to learn, or tap <b>Give me an idea</b>. There’s no wrong way to draw.`);
+    bubble(a.id === 'senior' ? 'Take your time. Try a thicker brush and slow, relaxed lines. 🌻' : a.id === 'adult' ? 'Ask me anything about drawing technique, materials or practice.' : 'Ask me anything about drawing! ✏️');
+  }
+  function coach(html, say) { const c = $('#fcoach'); if (c) c.innerHTML = html; LS.lastSay = say || html.replace(/<[^>]+>/g, ''); }
+  async function askFree(kind, question) {
+    try {
+      const r = await fetch('/api/public/teach', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kind, age: age().id, skill: LS.skill || '', question: question || '' }) });
+      if (!r.ok) throw new Error('no ai'); const j = await r.json(); return j.text ? { text: j.text, check: j.check || null, source: j.source || null } : null;
+    } catch (e) { return null; }
+  }
+  async function freeSkill(i) {
+    const s = FREE[age().id].skills[i]; if (!s) return;
+    LS.skill = s[0];
+    coach(`<b>🎓 ${esc(s[0])}</b><br>🤔 Let me think…`);
+    const ai = AI.ok ? await askFree('free-skill', '') : null;
+    coach(`<b>🎓 ${esc(s[0])}</b><br>${ai ? fmt(ai.text) + checkHtml(ai.check, ai.source) : fmt(s[1])}`, s[0] + '. ' + (ai ? ai.text : s[1]));
+  }
+  async function freeIdea() {
+    coach('💡 Thinking of an idea…');
+    const ai = AI.ok ? await askFree('free-idea', '') : null;
+    const local = `How about drawing <b>${esc(pick(FREE[age().id].ideas))}</b>? Start with the biggest shape first.`;
+    coach(ai ? '💡 ' + fmt(ai.text) + checkHtml(ai.check, ai.source) : '💡 ' + local);
+  }
+  async function freeHelp() {
+    bubble('🤔 Let me think…');
+    const ai = AI.ok ? await askFree('free-help', '') : null;
+    bubble(ai ? fmt(ai.text) + checkHtml(ai.check, ai.source) : 'Start with one big, easy shape like a circle or a wavy line. Then ask yourself: what could this become? Use ↩️ undo anytime!');
+  }
+  async function freeAsk(q) {
+    bubble('🤔 Let me think…');
+    const ai = AI.ok ? await askFree('free-chat', q) : null;
+    bubble(ai ? fmt(ai.text) + checkHtml(ai.check, ai.source) : 'Great question! Try it your way and experiment, because there’s no wrong way to draw. Tap a skill above to learn something new.');
+  }
+  function sayText(t) {
+    try { const u = new SpeechSynthesisUtterance(t); u.rate = age().id === 'senior' ? .85 : .95; u.pitch = age().id === 'kinder' || age().id === 'elementary' ? 1.1 : 1; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) { toast('Reading out loud is not available here.'); }
   }
   function pushState() {
     cv.states = cv.states.slice(0, cv.idx + 1); cv.states.push(cv.ctx.getImageData(0, 0, cv.el.width, cv.el.height));
@@ -285,7 +378,7 @@
     const { l, plan, i } = LS;
     try {
       const r = await fetch('/api/public/teach', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kind, lesson: l.name, step: plan[i].t, instruction: plan[i].say, difficulty: diff().label, question: question || '' }) });
+        body: JSON.stringify({ kind, lesson: l.name, step: plan[i].t, instruction: plan[i].say, difficulty: diff().label, age: age().id, question: question || '' }) });
       if (!r.ok) throw new Error('no ai'); const j = await r.json(); return j.text ? { text: j.text, check: j.check || null, source: j.source || null } : null;
     } catch (e) { return null; }
   }
@@ -303,6 +396,7 @@
   }
   async function ask(q) {
     q = q.trim(); if (!q) return;
+    if (LS && LS.free) return freeAsk(q);
     bubble('🤔 Let me think…');
     const ai = AI.ok ? await askAI('chat', q) : null;
     if (ai) return bubble(esc(ai.text) + checkHtml(ai.check, ai.source));
@@ -351,6 +445,12 @@
       case 'search': return doSearch(v);
       case 'lesson': return go('intro', { id: v });
       case 'diff': S.diff = +v; saveState(); return render();
+      case 'age': { S.age = v; saveState(); if (V.name !== 'free') return render(); const keep = LS.inked ? cv.el.toDataURL('image/png') : null; app.innerHTML = free(); initFree(keep); toast(age().emoji + ' Teaching for ' + age().label); return; }
+      case 'free': return startFree();
+      case 'fskill': return freeSkill(+v);
+      case 'fidea': return freeIdea();
+      case 'fhelp': return freeHelp();
+      case 'fspeak': return sayText(LS.lastSay || '');
       case 'start': return startLesson(v);
       case 'leave': return go('intro', { id: LS.l.id });
       case 'next': if (LS.i >= LS.plan.length - 1) return finish(); LS.i++; return updateStep(1);
