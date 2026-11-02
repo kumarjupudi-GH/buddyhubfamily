@@ -276,7 +276,7 @@
     go('lesson');
   }
   const cv = { el: null, ctx: null, tool: 'pen', color: COLORS[0], size: SIZES[1], states: [], idx: 0, down: false, lx: 0, ly: 0 };
-  function initLesson() {
+  function initCanvas() {
     cv.el = $('#cv'); cv.ctx = cv.el.getContext('2d'); cv.tool = 'pen'; cv.color = COLORS[0]; cv.size = SIZES[1];
     cv.ctx.lineCap = cv.ctx.lineJoin = 'round';
     cv.states = [cv.ctx.getImageData(0, 0, cv.el.width, cv.el.height)]; cv.idx = 0;
@@ -290,7 +290,55 @@
     cv.el.addEventListener('pointermove', e => { if (!cv.down) return; e.preventDefault(); const [x, y] = pos(e); line(cv.lx, cv.ly, x, y); cv.lx = x; cv.ly = y; });
     const up = () => { if (!cv.down) return; cv.down = false; LS.inked = true; pushState(); };
     cv.el.addEventListener('pointerup', up); cv.el.addEventListener('pointercancel', up);
-    updateStep(0);
+  }
+  function initLesson() { initCanvas(); updateStep(0); }
+
+  /* ---------- free draw (any age) ---------- */
+  const fmt = t => esc(t).replace(/\n/g, '<br>');
+  function startFree() {
+    LS = { l: { id: 'free', name: 'Free Draw' }, free: true, inked: false, skill: '', lastSay: '' };
+    go('free');
+  }
+  function initFree(keep) {
+    initCanvas();
+    if (keep) { const img = new Image(); img.onload = () => { cv.ctx.drawImage(img, 0, 0); pushState(); }; img.src = keep; LS.inked = true; }
+    const a = age();
+    coach(`Welcome, ${a.id === 'kinder' || a.id === 'elementary' ? 'artist' : 'friend'}! This is your blank canvas. Draw anything you like, pick a skill to learn, or tap <b>Give me an idea</b>. There’s no wrong way to draw.`);
+    bubble(a.id === 'senior' ? 'Take your time. Try a thicker brush and slow, relaxed lines. 🌻' : a.id === 'adult' ? 'Ask me anything about drawing technique, materials or practice.' : 'Ask me anything about drawing! ✏️');
+  }
+  function coach(html, say) { const c = $('#fcoach'); if (c) c.innerHTML = html; LS.lastSay = say || html.replace(/<[^>]+>/g, ''); }
+  async function askFree(kind, question) {
+    try {
+      const r = await fetch('/api/public/teach', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kind, age: age().id, skill: LS.skill || '', question: question || '' }) });
+      if (!r.ok) throw new Error('no ai'); const j = await r.json(); return j.text ? { text: j.text, check: j.check || null, source: j.source || null } : null;
+    } catch (e) { return null; }
+  }
+  async function freeSkill(i) {
+    const s = FREE[age().id].skills[i]; if (!s) return;
+    LS.skill = s[0];
+    coach(`<b>🎓 ${esc(s[0])}</b><br>🤔 Let me think…`);
+    const ai = AI.ok ? await askFree('free-skill', '') : null;
+    coach(`<b>🎓 ${esc(s[0])}</b><br>${ai ? fmt(ai.text) + checkHtml(ai.check, ai.source) : fmt(s[1])}`, s[0] + '. ' + (ai ? ai.text : s[1]));
+  }
+  async function freeIdea() {
+    coach('💡 Thinking of an idea…');
+    const ai = AI.ok ? await askFree('free-idea', '') : null;
+    const local = `How about drawing <b>${esc(pick(FREE[age().id].ideas))}</b>? Start with the biggest shape first.`;
+    coach(ai ? '💡 ' + fmt(ai.text) + checkHtml(ai.check, ai.source) : '💡 ' + local);
+  }
+  async function freeHelp() {
+    bubble('🤔 Let me think…');
+    const ai = AI.ok ? await askFree('free-help', '') : null;
+    bubble(ai ? fmt(ai.text) + checkHtml(ai.check, ai.source) : 'Start with one big, easy shape like a circle or a wavy line. Then ask yourself: what could this become? Use ↩️ undo anytime!');
+  }
+  async function freeAsk(q) {
+    bubble('🤔 Let me think…');
+    const ai = AI.ok ? await askFree('free-chat', q) : null;
+    bubble(ai ? fmt(ai.text) + checkHtml(ai.check, ai.source) : 'Great question! Try it your way and experiment, because there’s no wrong way to draw. Tap a skill above to learn something new.');
+  }
+  function sayText(t) {
+    try { const u = new SpeechSynthesisUtterance(t); u.rate = age().id === 'senior' ? .85 : .95; u.pitch = age().id === 'kinder' || age().id === 'elementary' ? 1.1 : 1; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) { toast('Reading out loud is not available here.'); }
   }
   function pushState() {
     cv.states = cv.states.slice(0, cv.idx + 1); cv.states.push(cv.ctx.getImageData(0, 0, cv.el.width, cv.el.height));
