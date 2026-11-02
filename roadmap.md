@@ -7,3 +7,5 @@
 - [ ] Split ArtBuddy into its own project (needs user: remix project — I can't create new projects)
 - [x] BrainBoost: Google Gemini (3.8 Flash) draws labeled diagrams for geometry/graph answers (auto) + "Draw a diagram" button
 - [ ] Publish latest changes (answer-check, pictures, diagrams)
+- [ ] ArtBuddy: age groups (Kinder → Senior) + Free Draw with age-tailored AI art teacher
+- [ ] Marketing: find family communities/forums/directories and draft a post or listing for each
