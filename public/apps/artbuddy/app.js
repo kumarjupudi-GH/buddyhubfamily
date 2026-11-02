@@ -259,10 +259,10 @@
   }
 
   function bubble(html) { const b = $('#bubble'); if (b) b.innerHTML = html; }
-  function checkHtml(c) {
+  function checkHtml(c, src) {
     if (!c) return '';
     return c.ok
-      ? '<div class="aicheck">✓ Double-checked by Google</div>'
+      ? '<div class="aicheck">✓ Best of Claude & Google' + (src ? ' — picked ' + (src === 'google' ? 'Google' : 'Claude') : '') + '</div>'
       : '<div class="aicheck fix">Google’s double-check: ' + esc(c.note || 'Ask a grown-up to double-check this one.') + '</div>';
   }
   function updateStep(dir) {
@@ -286,7 +286,7 @@
     try {
       const r = await fetch('/api/public/teach', { method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ kind, lesson: l.name, step: plan[i].t, instruction: plan[i].say, difficulty: diff().label, question: question || '' }) });
-      if (!r.ok) throw new Error('no ai'); const j = await r.json(); return j.text ? { text: j.text, check: j.check || null } : null;
+      if (!r.ok) throw new Error('no ai'); const j = await r.json(); return j.text ? { text: j.text, check: j.check || null, source: j.source || null } : null;
     } catch (e) { return null; }
   }
   const HELP = [
@@ -299,13 +299,13 @@
     if (n >= 1) { const t = $('#trace'); if (t) { t.checked = true; $('#stage').classList.add('trace'); } }
     bubble('🤔 Let me think…');
     const ai = AI.ok ? await askAI('help', '') : null;
-    bubble(ai ? esc(ai.text) + checkHtml(ai.check) : HELP[Math.min(n, 2)](p));
+    bubble(ai ? esc(ai.text) + checkHtml(ai.check, ai.source) : HELP[Math.min(n, 2)](p));
   }
   async function ask(q) {
     q = q.trim(); if (!q) return;
     bubble('🤔 Let me think…');
     const ai = AI.ok ? await askAI('chat', q) : null;
-    if (ai) return bubble(esc(ai.text) + checkHtml(ai.check));
+    if (ai) return bubble(esc(ai.text) + checkHtml(ai.check, ai.source));
     const t = q.toLowerCase();
     if (/erase|mistake|oops|wrong|messed/.test(t)) bubble('Mistakes are okay! Tap the 🧽 eraser or the ↩️ undo arrow. Even pro artists do that!');
     else if (/color|colour/.test(t)) bubble('Pick any color you like at the bottom of the tools. Your colors don’t have to match mine! 🌈');

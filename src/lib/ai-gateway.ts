@@ -134,3 +134,129 @@ export async function checkAnswer(options: {
     return null;
   }
 }
+
+// Server-only helper: asks a Google Gemini model the same question (OpenAI
+// chat-completions format on the gateway).
+export async function askGemini(options: {
+  model: string;
+  system: string;
+  messages: Array<{ role: "user" | "assistant"; content: string }>;
+  maxTokens: number;
+}): Promise<{ text: string; truncated: boolean }> {
+  const apiKey = process.env["LOVABLE_API_KEY"];
+  if (!apiKey) throw Object.assign(new Error("AI is not configured."), { status: 500 });
+  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${apiKey}`,
+      "X-Lovable-AIG-SDK": "fetch",
+    },
+    body: JSON.stringify({
+      model: options.model,
+      max_tokens: options.maxTokens,
+      messages: [{ role: "system", content: options.system }, ...options.messages],
+    }),
+  });
+  if (!res.ok) throw Object.assign(new Error("Google AI had a problem."), { status: res.status });
+  const data = (await res.json()) as any;
+  const choice = data?.choices?.[0];
+  return {
+    text: String(choice?.message?.content ?? "").trim(),
+    truncated: choice?.finish_reason === "length",
+  };
+}
+
+export type AnswerSource = "claude" | "google";
+
+// Pure: parse the judge's reply ("WINNER: A" / "WINNER: B" then "OK" or "FIX: ...").
+export function parseJudge(reply: string): { winner: "A" | "B"; ok: boolean; note: string | null } | null {
+  const w = reply.match(/WINNER:\s*([AB])/i);
+  if (!w) return null;
+  const winner = w[1]!.toUpperCase() as "A" | "B";
+  const fix = reply.match(/FIX:\s*(.+)/is);
+  if (fix && fix[1]) return { winner, ok: false, note: fix[1].trim().slice(0, 200) };
+  return { winner, ok: true, note: null };
+}
+
+async function judge(question: string, a: string, b: string) {
+  const apiKey = process.env["LOVABLE_API_KEY"];
+  if (!apiKey) return null;
+  try {
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${apiKey}`,
+        "X-Lovable-AIG-SDK": "fetch",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-3.1-flash-lite",
+        max_tokens: 150,
+        messages: [
+          {
+            role: "user",
+            content: [
+              "Two AI buddies answered the same question from a family member (could be a child aged 5-18).",
+              "Pick the answer that is MORE ACCURATE first, then easier to understand and more visual (clear steps, lists, tables, diagrams, examples), and safe and age-appropriate.",
+              "Reply on the first line with exactly: WINNER: A  or  WINNER: B",
+              "On the second line write OK if the winning answer is accurate and safe, otherwise FIX: and one short, kind sentence correcting it. No markdown.",
+              "",
+              "Question: " + question.slice(0, 600),
+              "",
+              "Answer A:\n" + a.slice(0, 2500),
+              "",
+              "Answer B:\n" + b.slice(0, 2500),
+            ].join("\n"),
+          },
+        ],
+      }),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as any;
+    return parseJudge(String(data?.choices?.[0]?.message?.content ?? ""));
+  } catch {
+    return null;
+  }
+}
+
+// Asks Claude and Google Gemini in parallel, has a judge pick the more accurate
+// and easier-to-understand answer, and returns only that one.
+export async function bestAnswer(options: {
+  claudeModel: string;
+  geminiModel: string;
+  system: string;
+  messages: Array<{ role: "user" | "assistant"; content: string }>;
+  maxTokens: number;
+  question: string;
+}): Promise<{
+  text: string;
+  truncated: boolean;
+  source: AnswerSource;
+  check: { ok: boolean; note: string | null } | null;
+}> {
+  const { claudeModel, geminiModel, question, ...rest } = options;
+  const [c, g] = await Promise.allSettled([
+    askClaude({ ...rest, model: claudeModel }),
+    askGemini({ ...rest, model: geminiModel }),
+  ]);
+  const claude = c.status === "fulfilled" && c.value.text.trim() ? c.value : null;
+  const google = g.status === "fulfilled" && g.value.text.trim() ? g.value : null;
+  if (!claude && !google) {
+    if (c.status === "rejected") throw c.reason;
+    throw Object.assign(new Error("The AI sent an empty answer."), { status: 502 });
+  }
+  if (!claude || !google) {
+    const only = (claude || google)!;
+    const check = await checkAnswer({ question, answer: only.text });
+    return { ...only, source: claude ? "claude" : "google", check };
+  }
+  const verdict = await judge(question, claude.text, google.text);
+  if (!verdict) return { ...claude, source: "claude", check: null };
+  const pick = verdict.winner === "A" ? claude : google;
+  return {
+    ...pick,
+    source: verdict.winner === "A" ? "claude" : "google",
+    check: { ok: verdict.ok, note: verdict.note },
+  };
+}
