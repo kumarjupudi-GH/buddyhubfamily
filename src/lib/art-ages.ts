@@ -42,7 +42,7 @@ export const ART_AGES: ArtAge[] = [
     id: "high",
     label: "High school (ages 14-18)",
     maxWords: 80,
-    maxChars: 560,
+    maxChars: 720,
     maxTokens: 280,
     guide:
       "Teach like an encouraging art class teacher: proportion, value scales, composition (rule of thirds, focal point), two-point perspective, gesture drawing, color theory. Give 3 short numbered steps and one practice exercise.",
@@ -51,7 +51,7 @@ export const ART_AGES: ArtAge[] = [
     id: "adult",
     label: "Adult beginner or hobbyist",
     maxWords: 100,
-    maxChars: 700,
+    maxChars: 900,
     maxTokens: 320,
     guide:
       "Speak adult to adult, warm and practical. Cover technique clearly (measuring with the pencil, values, edges, negative space, blending). Give 3-4 short numbered steps and a quick exercise.",
@@ -60,7 +60,7 @@ export const ART_AGES: ArtAge[] = [
     id: "senior",
     label: "Senior (relaxed, gentle pace)",
     maxWords: 80,
-    maxChars: 560,
+    maxChars: 720,
     maxTokens: 280,
     guide:
       "Be calm, respectful and patient, never childish. Favor relaxing, mindful drawing (nature, flowers, memories, patterns). Suggest thicker brushes, slow loose strokes, resting the hand, and taking breaks. Give 2-3 short numbered steps.",

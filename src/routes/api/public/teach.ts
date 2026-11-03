@@ -68,11 +68,17 @@ export const Route = createFileRoute("/api/public/teach")({
             messages: [{ role: "user", content: `${ctx}\n\n${task}` }],
             maxTokens: age.maxTokens,
           });
-          const cleaned = text
+          let cleaned = text
             .replace(/[*_#`>\[\]]/g, "")
             .replace(/https?:\/\/\S+/g, "")
-            .trim()
-            .slice(0, age.maxChars);
+            .replace(/\n{3,}/g, "\n\n")
+            .trim();
+          if (cleaned.length > age.maxChars) {
+            // Cut at the last full sentence so answers never end mid-word.
+            const cut = cleaned.slice(0, age.maxChars);
+            const end = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("! "), cut.lastIndexOf("? "), cut.lastIndexOf(".\n"));
+            cleaned = end > 40 ? cut.slice(0, end + 1) : cut;
+          }
           return json(200, { text: cleaned, source, ...(cleaned && check ? { check } : {}) });
         } catch {
           return json(502, { error: "AI unavailable" });
