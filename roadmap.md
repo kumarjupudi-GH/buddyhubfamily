@@ -9,3 +9,5 @@
 - [ ] Publish latest changes (answer-check, pictures, diagrams)
 - [ ] ArtBuddy: age groups (Kinder → Senior) + Free Draw with age-tailored AI art teacher
 - [ ] Marketing: find family communities/forums/directories and draft a post or listing for each
+- [ ] SIVA Techno Mart 5-minute FamilyBuddy promo video (storyboard, script, scene prompts, real app footage, narration, subtitles, music, MP4)
+- [ ] Video Production Studio page (storyboard editor, media manager, narration studio, timeline preview, MP4 export)
