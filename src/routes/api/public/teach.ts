@@ -80,8 +80,11 @@ export const Route = createFileRoute("/api/public/teach")({
             cleaned = end > 40 ? cut.slice(0, end + 1) : cut;
           }
           return json(200, { text: cleaned, source, ...(cleaned && check ? { check } : {}) });
-        } catch {
-          return json(502, { error: "AI unavailable" });
+        } catch (e: any) {
+          // AI unavailable (e.g. usage balance used up). ArtBuddy shows its
+          // built-in tips when text is empty, so reply 200 instead of failing.
+          console.warn("teach: AI unavailable:", e?.message || e);
+          return json(200, { text: "", unavailable: true, reason: e?.status === 402 ? "credits" : "ai" });
         }
       },
     },
