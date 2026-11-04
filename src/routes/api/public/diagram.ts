@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { askGoogle, GEMINI_MODELS } from "@/lib/google-ai";
+import { checkAILimit } from "@/lib/ai-limits";
 
 // Public endpoint for BrainBoost Buddy: Google Gemini draws an accurate,
 // labeled SVG diagram (geometry, graphs, number lines, fractions...) that
 // explains the answer. Returns { svg } or { error }.
-const MODEL = "google/gemini-3.8-flash";
 
 const INSTRUCTIONS = [
   "You draw clear teaching diagrams for kids (ages 5-18) as a single SVG.",
@@ -44,39 +45,27 @@ export const Route = createFileRoute("/api/public/diagram")({
         const question = typeof body?.question === "string" ? body.question.trim().slice(0, 500) : "";
         const answer = typeof body?.answer === "string" ? body.answer.trim().slice(0, 2000) : "";
         if (!question) return json(400, { error: "Invalid request." });
-        const apiKey = process.env["LOVABLE_API_KEY"];
-        if (!apiKey) return json(500, { error: "AI is not configured." });
-
-        const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-            authorization: `Bearer ${apiKey}`,
-            "X-Lovable-AIG-SDK": "fetch",
-          },
-          body: JSON.stringify({
-            model: MODEL,
-            max_tokens: 6000,
+        const limited = await checkAILimit(request, "diagram");
+        if (limited) return json(429, { error: limited });
+        let text = "";
+        try {
+          ({ text } = await askGoogle({
+            model: GEMINI_MODELS.diagram,
+            system: INSTRUCTIONS,
             messages: [
-              { role: "system", content: INSTRUCTIONS },
               {
                 role: "user",
                 content: "Student asked: " + question + "\n\nTutor's answer (draw what it explains):\n" + answer,
               },
             ],
-          }),
-        });
-        if (!res.ok) {
-          const msg =
-            res.status === 402
-              ? "Out of AI credits for diagrams right now."
-              : res.status === 429
-                ? "Lots of diagrams right now — try again in a minute."
-                : "Couldn't draw a diagram this time.";
-          return json(res.status, { error: msg });
+            maxTokens: 10000,
+            thinkingBudget: 2048,
+          }));
+        } catch (e: any) {
+          return json(typeof e?.status === "number" ? e.status : 502, {
+            error: e?.message || "Couldn't draw a diagram this time.",
+          });
         }
-        const data = (await res.json()) as any;
-        const text: string = data?.choices?.[0]?.message?.content || "";
         const svg = cleanSvg(text);
         if (!svg) return json(502, { error: "Couldn't draw a clear diagram for that one." });
         return json(200, { svg });

@@ -941,7 +941,7 @@ textarea { box-sizing: border-box; }
   }
   function copyFor(code) {
     switch (code) {
-      case "rate_limited": return "BrainBoost Buddy needs a short break (too many messages, or your Claude usage limit was reached). Wait a bit, then press Try again.";
+      case "rate_limited": return "BrainBoost Buddy needs a short break (lots of questions right now). Wait a bit, then press Try again.";
       case "session_expired": return "You were signed out. Sign in to Claude again, then press Try again.";
       case "refused": return "I can't help with that one. Try asking it a different way, or ask about your schoolwork.";
       case "empty_completion": return "I didn't come up with an answer. Try asking in a different way.";
@@ -1474,7 +1474,7 @@ textarea { box-sizing: border-box; }
           if (settled) return;
           if (!x.ok || !x.j || typeof x.j.text !== "string") {
             var err = (x.j && x.j.error) || {};
-            fail(err.code || (x.status === 429 ? "rate_limited" : "upstream_error"), err.message || ("HTTP " + x.status));
+            fail(x.status === 429 ? "rate_limited" : (err.code || "upstream_error"), err.message || ("HTTP " + x.status));
             return;
           }
           settled = true;

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { bestAnswer } from "@/lib/ai-gateway";
+import { askGoogle } from "@/lib/google-ai";
+import { checkAILimit } from "@/lib/ai-limits";
 import { BUDDY_PROMPTS } from "@/lib/buddies";
 
 // Family buddies chat endpoint (public app API). Persona comes from BUDDY_PROMPTS.
@@ -56,20 +57,19 @@ export const Route = createFileRoute("/api/public/buddy-chat")({
             error: { code: "invalid_request", message: "messages must be a list of user/assistant turns." },
           });
         }
+        const limited = await checkAILimit(request, "chat");
+        if (limited) return json(429, { error: { code: "rate_limited", message: limited } });
         try {
-          const { text, truncated, source, check } = await bestAnswer({
-            claudeModel: "anthropic/claude-sonnet-5",
-            geminiModel: "google/gemini-3.8-flash",
+          const { text, truncated } = await askGoogle({
             system: BUDDY_PROMPTS[buddy] + "\n\n" + SAFETY,
             messages,
             maxTokens: 1024,
-            question: messages[messages.length - 1]?.content ?? "",
           });
-          return json(200, { text, truncated, source, ...(check ? { check } : {}) });
+          return json(200, { text, truncated, source: "google" });
         } catch (e: any) {
           const status = typeof e?.status === "number" ? e.status : 502;
           return json(status, {
-            error: { code: "upstream_error", message: e?.message || "The AI had a problem. Try again." },
+            error: { code: e?.code || "upstream_error", message: e?.message || "The AI had a problem. Try again." },
           });
         }
       },
