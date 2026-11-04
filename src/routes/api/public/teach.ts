@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { bestAnswer } from "@/lib/ai-gateway";
+import { askGoogle } from "@/lib/google-ai";
+import { checkAILimit } from "@/lib/ai-limits";
 
 // ArtBuddy AI art teacher endpoint (public app API).
 const SYSTEM = `You are ArtBuddy, a warm and cheerful art teacher inside a drawing app for kids aged 5-12.
@@ -38,11 +39,10 @@ export const Route = createFileRoute("/api/public/teach")({
           kind === "help"
             ? 'The child pressed "Help me!". Explain this step in a simpler, different way and encourage them.'
             : `The child asked a question:\n<child_message>${clean(body?.question, 140)}</child_message>\nAnswer helpfully about drawing.`;
+        const limited = await checkAILimit(request, "chat");
+        if (limited) return json(429, { error: limited });
         try {
-          const { text, source, check } = await bestAnswer({
-            claudeModel: "anthropic/claude-haiku-4-5",
-            geminiModel: "google/gemini-3.1-flash-lite",
-            question: kind === "chat" ? clean(body?.question, 140) : clean(body?.instruction, 160),
+          const { text } = await askGoogle({
             system: SYSTEM,
             messages: [{ role: "user", content: `${ctx}\n\n${task}` }],
             maxTokens: 150,
@@ -52,7 +52,7 @@ export const Route = createFileRoute("/api/public/teach")({
             .replace(/https?:\/\/\S+/g, "")
             .trim()
             .slice(0, 260);
-          return json(200, { text: cleaned, source, ...(cleaned && check ? { check } : {}) });
+          return json(200, { text: cleaned, source: "google" });
         } catch {
           return json(502, { error: "AI unavailable" });
         }
