@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { BUDDY_APPS, type BuddyApp } from "@/lib/buddy-catalog";
 
@@ -128,6 +128,13 @@ function Index() {
         <Puzzle cols={2} className="mx-auto w-full max-w-md md:hidden" />
         <p className="mt-4 text-center text-sm text-muted-foreground">Tap a puzzle piece to open that buddy. Every buddy has a Home button to come back here.</p>
       </section>
+      <footer className="mx-auto mt-10 flex max-w-5xl flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t border-border pt-6 text-sm text-muted-foreground">
+        <Link to="/limitations" className="font-semibold transition hover:text-foreground">
+          Limitations
+        </Link>
+        <span aria-hidden="true">·</span>
+        <span>AI answers can be wrong — please double-check important things.</span>
+      </footer>
     </main>
   );
 }
