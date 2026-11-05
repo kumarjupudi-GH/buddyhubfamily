@@ -1,14 +1,13 @@
 // Server-only shared AI service for every FamilyBuddy app.
-// Calls Google Gemini directly with the owner's own Google AI Studio key
-// (GEMINI_API_KEY, a server secret). The key is never sent to the browser.
+// One low-cost Google Gemini call per answer through Lovable AI (server key only).
 
 export type ChatTurn = { role: "user" | "assistant"; content: string };
 
 // Free-tier Gemini models. Chat uses the model with the largest free daily quota;
 // diagrams use the slightly smarter one for accurate geometry.
 export const GEMINI_MODELS = {
-  chat: "gemini-2.5-flash-lite",
-  diagram: "gemini-2.5-flash",
+  chat: "google/gemini-3.1-flash-lite",
+  diagram: "google/gemini-3.8-flash",
 } as const;
 
 export class AIError extends Error {
@@ -51,50 +50,33 @@ export async function askGoogle(options: {
   model?: string;
   thinkingBudget?: number;
 }): Promise<{ text: string; truncated: boolean }> {
-  const apiKey = process.env["GEMINI_API_KEY"];
+  const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) {
-    throw new AIError(503, "server_not_configured", "The buddy's AI isn't set up yet. A grown-up needs to add the Google AI key.");
+    throw new AIError(503, "server_not_configured", "The buddy's AI isn't set up yet.");
   }
-  const model = options.model ?? GEMINI_MODELS.chat;
   let res: Response;
   try {
-    res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-      {
-        method: "POST",
-        headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: options.system }] },
-          contents: toGeminiContents(options.messages),
-          generationConfig: {
-            maxOutputTokens: options.maxTokens,
-            thinkingConfig: { thinkingBudget: options.thinkingBudget ?? 0 },
-          },
-        }),
-      },
-    );
+    res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}`, "X-Lovable-AIG-SDK": "fetch" },
+      body: JSON.stringify({
+        model: options.model ?? GEMINI_MODELS.chat,
+        max_tokens: options.maxTokens,
+        messages: [{ role: "system", content: options.system }, ...options.messages],
+      }),
+    });
   } catch {
-    throw new AIError(503, "upstream_error", "Couldn't reach Google's AI. Please try again.");
+    throw new AIError(503, "upstream_error", "Couldn't reach the AI. Please try again.");
   }
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    console.error("Gemini error", res.status, body.slice(0, 300));
+    console.error("AI error", res.status, body.slice(0, 300));
+    if (res.status === 402) throw new AIError(402, "rate_limited", "The buddies are out of AI credits for now. Please try again later.");
     throw classifyGoogleError(res.status, body);
   }
   const data = (await res.json().catch(() => null)) as any;
-  if (data?.promptFeedback?.blockReason) {
-    throw new AIError(400, "refused", "I can't help with that one. Let's talk about something else.");
-  }
-  const cand = data?.candidates?.[0];
-  const text = (cand?.content?.parts ?? [])
-    .map((p: any) => (typeof p?.text === "string" && !p.thought ? p.text : ""))
-    .join("")
-    .trim();
-  if (!text) {
-    if (cand?.finishReason === "SAFETY") {
-      throw new AIError(400, "refused", "I can't help with that one. Let's talk about something else.");
-    }
-    throw new AIError(502, "empty_completion", "I didn't come up with an answer. Try asking in a different way.");
-  }
-  return { text, truncated: cand?.finishReason === "MAX_TOKENS" };
+  const choice = data?.choices?.[0];
+  const text = String(choice?.message?.content ?? "").trim();
+  if (!text) throw new AIError(502, "empty_completion", "I didn't come up with an answer. Try asking in a different way.");
+  return { text, truncated: choice?.finish_reason === "length" };
 }

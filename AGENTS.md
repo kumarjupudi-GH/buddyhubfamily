@@ -12,5 +12,5 @@
 - Apps under public/apps open independently with no profiles, trackers or dashboards, so any buddy works on its own.
 - New family buddies are a small index.html config on public/apps/buddy-shared engine, with personas server-side in src/lib/buddies.ts, so prompts stay private and buddies stay consistent.
 - The home puzzle is generated from src/lib/buddy-catalog.ts; a null href routes to /coming-soon/$slug so new buddies never break links.
-- All buddy text AI (chats, ArtBuddy tips, diagrams) goes through askGoogle in src/lib/google-ai.ts using the owner's own free-tier GEMINI_API_KEY server secret, so running costs stay off paid credits; only pictures still use the Lovable gateway.
+- All buddy text AI (chats, ArtBuddy tips, diagrams) goes through askGoogle in src/lib/google-ai.ts as one low-cost Gemini call via Lovable AI (no Claude, no judge), so each answer costs one cheap call.
 - Every AI endpoint calls checkAILimit (src/lib/ai-limits.ts → consume_ai_quota in the database) before any AI call, so per-visitor and site-wide caps hold across servers.
