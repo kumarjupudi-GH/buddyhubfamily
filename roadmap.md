@@ -7,5 +7,5 @@
 - [ ] Split ArtBuddy into its own project (needs user: remix project — I can't create new projects)
 - [x] BrainBoost: Google Gemini (3.8 Flash) draws labeled diagrams for geometry/graph answers (auto) + "Draw a diagram" button
 - [x] Switch all text AI from Claude to free Google Gemini + usage limits
-- [ ] Add Google AI Studio key (needs user) and test with real questions
+- [ ] Test the seven newer buddies with real questions + diagrams
 - [ ] Publish latest changes (answer-check, pictures, diagrams)
