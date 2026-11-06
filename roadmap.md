@@ -9,4 +9,4 @@
 - [x] Switch all text AI from Claude to free Google Gemini + usage limits
 - [ ] Test the seven newer buddies with real questions + diagrams
 - [ ] Publish latest changes (answer-check, pictures, diagrams)
-- [ ] URGENT: diagnose buddies not answering; restore AI (Claude request), credit alerts at 80%, friendly out-of-credit message
+- [ ] AI out of credits (diagnosed): needs user to add AI credits; 80% admin alert waits on user choosing how to be alerted
