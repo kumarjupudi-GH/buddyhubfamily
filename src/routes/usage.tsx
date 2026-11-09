@@ -14,7 +14,7 @@ export const Route = createFileRoute("/usage")({
   }),
   loader: () => getMonthlyUsage(),
   component: UsagePage,
-  errorComponent: ({ error }) => <p className="p-8">{error.message}</p>,
+  errorComponent: ({ error }) => <p className="p-8">{error instanceof Error ? error.message : "Something went wrong."}</p>,
 });
 
 const NAMES: Record<string, string> = { claude: "Claude (explanations)", chatgpt: "ChatGPT (coding & reasoning)", gemini: "Google Gemini (everyday)" };
