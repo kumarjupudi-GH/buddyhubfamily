@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { askGoogle } from "@/lib/google-ai";
+import { routedAnswer } from "@/lib/ai-router";
 import { checkAILimit } from "@/lib/ai-limits";
 import { BUDDY_PROMPTS } from "@/lib/buddies";
 
@@ -60,12 +60,13 @@ export const Route = createFileRoute("/api/public/buddy-chat")({
         const limited = await checkAILimit(request, "chat");
         if (limited) return json(429, { error: { code: "rate_limited", message: limited } });
         try {
-          const { text, truncated } = await askGoogle({
+          const { text, truncated, provider } = await routedAnswer({
             system: BUDDY_PROMPTS[buddy] + "\n\n" + SAFETY,
             messages,
             maxTokens: 1024,
+            mode: "buddy",
           });
-          return json(200, { text, truncated, source: "google" });
+          return json(200, { text, truncated, source: provider });
         } catch (e: any) {
           const status = typeof e?.status === "number" ? e.status : 502;
           return json(status, {
