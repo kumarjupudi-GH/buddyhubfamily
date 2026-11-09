@@ -8,6 +8,20 @@
       "when": 1793802122087,
       "tag": "0000_ai_usage_limits",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794267778755,
+      "tag": "0001_monthly_ai_usage",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794267798879,
+      "tag": "0002_keep_monthly_usage_rows",
+      "breakpoints": true
     }
   ]
 }

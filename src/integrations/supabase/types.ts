@@ -37,6 +37,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      bump_monthly_usage: { Args: { _provider: string }; Returns: number }
       consume_ai_quota: {
         Args: {
           _per_day: number
@@ -45,6 +46,13 @@ export type Database = {
           _visitor: string
         }
         Returns: string
+      }
+      monthly_ai_usage: {
+        Args: never
+        Returns: {
+          provider: string
+          total: number
+        }[]
       }
     }
     Enums: {

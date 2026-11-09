@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { askGoogle } from "@/lib/google-ai";
+import { routedAnswer } from "@/lib/ai-router";
 import { checkAILimit } from "@/lib/ai-limits";
 
 // BrainBoost Buddy homework chat endpoint (public app API).
@@ -11,6 +11,11 @@ const SYSTEM_PROMPT = [
   "Help students understand their work with hints and steps instead of writing graded assignments for them.",
   "If a student seems distressed or unsafe, respond kindly and encourage them to talk to a trusted adult;",
   "if they may be in immediate danger, suggest calling 911 (US) or calling or texting 988.",
+  "\n\nHow to teach: be factually accurate and say so if you are unsure. First explain the concept simply with a real-life example.",
+  "Then show a fully worked example, numbered step by step, saying WHY each step works.",
+  "Only after that, give the student a similar practice problem to try (do not solve their graded assignment for them).",
+  "When something is visual (shapes, graphs, orbits, cycles, body parts), describe it in an orderly way that matches a labeled diagram.",
+  "Finish with one short follow-up question that checks understanding.",
 ].join(" ");
 
 const MAX_TURNS = 40;
@@ -57,12 +62,13 @@ export const Route = createFileRoute("/api/public/chat")({
         const limited = await checkAILimit(request, "chat");
         if (limited) return json(429, { error: { code: "rate_limited", message: limited } });
         try {
-          const { text, truncated } = await askGoogle({
+          const { text, truncated, provider } = await routedAnswer({
             system: SYSTEM_PROMPT,
             messages,
             maxTokens: 2048,
+            mode: "tutor",
           });
-          return json(200, { text, truncated, source: "google" });
+          return json(200, { text, truncated, source: provider });
         } catch (e: any) {
           const status = typeof e?.status === "number" ? e.status : 502;
           return json(status, {

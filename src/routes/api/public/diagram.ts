@@ -13,7 +13,11 @@ const INSTRUCTIONS = [
   "Be mathematically accurate: draw shapes to scale where possible, mark right angles with a small square,",
   "label vertices, side lengths, angles and axes with short <text> labels (font-family sans-serif, font-size 14-18) that do not overlap.",
   "For graphs draw labeled axes with tick marks and plot points/lines exactly. For fractions use equal parts.",
-  "Add a short title at the top. Never use <script>, <image>, <foreignObject>, <use>, href, or event handlers. Keep it under 9000 characters.",
+  "Science: use correct order and relative positions (e.g. the solar system: Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, each labeled, on elliptical orbit paths around the Sun).",
+  "Show the idea step by step: number the parts (1, 2, 3...) in the same order as the tutor's answer, with a short caption for each step, so the picture matches the explanation exactly.",
+  "When motion helps (orbits, cycles, rotation, waves), you may animate with <animateTransform> or <animate> (dur 4-20s, repeatCount indefinite). Never use <animateMotion> or <mpath>.",
+  "Never invent facts that are not in the answer. If unsure, leave it out rather than drawing something wrong.",
+  "Add a short title at the top. Never use <script>, <image>, <foreignObject>, <use>, href, or event handlers. Keep it under 11000 characters.",
 ].join("\n");
 
 function json(status: number, obj: unknown) {
@@ -27,7 +31,7 @@ function cleanSvg(text: string): string | null {
   const m = text.match(/<svg[\s\S]*<\/svg>/i);
   if (!m) return null;
   const svg = m[0];
-  if (svg.length > 12000) return null;
+  if (svg.length > 14000) return null;
   if (/<script|<foreignObject|<iframe|<image|<use[\s>]|javascript:|\son[a-z]+\s*=|href\s*=|<!ENTITY|<!DOCTYPE/i.test(svg)) return null;
   return svg;
 }
