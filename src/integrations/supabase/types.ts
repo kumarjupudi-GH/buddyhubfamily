@@ -47,6 +47,13 @@ export type Database = {
         }
         Returns: string
       }
+      monthly_ai_usage: {
+        Args: never
+        Returns: {
+          provider: string
+          total: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
