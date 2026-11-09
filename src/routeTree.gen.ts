@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LimitationsRouteImport } from './routes/limitations'
+import { Route as UsageRouteImport } from './routes/usage'
 import { Route as ComingSoonSlugRouteImport } from './routes/coming-soon.$slug'
 import { Route as ApiPublicBuddyChatRouteImport } from './routes/api/public/buddy-chat'
 import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
@@ -27,6 +28,11 @@ const IndexRoute = IndexRouteImport.update({
 const LimitationsRoute = LimitationsRouteImport.update({
   id: '/limitations',
   path: '/limitations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UsageRoute = UsageRouteImport.update({
+  id: '/usage',
+  path: '/usage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComingSoonSlugRoute = ComingSoonSlugRouteImport.update({
@@ -68,6 +74,7 @@ const ApiPublicTeachRoute = ApiPublicTeachRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/limitations': typeof LimitationsRoute
+  '/usage': typeof UsageRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/limitations': typeof LimitationsRoute
+  '/usage': typeof UsageRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/limitations': typeof LimitationsRoute
+  '/usage': typeof UsageRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/limitations'
+    | '/usage'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/limitations'
+    | '/usage'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/limitations'
+    | '/usage'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LimitationsRoute: typeof LimitationsRoute
+  UsageRoute: typeof UsageRoute
   ComingSoonSlugRoute: typeof ComingSoonSlugRoute
   ApiPublicBuddyChatRoute: typeof ApiPublicBuddyChatRoute
   ApiPublicChatRoute: typeof ApiPublicChatRoute
@@ -161,6 +174,13 @@ declare module '@tanstack/react-router' {
       path: '/limitations'
       fullPath: '/limitations'
       preLoaderRoute: typeof LimitationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/usage': {
+      id: '/usage'
+      path: '/usage'
+      fullPath: '/usage'
+      preLoaderRoute: typeof UsageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/coming-soon/$slug': {
@@ -218,6 +238,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LimitationsRoute: LimitationsRoute,
+  UsageRoute: UsageRoute,
   ComingSoonSlugRoute: ComingSoonSlugRoute,
   ApiPublicBuddyChatRoute: ApiPublicBuddyChatRoute,
   ApiPublicChatRoute: ApiPublicChatRoute,
