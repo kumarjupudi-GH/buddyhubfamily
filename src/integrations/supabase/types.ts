@@ -37,6 +37,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      bump_monthly_usage: { Args: { _provider: string }; Returns: number }
       consume_ai_quota: {
         Args: {
           _per_day: number
