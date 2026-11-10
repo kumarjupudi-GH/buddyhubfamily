@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { HomeAccountCard } from "@/components/visitor-account";
 import { BUDDY_APPS, type BuddyApp } from "@/lib/buddy-catalog";
 
 export const Route = createFileRoute("/")({
@@ -123,6 +124,7 @@ function Index() {
           ))}
         </div>
       </header>
+      <div className="mx-auto max-w-5xl"><HomeAccountCard /></div>
       <section className="mx-auto mt-6 max-w-5xl">
         <Puzzle cols={5} className="hidden w-full md:block" />
         <Puzzle cols={2} className="mx-auto w-full max-w-md md:hidden" />

@@ -51,7 +51,7 @@ function UsageTable({ events, timezone, users = [] }: { events: EventRow[]; time
   return <section className="mt-10"><h2 className="mb-4 text-xl font-semibold">Daily provider usage</h2><ul className="mb-6 space-y-2">{Array.from(totals.entries()).map(([id, row]) => <li key={id} className="border-b border-border py-2">{row.day} · {users.find(u => u.id === row.user)?.email} · {row.provider} · {row.requests} requests · ${row.cost.toFixed(4)} estimated{row.unknown > 0 ? ` + ${row.unknown} unknown costs` : ""}</li>)}</ul><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr className="border-b border-border">{["Day", ...(users.length ? ["Account"] : []), "Buddy / model", "Tokens in / out", "Estimated USD", "Outcome"].map(h => <th className="p-3" key={h}>{h}</th>)}</tr></thead><tbody>{events.map(e => <tr className="border-b border-border" key={e.id}><td className="whitespace-nowrap p-3">{localDay(e.created_at, timezone)}</td>{users.length > 0 && <td className="p-3">{users.find(u => u.id === e.user_id)?.email ?? "Unknown account"}</td>}<td className="p-3">{e.buddy}<br/><span className="text-muted-foreground">{e.provider} · {e.model}</span></td><td className="p-3">{e.input_tokens ?? "?"} / {e.output_tokens ?? "?"}</td><td className="p-3">{e.estimated_usd === null ? "Unknown" : `$${e.estimated_usd.toFixed(6)}`}</td><td className="p-3">{e.outcome}</td></tr>)}</tbody></table></div>{events.length === 0 && <p className="py-6 text-muted-foreground">No AI requests recorded yet.</p>}<p className="mt-3 text-sm text-muted-foreground">Recent request detail and totals are limited to 200 rows per account. Image costs, failed requests and unreported tokens may be unknown. Estimates exclude provider account usage outside this website.</p></section>;
 }
 const DAILY_LIMITS = { questions: 1000, diagrams: 250, pictures: 100 };
-function StatusCard({ email, keys, events, timezone, onSignOut }: { email: string | undefined; keys: string[]; events: EventRow[]; timezone: string; onSignOut: () => void }) {
+function StatusCard({ email, keys, events, timezone, onSignOut, changeKeyHref = "#api-key" }: { email: string | undefined; keys: string[]; events: EventRow[]; timezone: string; onSignOut: () => void; changeKeyHref?: string }) {
   const today = localDay(new Date(), timezone);
   const todays = events.filter(e => localDay(e.created_at, timezone) === today);
   const pictures = todays.filter(e => e.buddy === "picture").length;
@@ -59,7 +59,19 @@ function StatusCard({ email, keys, events, timezone, onSignOut }: { email: strin
   const questions = todays.length - pictures - diagrams;
   const rows: [string, number, number][] = [["Questions today", questions, DAILY_LIMITS.questions], ["Diagrams today", diagrams, DAILY_LIMITS.diagrams], ["Pictures today", pictures, DAILY_LIMITS.pictures]];
   return <section className="mt-4 rounded-lg border border-border bg-card p-5 text-card-foreground">
-    <div className="flex flex-wrap items-center gap-3"><p className="mr-auto">Signed in as <strong>{email}</strong>{keys.length > 0 && <> · {keys.map(k => names[k as VisitorProvider] ?? k).join(", ")} key saved</>}</p><Button asChild variant="outline" size="sm"><a href="#api-key">Change key</a></Button><Button variant="ghost" size="sm" onClick={onSignOut}>Sign out</Button></div>
+    <div className="flex flex-wrap items-center gap-3"><p className="mr-auto">Signed in as <strong>{email}</strong>{keys.length > 0 && <> · {keys.map(k => names[k as VisitorProvider] ?? k).join(", ")} key saved</>}</p><Button asChild variant="outline" size="sm"><a href={changeKeyHref}>Change key</a></Button><Button variant="ghost" size="sm" onClick={onSignOut}>Sign out</Button></div>
     <div className="mt-4 grid gap-4 sm:grid-cols-3">{rows.map(([label, used, limit]) => <div key={label}><p className="text-sm text-muted-foreground">{label}</p><p className="text-2xl font-semibold">{used} / {limit}</p><div className="mt-2 h-2 rounded-full bg-muted"><div className={`h-2 rounded-full ${used / limit >= 0.8 ? "bg-destructive" : "bg-primary"}`} style={{ width: `${Math.min(100, (used / limit) * 100)}%` }} /></div></div>)}</div>
   </section>;
+}
+
+export function HomeAccountCard() {
+  const router = useRouter();
+  const [signedIn, setSignedIn] = useState(false), [ready, setReady] = useState(false);
+  const load = useServerFn(getVisitorAccount);
+  useEffect(() => { supabase.auth.getSession().then(({ data }) => { setSignedIn(Boolean(data.session)); setReady(true); }); }, []);
+  const account = useQuery({ queryKey: ["visitor-account"], queryFn: () => load(), enabled: signedIn });
+  if (!ready) return null;
+  if (!signedIn) return <section className="mt-4 rounded-lg border border-border bg-card p-4 text-center text-card-foreground"><p>Adults: <Link to="/account" className="font-semibold underline">sign in and connect your AI key</Link> to see today's questions, diagrams and pictures.</p></section>;
+  if (!account.data) return null;
+  return <StatusCard email={account.data.email} keys={account.data.keys.map(k => k.provider)} events={account.data.events} timezone={account.data.settings?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone} changeKeyHref="/account#api-key" onSignOut={async () => { router.options.context.queryClient.clear(); await supabase.auth.signOut(); setSignedIn(false); }} />;
 }
