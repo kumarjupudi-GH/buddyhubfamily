@@ -20,46 +20,12 @@
         body: JSON.stringify({ question: question, answer: answer, stream: stream })
       });
     };
-    var res = await send(true);
-    if (!res.ok || !res.body) throw new Error(res.status === 402 ? "Out of picture credits for now." : res.status === 429 ? "Too many pictures right now — try again in a minute." : "Couldn't draw a picture this time.");
-    var reader = res.body.getReader(), dec = new TextDecoder(), buf = "";
-    var sawAny = false, done = false, err = null;
-    function handle(block) {
-      var ev = "", data = "";
-      block.split("\n").forEach(function (l) {
-        if (l.indexOf("event:") === 0) ev = l.slice(6).trim();
-        else if (l.indexOf("data:") === 0) data += l.slice(5).trim();
-      });
-      if (!data) return;
-      var p; try { p = JSON.parse(data); } catch (e) { return; }
-      var type = ev || p.type;
-      if (type === "error" || p.type === "error") { sawAny = true; err = (p.error && p.error.message) || "Couldn't draw a picture."; return; }
-      if (type !== "image_generation.partial_image" && type !== "image_generation.completed") return;
-      sawAny = true;
-      if (!p.b64_json) { err = "No picture came back."; return; }
-      var fin = type === "image_generation.completed";
-      onFrame("data:image/png;base64," + p.b64_json, fin);
-      if (fin) done = true;
-    }
-    for (;;) {
-      var r = await reader.read();
-      if (r.done) break;
-      buf += dec.decode(r.value, { stream: true }).replace(/\r\n/g, "\n");
-      var i;
-      while ((i = buf.indexOf("\n\n")) !== -1) { handle(buf.slice(0, i)); buf = buf.slice(i + 2); }
-    }
-    if (buf.trim()) handle(buf);
-    if (err) throw new Error(err);
-    if (!sawAny) {
-      var rp = await send(false);
-      if (!rp.ok) throw new Error("Couldn't draw a picture this time.");
-      var j = await rp.json();
-      var b64 = j && j.data && j.data[0] && j.data[0].b64_json;
-      if (!b64) throw new Error("No picture came back.");
-      onFrame("data:image/png;base64," + b64, true);
-      return;
-    }
-    if (!done) throw new Error("The picture didn't finish. Try again.");
+    var res = await send(false);
+    if (!res.ok) throw new Error(await res.text() || "Couldn't draw a picture this time.");
+    var data = await res.json();
+    var image = data && data.data && data.data[0];
+    if (!image || !image.b64_json) throw new Error("No completed picture came back.");
+    onFrame("data:image/png;base64," + image.b64_json, true);
   }
 
   window.BuddyPicture = {

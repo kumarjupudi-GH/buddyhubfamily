@@ -10,19 +10,33 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as AdminUsageRouteImport } from './routes/admin-usage'
 import { Route as LimitationsRouteImport } from './routes/limitations'
 import { Route as UsageRouteImport } from './routes/usage'
 import { Route as ComingSoonSlugRouteImport } from './routes/coming-soon.$slug'
 import { Route as ApiPublicBuddyChatRouteImport } from './routes/api/public/buddy-chat'
+import { Route as ApiPublicBuddySessionRouteImport } from './routes/api/public/buddy-session'
 import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
 import { Route as ApiPublicDiagramRouteImport } from './routes/api/public/diagram'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as ApiPublicPictureRouteImport } from './routes/api/public/picture'
 import { Route as ApiPublicTeachRouteImport } from './routes/api/public/teach'
+import { Route as ApiPublicVisitorSessionRouteImport } from './routes/api/public/visitor-session'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsageRoute = AdminUsageRouteImport.update({
+  id: '/admin-usage',
+  path: '/admin-usage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LimitationsRoute = LimitationsRouteImport.update({
@@ -43,6 +57,11 @@ const ComingSoonSlugRoute = ComingSoonSlugRouteImport.update({
 const ApiPublicBuddyChatRoute = ApiPublicBuddyChatRouteImport.update({
   id: '/api/public/buddy-chat',
   path: '/api/public/buddy-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicBuddySessionRoute = ApiPublicBuddySessionRouteImport.update({
+  id: '/api/public/buddy-session',
+  path: '/api/public/buddy-session',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicChatRoute = ApiPublicChatRouteImport.update({
@@ -70,94 +89,127 @@ const ApiPublicTeachRoute = ApiPublicTeachRouteImport.update({
   path: '/api/public/teach',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicVisitorSessionRoute = ApiPublicVisitorSessionRouteImport.update({
+  id: '/api/public/visitor-session',
+  path: '/api/public/visitor-session',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin-usage': typeof AdminUsageRoute
   '/limitations': typeof LimitationsRoute
   '/usage': typeof UsageRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
+  '/api/public/buddy-session': typeof ApiPublicBuddySessionRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/diagram': typeof ApiPublicDiagramRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/picture': typeof ApiPublicPictureRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
+  '/api/public/visitor-session': typeof ApiPublicVisitorSessionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin-usage': typeof AdminUsageRoute
   '/limitations': typeof LimitationsRoute
   '/usage': typeof UsageRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
+  '/api/public/buddy-session': typeof ApiPublicBuddySessionRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/diagram': typeof ApiPublicDiagramRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/picture': typeof ApiPublicPictureRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
+  '/api/public/visitor-session': typeof ApiPublicVisitorSessionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin-usage': typeof AdminUsageRoute
   '/limitations': typeof LimitationsRoute
   '/usage': typeof UsageRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
+  '/api/public/buddy-session': typeof ApiPublicBuddySessionRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/diagram': typeof ApiPublicDiagramRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/picture': typeof ApiPublicPictureRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
+  '/api/public/visitor-session': typeof ApiPublicVisitorSessionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
+    | '/admin-usage'
     | '/limitations'
     | '/usage'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
+    | '/api/public/buddy-session'
     | '/api/public/chat'
     | '/api/public/diagram'
     | '/api/public/health'
     | '/api/public/picture'
     | '/api/public/teach'
+    | '/api/public/visitor-session'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/account'
+    | '/admin-usage'
     | '/limitations'
     | '/usage'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
+    | '/api/public/buddy-session'
     | '/api/public/chat'
     | '/api/public/diagram'
     | '/api/public/health'
     | '/api/public/picture'
     | '/api/public/teach'
+    | '/api/public/visitor-session'
   id:
     | '__root__'
     | '/'
+    | '/account'
+    | '/admin-usage'
     | '/limitations'
     | '/usage'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
+    | '/api/public/buddy-session'
     | '/api/public/chat'
     | '/api/public/diagram'
     | '/api/public/health'
     | '/api/public/picture'
     | '/api/public/teach'
+    | '/api/public/visitor-session'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
+  AdminUsageRoute: typeof AdminUsageRoute
   LimitationsRoute: typeof LimitationsRoute
   UsageRoute: typeof UsageRoute
   ComingSoonSlugRoute: typeof ComingSoonSlugRoute
   ApiPublicBuddyChatRoute: typeof ApiPublicBuddyChatRoute
+  ApiPublicBuddySessionRoute: typeof ApiPublicBuddySessionRoute
   ApiPublicChatRoute: typeof ApiPublicChatRoute
   ApiPublicDiagramRoute: typeof ApiPublicDiagramRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicPictureRoute: typeof ApiPublicPictureRoute
   ApiPublicTeachRoute: typeof ApiPublicTeachRoute
+  ApiPublicVisitorSessionRoute: typeof ApiPublicVisitorSessionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -167,6 +219,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-usage': {
+      id: '/admin-usage'
+      path: '/admin-usage'
+      fullPath: '/admin-usage'
+      preLoaderRoute: typeof AdminUsageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/limitations': {
@@ -195,6 +261,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/buddy-chat'
       fullPath: '/api/public/buddy-chat'
       preLoaderRoute: typeof ApiPublicBuddyChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/buddy-session': {
+      id: '/api/public/buddy-session'
+      path: '/api/public/buddy-session'
+      fullPath: '/api/public/buddy-session'
+      preLoaderRoute: typeof ApiPublicBuddySessionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/chat': {
@@ -232,20 +305,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicTeachRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/visitor-session': {
+      id: '/api/public/visitor-session'
+      path: '/api/public/visitor-session'
+      fullPath: '/api/public/visitor-session'
+      preLoaderRoute: typeof ApiPublicVisitorSessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
+  AdminUsageRoute: AdminUsageRoute,
   LimitationsRoute: LimitationsRoute,
   UsageRoute: UsageRoute,
   ComingSoonSlugRoute: ComingSoonSlugRoute,
   ApiPublicBuddyChatRoute: ApiPublicBuddyChatRoute,
+  ApiPublicBuddySessionRoute: ApiPublicBuddySessionRoute,
   ApiPublicChatRoute: ApiPublicChatRoute,
   ApiPublicDiagramRoute: ApiPublicDiagramRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicPictureRoute: ApiPublicPictureRoute,
   ApiPublicTeachRoute: ApiPublicTeachRoute,
+  ApiPublicVisitorSessionRoute: ApiPublicVisitorSessionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

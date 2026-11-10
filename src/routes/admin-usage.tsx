@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { VisitorAccount } from "@/components/visitor-account";
+export const Route = createFileRoute("/admin-usage")({ head: () => ({ meta: [{ title: "User usage dashboard — Family BuddyApps" }, { name: "description", content: "Private daily user and AI usage reporting for authorized administrators." }, { property: "og:title", content: "User usage dashboard — Family BuddyApps" }, { property: "og:description", content: "Administrator-only daily usage reporting." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }), component: () => <VisitorAccount admin/> });

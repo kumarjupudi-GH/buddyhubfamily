@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { routedAnswer } from "@/lib/ai-router";
+import { pickProvider } from "@/lib/ai-router";
 import { checkAILimit } from "@/lib/ai-limits";
+import { AIError } from "@/lib/google-ai";
 
 // BrainBoost Buddy homework chat endpoint (public app API).
 const SYSTEM_PROMPT = [
@@ -47,6 +48,9 @@ export const Route = createFileRoute("/api/public/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const { visitorIdentity, visitorText } = await import("@/lib/visitor-ai.server");
+        let identity;
+        try { identity = await visitorIdentity(request); } catch (e) { return json(e instanceof Error && "status" in e ? Number(e.status) : 503, { error: { code: "account_required", message: e instanceof Error ? e.message : "Account unavailable." } }); }
         let body: any;
         try {
           body = await request.json();
@@ -59,14 +63,16 @@ export const Route = createFileRoute("/api/public/chat")({
             error: { code: "invalid_request", message: "messages must be a list of user/assistant turns." },
           });
         }
-        const limited = await checkAILimit(request, "chat");
+        const limited = await checkAILimit(request, "chat", identity.userId);
         if (limited) return json(429, { error: { code: "rate_limited", message: limited } });
         try {
-          const { text, truncated, provider } = await routedAnswer({
+          const { text, truncated, provider } = await visitorText({
+            userId: identity.userId,
+            buddy: "brainboost",
+            provider: pickProvider(messages[messages.length - 1]?.content ?? "", "tutor"),
             system: SYSTEM_PROMPT,
             messages,
             maxTokens: 2048,
-            mode: "tutor",
           });
           return json(200, { text, truncated, source: provider });
         } catch (e: any) {
