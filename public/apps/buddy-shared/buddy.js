@@ -1,6 +1,7 @@
 // Shared engine for the family buddies. Generalized from BrainBoost Buddy
 // (public/apps/homework-buddy/index.html). Each page sets window.BUDDY first.
 (function () {
+  var sessionScript = document.createElement("script"); sessionScript.type = "module"; sessionScript.src = "/apps/buddy-shared/session.js"; document.head.appendChild(sessionScript);
   var B = window.BUDDY || {};
   var ID = B.id || "buddy";
   var NAME = B.name || "Buddy";
