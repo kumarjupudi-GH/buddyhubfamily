@@ -6,14 +6,15 @@ import { z } from "zod";
 export const getSponsorControls = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
   const { data: admin, error } = await context.supabase.rpc("is_usage_admin");
   if (error || !admin) throw new Error("Administrator access is required.");
-  const [policy, balances] = await Promise.all([
+  const [policy, balances, reservations] = await Promise.all([
     context.supabase.from("ai_sponsor_policy").select("*").eq("id", true).maybeSingle(),
     context.supabase.from("ai_intro_wallets").select("*"),
+    context.supabase.from("ai_spend_reservations").select("user_id,reserved_usd,settled_usd,state").limit(10000),
   ]);
-  if (policy.error || balances.error) throw new Error("Allowance controls are unavailable.");
+  if (policy.error || balances.error || reservations.error) throw new Error("Allowance controls are unavailable.");
   const { data: balance, error: balanceError } = await context.supabase.rpc("sponsor_balance", { _user: context.userId });
   if (balanceError) throw new Error("Remaining budget is unavailable.");
-  return { policy: sponsorPolicySchema.parse(policy.data ?? DEFAULT_SPONSOR_POLICY), balance: readBalance(balance), wallets: balances.data ?? [] };
+  return { policy: sponsorPolicySchema.parse(policy.data ?? DEFAULT_SPONSOR_POLICY), balance: readBalance(balance), wallets: balances.data ?? [], reservations: reservations.data ?? [], partial: (reservations.data?.length ?? 0) >= 10000 };
 });
 export const saveSponsorControls = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).inputValidator(sponsorPolicySchema).handler(async ({ context, data }) => {
   const { data: admin, error } = await context.supabase.rpc("is_usage_admin");

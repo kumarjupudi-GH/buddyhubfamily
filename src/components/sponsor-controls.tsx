@@ -32,5 +32,7 @@ export function SponsorControls() {
       <Button disabled={busy}>Save funding controls</Button>
     </form>{note && <p role="status" className="mt-4">{note}</p>}
     <h3 className="mt-6 font-semibold">One-time introductory grants</h3><p>{result.data?.wallets.length ?? 0} accounts granted · ${result.data?.wallets.reduce((sum, w) => sum + w.granted_usd, 0).toFixed(2)} allocated</p>
+    {result.data?.partial && <p role="alert">Request accounting is a limited sample. Use the authoritative remaining site budget above.</p>}
+    <div className="mt-4 overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr><th className="p-2">Account ID</th><th className="p-2">Granted USD</th><th className="p-2">Used / reserved USD</th><th className="p-2">Remaining USD</th></tr></thead><tbody>{result.data?.wallets.map(w => { const used = result.data.reservations.filter(r => r.user_id === w.user_id).reduce((sum, r) => sum + (r.settled_usd ?? r.reserved_usd), 0); return <tr key={w.user_id} className="border-b border-border"><td className="p-2">{w.user_id}</td><td className="p-2">{w.granted_usd.toFixed(4)}</td><td className="p-2">{used.toFixed(4)}</td><td className="p-2">{result.data.partial ? "Limited sample" : Math.max(0, Math.min(w.granted_usd, policy.per_user_usd) - used).toFixed(4)}</td></tr>; })}</tbody></table></div>
   </section>;
 }
