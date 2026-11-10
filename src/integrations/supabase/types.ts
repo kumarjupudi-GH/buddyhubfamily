@@ -143,6 +143,27 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           role: string
@@ -297,6 +318,7 @@ export type Database = {
         Returns: string
       }
       ensure_intro_allowance: { Args: { _user: string }; Returns: undefined }
+      has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }
       is_usage_admin: { Args: never; Returns: boolean }
       monthly_ai_usage: {
         Args: never
