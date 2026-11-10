@@ -41,7 +41,7 @@ function providerFailure(status: number) {
   if (status === 402 || status === 429) return new AIError(status, "rate_limited", "Today's free AI questions are used up, or the provider is busy. Please wait a minute or try again tomorrow. Your AI provider's credits or quota are unavailable. An adult should check their provider account; the host's credits will not be used.");
   return new AIError(502, "upstream_error", "Your AI provider could not complete this request. Please try again later.");
 }
-export async function visitorText(options: { userId: string; buddy: string; provider: VisitorProvider; system: string; messages: ChatTurn[]; maxTokens: number; diagram?: boolean; fundingMode?: "visitor" | "sponsored"; requestId?: string }) {
+export async function visitorText(options: { userId: string; buddy: string; provider: VisitorProvider; system: string; messages: ChatTurn[]; maxTokens: number; diagram?: boolean; fundingMode?: "visitor" | "sponsored"; requestId?: string | undefined }) {
   if (options.fundingMode === "sponsored") {
     const { sponsoredText } = await import("@/lib/sponsored-ai.server");
     return sponsoredText(options);

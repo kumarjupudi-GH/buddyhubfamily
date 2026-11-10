@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const openaiResult = z.object({ choices: z.array(z.object({ message: z.object({ content: z.string().nullable() }), finish_reason: z.string().optional() })), usage: z.object({ prompt_tokens: z.number().nonnegative(), completion_tokens: z.number().nonnegative(), prompt_tokens_details: z.object({ cached_tokens: z.number().nonnegative().optional() }).optional() }).optional() });
 const claudeResult = z.object({ content: z.array(z.object({ type: z.string(), text: z.string().optional() })), stop_reason: z.string().nullable(), usage: z.object({ input_tokens: z.number().nonnegative(), output_tokens: z.number().nonnegative(), cache_read_input_tokens: z.number().nonnegative().optional() }) });
-export type SponsoredOptions = { userId: string; buddy: string; system: string; messages: ChatTurn[]; maxTokens: number; diagram?: boolean; requestId?: string };
+export type SponsoredOptions = { userId: string; buddy: string; system: string; messages: ChatTurn[]; maxTokens: number; diagram?: boolean; requestId?: string | undefined };
 
 export async function sponsoredText(options: SponsoredOptions) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -28,7 +28,7 @@ export async function sponsoredText(options: SponsoredOptions) {
     const id = reservation.data;
     const event = await supabaseAdmin.from("visitor_ai_events").insert({ user_id: options.userId, buddy: options.buddy, provider, model, request_scope: options.diagram ? "diagram" : "chat", funding_source: "sponsored", request_id: requestId }).select("id").single();
     async function settle(cost: number | null, outcome: string, input: number | null = null, output: number | null = null) {
-      const settled = await supabaseAdmin.rpc("settle_sponsor_spend", { _id: id, _cost: cost });
+      const settled = cost === null ? await supabaseAdmin.from("ai_spend_reservations").update({ state: "uncertain" }).eq("id", id).eq("state", "reserved") : await supabaseAdmin.rpc("settle_sponsor_spend", { _id: id, _cost: cost });
       if (settled.error) throw new AIError(503, "usage_unavailable", "Usage recording is unavailable. No retry will be sent.");
       if (event.data) await supabaseAdmin.from("visitor_ai_events").update({ outcome, estimated_usd: cost, input_tokens: input, output_tokens: output, rate_version: "standard-list-2026-11-10" }).eq("id", event.data.id);
     }
