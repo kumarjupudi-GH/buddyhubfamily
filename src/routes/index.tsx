@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { BUDDY_APPS, type BuddyApp } from "@/lib/buddy-catalog";
+import { AccountMenu } from "@/components/AccountMenu";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -104,6 +105,7 @@ function Index() {
   };
   return (
     <main className="min-h-screen bg-background px-4 py-10 font-display text-foreground sm:px-8">
+      <div className="mx-auto flex max-w-5xl justify-end"><AccountMenu /></div>
       <header className="mx-auto max-w-5xl text-center">
         <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">🧩 Family BuddyApps</p>
         <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-5xl">Your Family, One Connected Buddy Ecosystem!</h1>
