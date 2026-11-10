@@ -20,7 +20,7 @@ export const saveVisitorSettings = createServerFn({ method: "POST" }).middleware
   if (error) throw new Error("Settings could not be saved.");
   return { ok: true };
 });
-export const saveVisitorConnection = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).inputValidator(z.object({ provider: z.enum(["claude", "chatgpt", "gemini"]), key: z.string().trim().min(10).max(500), adult: z.literal(true) })).handler(async ({ data, context }) => {
+export const saveVisitorConnection = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).inputValidator(z.object({ provider: z.enum(["claude", "chatgpt", "gemini", "openrouter"]), key: z.string().trim().min(10).max(500), adult: z.literal(true) })).handler(async ({ data, context }) => {
   const { data: settings } = await context.supabase.from("visitor_ai_settings").select("user_id").eq("user_id", context.userId).maybeSingle();
   if (!settings) throw new Error("Save adult account settings first.");
   const { encryptVisitorKey } = await import("@/lib/visitor-crypto.server");
@@ -29,7 +29,7 @@ export const saveVisitorConnection = createServerFn({ method: "POST" }).middlewa
   if (error) throw new Error("Connection could not be saved.");
   return { ok: true };
 });
-export const removeVisitorConnection = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).inputValidator(z.enum(["claude", "chatgpt", "gemini"])).handler(async ({ data, context }) => {
+export const removeVisitorConnection = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).inputValidator(z.enum(["claude", "chatgpt", "gemini", "openrouter"])).handler(async ({ data, context }) => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { error } = await supabaseAdmin.from("visitor_ai_keys").delete().eq("user_id", context.userId).eq("provider", data);
   if (error) throw new Error("Connection could not be removed.");

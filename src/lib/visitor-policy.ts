@@ -1,5 +1,5 @@
-export type VisitorProvider = "claude" | "chatgpt" | "gemini";
-export const VISITOR_MODELS = { claude: "claude-haiku-4-5-20251001", chatgpt: "gpt-6.1-terra", gemini: "gemini-3.1-flash-lite", diagram: "gemini-3.8-flash", picture: "gpt-image-2.5-sunburst" } as const;
+export type VisitorProvider = "claude" | "chatgpt" | "gemini" | "openrouter";
+export const VISITOR_MODELS = { claude: "claude-haiku-4-5-20251001", chatgpt: "gpt-6.1-terra", gemini: "gemini-3.1-flash-lite", diagram: "gemini-3.8-flash", picture: "gpt-image-2.5-sunburst", openrouter: "openrouter/free" } as const;
 export function budgetAlert(used: number, budget: number) {
   return used >= budget ? "over" : used >= budget * 0.8 ? "warn" : "ok";
 }
@@ -16,6 +16,7 @@ export function estimateCost(model: string, input: number | null, output: number
     [VISITOR_MODELS.chatgpt]: [1, 5, 0.05],
     [VISITOR_MODELS.gemini]: [0.25, 1.5, 0.025],
     [VISITOR_MODELS.diagram]: at < new Date("2027-01-01T00:00:00Z") ? [0.75, 3.75, 0.075] : [1.5, 7.5, 0.15],
+    [VISITOR_MODELS.openrouter]: [0, 0, 0], // free-only router: never selects paid models
     [VISITOR_MODELS.picture]: [5, 30, 1.25],
   };
   const rate = rates[model];
