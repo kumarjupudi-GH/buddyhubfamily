@@ -40,6 +40,9 @@ export const Route = createFileRoute("/api/public/diagram")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const { visitorIdentity, visitorText } = await import("@/lib/visitor-ai.server");
+        let identity;
+        try { identity = await visitorIdentity(request); } catch (e) { return json(e instanceof Error && "status" in e ? Number(e.status) : 503, { error: e instanceof Error ? e.message : "Account unavailable." }); }
         let body: any;
         try {
           body = await request.json();
@@ -49,12 +52,13 @@ export const Route = createFileRoute("/api/public/diagram")({
         const question = typeof body?.question === "string" ? body.question.trim().slice(0, 500) : "";
         const answer = typeof body?.answer === "string" ? body.answer.trim().slice(0, 2000) : "";
         if (!question) return json(400, { error: "Invalid request." });
-        const limited = await checkAILimit(request, "diagram");
+        const limited = await checkAILimit(request, "diagram", identity.userId);
         if (limited) return json(429, { error: limited });
         let text = "";
         try {
-          ({ text } = await askGoogle({
-            model: GEMINI_MODELS.diagram,
+          ({ text } = await visitorText({
+            userId: identity.userId, buddy: "brainboost", provider: "gemini",
+            diagram: true,
             system: INSTRUCTIONS,
             messages: [
               {
@@ -63,7 +67,6 @@ export const Route = createFileRoute("/api/public/diagram")({
               },
             ],
             maxTokens: 10000,
-            thinkingBudget: 2048,
           }));
         } catch (e: any) {
           return json(typeof e?.status === "number" ? e.status : 502, {

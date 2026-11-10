@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { routedAnswer } from "@/lib/ai-router";
+import { pickProvider } from "@/lib/ai-router";
 import { checkAILimit } from "@/lib/ai-limits";
+import { AIError } from "@/lib/google-ai";
 import { BUDDY_PROMPTS } from "@/lib/buddies";
 
 // Family buddies chat endpoint (public app API). Persona comes from BUDDY_PROMPTS.
@@ -41,6 +42,9 @@ export const Route = createFileRoute("/api/public/buddy-chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const { visitorIdentity, visitorText } = await import("@/lib/visitor-ai.server");
+        let identity;
+        try { identity = await visitorIdentity(request); } catch (e) { return json(e instanceof Error && "status" in e ? Number(e.status) : 503, { error: { code: "account_required", message: e instanceof Error ? e.message : "Account unavailable." } }); }
         let body: any;
         try {
           body = await request.json();
@@ -57,14 +61,16 @@ export const Route = createFileRoute("/api/public/buddy-chat")({
             error: { code: "invalid_request", message: "messages must be a list of user/assistant turns." },
           });
         }
-        const limited = await checkAILimit(request, "chat");
+        const limited = await checkAILimit(request, "chat", identity.userId);
         if (limited) return json(429, { error: { code: "rate_limited", message: limited } });
         try {
-          const { text, truncated, provider } = await routedAnswer({
+          const { text, truncated, provider } = await visitorText({
+            userId: identity.userId,
+            buddy: buddy,
+            provider: pickProvider(messages[messages.length - 1]?.content ?? "", "buddy"),
             system: BUDDY_PROMPTS[buddy] + "\n\n" + SAFETY,
             messages,
             maxTokens: 1024,
-            mode: "buddy",
           });
           return json(200, { text, truncated, source: provider });
         } catch (e: any) {
