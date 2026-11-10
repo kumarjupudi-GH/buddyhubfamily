@@ -4,10 +4,10 @@ import { VisitorAccount } from "@/components/visitor-account";
 export const Route = createFileRoute("/usage")({
   head: () => ({
     meta: [
-      { title: "AI usage this month — Family BuddyApps" },
-      { name: "description", content: "How many answers the buddies gave this month, by AI helper, with an 80% budget alert." },
-      { property: "og:title", content: "AI usage this month — Family BuddyApps" },
-      { property: "og:description", content: "Monthly buddy answers by AI helper with an 80% budget alert." },
+      { title: "Your daily AI usage — Family BuddyApps" },
+      { name: "description", content: "Private daily provider usage and estimated costs against your family's budget." },
+      { property: "og:title", content: "Your daily AI usage — Family BuddyApps" },
+      { property: "og:description", content: "Private daily AI usage with individual 80% budget warnings." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
