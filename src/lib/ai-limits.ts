@@ -42,6 +42,6 @@ export async function checkAILimit(request: Request, scope: AIScope, accountId?:
     return limitMessage(String(data));
   } catch (e) {
     console.error("AI limit check failed", e);
-    return scope === "picture" ? "Pictures are taking a short break. Please try again soon." : null;
+    return accountId || scope === "picture" ? "AI usage checks are taking a short break. Please try again soon." : null;
   }
 }
