@@ -58,6 +58,8 @@ export const Route = createFileRoute("/api/public/diagram")({
         try {
           ({ text } = await visitorText({
             userId: identity.userId, buddy: "brainboost", provider: "gemini",
+            fundingMode: identity.settings.funding_mode === "sponsored" ? "sponsored" : "visitor",
+            requestId: request.headers.get("X-Request-ID") ?? undefined,
             diagram: true,
             system: INSTRUCTIONS,
             messages: [

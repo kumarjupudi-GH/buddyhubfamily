@@ -1,4 +1,6 @@
 # Roadmap
+- [x] Smart routing preview: disabled-by-default sponsor controls, one-time grant eligibility, atomic reservations, OpenAI primary/controlled Claude fallback, authoritative counts, account balances; 44 tests pass and signed-in home/account verified
+- [ ] Smart routing live validation: real OpenAI/Claude answers, diagrams, model-quality comparisons and concurrent reservation/grant checks need a verified administrator role, provider connections and explicit small test budget; publishing needs separate approval
 - [x] ArtBuddy: four learning levels, eight illustrated tutorials and eight drawing challenges; saved art and desktop/mobile flows verified (preview only)
 - [x] Add missing website Home navigation in BrainBoost and ArtBuddy; family buddies already have it
 - [ ] Visitor-funded AI: preview implementation and signed-out safeguards tested; authenticated provider calls and private reports await user sign-in and provider connections; owner admin role awaits verified account; no deployment without approval

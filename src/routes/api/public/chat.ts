@@ -68,8 +68,10 @@ export const Route = createFileRoute("/api/public/chat")({
         try {
           const { text, truncated, provider } = await visitorText({
             userId: identity.userId,
+            fundingMode: identity.settings.funding_mode === "sponsored" ? "sponsored" : "visitor",
+            requestId: request.headers.get("X-Request-ID") ?? undefined,
             buddy: "brainboost",
-            provider: await usableProvider(identity.userId, pickProvider(messages[messages.length - 1]?.content ?? "", "tutor")),
+            provider: identity.settings.funding_mode === "sponsored" ? "chatgpt" : await usableProvider(identity.userId, pickProvider(messages[messages.length - 1]?.content ?? "", "tutor")),
             system: SYSTEM_PROMPT,
             messages,
             maxTokens: 2048,

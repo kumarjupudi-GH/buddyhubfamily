@@ -41,10 +41,16 @@ function providerFailure(status: number) {
   if (status === 402 || status === 429) return new AIError(status, "rate_limited", "Today's free AI questions are used up, or the provider is busy. Please wait a minute or try again tomorrow. Your AI provider's credits or quota are unavailable. An adult should check their provider account; the host's credits will not be used.");
   return new AIError(502, "upstream_error", "Your AI provider could not complete this request. Please try again later.");
 }
-export async function visitorText(options: { userId: string; buddy: string; provider: VisitorProvider; system: string; messages: ChatTurn[]; maxTokens: number; diagram?: boolean }) {
+export async function visitorText(options: { userId: string; buddy: string; provider: VisitorProvider; system: string; messages: ChatTurn[]; maxTokens: number; diagram?: boolean; fundingMode?: "visitor" | "sponsored"; requestId?: string | undefined }) {
+  if (options.fundingMode === "sponsored") {
+    const { sponsoredText } = await import("@/lib/sponsored-ai.server");
+    return sponsoredText(options);
+  }
   const model = options.provider === "openrouter" ? VISITOR_MODELS.openrouter : options.diagram ? VISITOR_MODELS.diagram : VISITOR_MODELS[options.provider];
   const key = await visitorKey(options.userId, options.provider);
   const id = await beginAttempt(options.userId, options.buddy, options.provider, model);
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  await supabaseAdmin.from("visitor_ai_events").update({ request_scope: options.diagram ? "diagram" : "chat" }).eq("id", id);
   try {
     let response: Response;
     if (options.provider === "claude") {
@@ -82,9 +88,14 @@ export async function visitorText(options: { userId: string; buddy: string; prov
   }
 }
 export async function visitorPicture(userId: string, prompt: string) {
+  const { supabaseAdmin: admin } = await import("@/integrations/supabase/client.server");
+  const settings = await admin.from("visitor_ai_settings").select("funding_mode").eq("user_id", userId).single();
+  if (settings.error) throw new AIError(503, "account_unavailable", "Account settings are unavailable.");
+  if (settings.data.funding_mode === "sponsored") throw new AIError(403, "funding_unavailable", "Introductory allowances do not cover generated pictures. Choose your own OpenAI connection to make a picture.");
   const key = await visitorKey(userId, "chatgpt");
   const model = VISITOR_MODELS.picture;
   const id = await beginAttempt(userId, "picture", "chatgpt", model);
+  await admin.from("visitor_ai_events").update({ request_scope: "picture" }).eq("id", id);
   try {
     const response = await fetch("https://api.openai.com/v1/images/generations", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` }, body: JSON.stringify({ model, prompt, n: 1 }) });
     if (!response.ok) { await finishAttempt(id, model, `provider_error_${response.status}`); throw providerFailure(response.status); }
@@ -103,6 +114,13 @@ export async function visitorSummary(userId: string) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: settings } = await supabaseAdmin.from("visitor_ai_settings").select("*").eq("user_id", userId).maybeSingle();
   if (!settings) return { level: "ok", estimated: 0, unknown: 0, budget: null };
+  if (settings.funding_mode === "sponsored") {
+    const { readBalance } = await import("@/lib/sponsor-policy");
+    const { data: balance, error: balanceError } = await supabaseAdmin.rpc("sponsor_balance", { _user: userId });
+    if (balanceError) throw new Error("Introductory allowance is unavailable.");
+    const allowance = readBalance(balance);
+    return { level: allowance.granted > 0 ? budgetAlert(allowance.used, allowance.granted) : "ok", estimated: allowance.used, unknown: 0, budget: allowance.granted, allowance };
+  }
   const { data, error } = await supabaseAdmin.from("visitor_ai_events").select("created_at,estimated_usd").eq("user_id", userId).gte("created_at", new Date(Date.now() - 48 * 3600000).toISOString());
   if (error) throw new Error("Daily usage is unavailable.");
   const day = localDay(new Date(), settings.timezone);
