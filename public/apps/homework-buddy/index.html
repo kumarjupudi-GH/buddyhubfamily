@@ -548,6 +548,7 @@ textarea { box-sizing: border-box; }
   </div>
 </div>
 
+<script src="/apps/buddy-shared/ai-picker.js"></script>
 <script>
 (function () {
   var MAX_TURNS = 24;
@@ -1416,7 +1417,7 @@ textarea { box-sizing: border-box; }
           if (opts.signal.aborted) { fail("cancelled", "cancelled"); return; }
           opts.signal.addEventListener("abort", function () { fail("cancelled", "cancelled"); });
         }
-        fetch("/api/public/chat", {
+        window.BuddyAI.fetch("/api/public/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ messages: msgs }),
