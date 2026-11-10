@@ -82,6 +82,7 @@
   /* ---------- shared UI pieces ---------- */
   const logo = () => 'ArtBuddy'.split('').map(c => `<span>${c}</span>`).join('');
   const topbar = (back) => `<header class="top">${back ? `<button class="btn ghost back" data-a="home" aria-label="Home">🏠 Home</button>` : `<div class="logo" aria-label="ArtBuddy">${logo()}</div>`}
+    <a class="btn ghost" href="/" aria-label="Back to Family BuddyApps home" title="Website home">🏠 Website home</a>
     <button class="chip stars" data-a="art" aria-label="My Art and stars">⭐ ${S.stars} · My Art</button></header>`;
   const diffPills = () => `<div class="diffs" role="radiogroup" aria-label="How tricky?">${DIFFS.map((d, i) =>
     `<button class="diff ${i === S.diff ? 'on' : ''}" role="radio" aria-checked="${i === S.diff}" data-a="diff" data-v="${i}"><span class="em">${d.emoji}</span>${d.label}<small>${d.hint}</small></button>`).join('')}</div>`;
