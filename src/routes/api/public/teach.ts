@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { askVisitor } from "@/lib/visitor-ai.server";
+import { askClaude } from "@/lib/ai-gateway";
 
 // ArtBuddy AI art teacher endpoint (public app API).
 const SYSTEM = `You are ArtBuddy, a warm and cheerful art teacher inside a drawing app for kids aged 5-12.
@@ -39,7 +39,8 @@ export const Route = createFileRoute("/api/public/teach")({
             ? 'The child pressed "Help me!". Explain this step in a simpler, different way and encourage them.'
             : `The child asked a question:\n<child_message>${clean(body?.question, 140)}</child_message>\nAnswer helpfully about drawing.`;
         try {
-          const { text } = await askVisitor(request, body?.selection, {
+          const { text } = await askClaude({
+            model: "anthropic/claude-haiku-4-5",
             system: SYSTEM,
             messages: [{ role: "user", content: `${ctx}\n\n${task}` }],
             maxTokens: 150,

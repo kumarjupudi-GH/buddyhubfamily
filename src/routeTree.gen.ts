@@ -10,12 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AiBridgeRouteImport } from './routes/ai-bridge'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as MyAiRouteImport } from './routes/my-ai'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ComingSoonSlugRouteImport } from './routes/coming-soon.$slug'
-import { Route as ApiPublicAiAccountRouteImport } from './routes/api/public/ai-account'
 import { Route as ApiPublicBuddyChatRouteImport } from './routes/api/public/buddy-chat'
 import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
@@ -26,19 +23,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AiBridgeRoute = AiBridgeRouteImport.update({
-  id: '/ai-bridge',
-  path: '/ai-bridge',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MyAiRoute = MyAiRouteImport.update({
-  id: '/my-ai',
-  path: '/my-ai',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -49,11 +36,6 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const ComingSoonSlugRoute = ComingSoonSlugRouteImport.update({
   id: '/coming-soon/$slug',
   path: '/coming-soon/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicAiAccountRoute = ApiPublicAiAccountRouteImport.update({
-  id: '/api/public/ai-account',
-  path: '/api/public/ai-account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicBuddyChatRoute = ApiPublicBuddyChatRouteImport.update({
@@ -79,12 +61,9 @@ const ApiPublicTeachRoute = ApiPublicTeachRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/ai-bridge': typeof AiBridgeRoute
   '/auth': typeof AuthRoute
-  '/my-ai': typeof MyAiRoute
   '/reset-password': typeof ResetPasswordRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
-  '/api/public/ai-account': typeof ApiPublicAiAccountRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -92,12 +71,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/ai-bridge': typeof AiBridgeRoute
   '/auth': typeof AuthRoute
-  '/my-ai': typeof MyAiRoute
   '/reset-password': typeof ResetPasswordRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
-  '/api/public/ai-account': typeof ApiPublicAiAccountRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -106,12 +82,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/ai-bridge': typeof AiBridgeRoute
   '/auth': typeof AuthRoute
-  '/my-ai': typeof MyAiRoute
   '/reset-password': typeof ResetPasswordRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
-  '/api/public/ai-account': typeof ApiPublicAiAccountRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -121,12 +94,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/ai-bridge'
     | '/auth'
-    | '/my-ai'
     | '/reset-password'
     | '/coming-soon/$slug'
-    | '/api/public/ai-account'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
     | '/api/public/health'
@@ -134,12 +104,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/ai-bridge'
     | '/auth'
-    | '/my-ai'
     | '/reset-password'
     | '/coming-soon/$slug'
-    | '/api/public/ai-account'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
     | '/api/public/health'
@@ -147,12 +114,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/ai-bridge'
     | '/auth'
-    | '/my-ai'
     | '/reset-password'
     | '/coming-soon/$slug'
-    | '/api/public/ai-account'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
     | '/api/public/health'
@@ -161,12 +125,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AiBridgeRoute: typeof AiBridgeRoute
   AuthRoute: typeof AuthRoute
-  MyAiRoute: typeof MyAiRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ComingSoonSlugRoute: typeof ComingSoonSlugRoute
-  ApiPublicAiAccountRoute: typeof ApiPublicAiAccountRoute
   ApiPublicBuddyChatRoute: typeof ApiPublicBuddyChatRoute
   ApiPublicChatRoute: typeof ApiPublicChatRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
@@ -182,25 +143,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ai-bridge': {
-      id: '/ai-bridge'
-      path: '/ai-bridge'
-      fullPath: '/ai-bridge'
-      preLoaderRoute: typeof AiBridgeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/my-ai': {
-      id: '/my-ai'
-      path: '/my-ai'
-      fullPath: '/my-ai'
-      preLoaderRoute: typeof MyAiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -215,13 +162,6 @@ declare module '@tanstack/react-router' {
       path: '/coming-soon/$slug'
       fullPath: '/coming-soon/$slug'
       preLoaderRoute: typeof ComingSoonSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/ai-account': {
-      id: '/api/public/ai-account'
-      path: '/api/public/ai-account'
-      fullPath: '/api/public/ai-account'
-      preLoaderRoute: typeof ApiPublicAiAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/buddy-chat': {
@@ -257,12 +197,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AiBridgeRoute: AiBridgeRoute,
   AuthRoute: AuthRoute,
-  MyAiRoute: MyAiRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ComingSoonSlugRoute: ComingSoonSlugRoute,
-  ApiPublicAiAccountRoute: ApiPublicAiAccountRoute,
   ApiPublicBuddyChatRoute: ApiPublicBuddyChatRoute,
   ApiPublicChatRoute: ApiPublicChatRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,

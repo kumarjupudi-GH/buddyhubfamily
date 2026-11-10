@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { askVisitor } from "@/lib/visitor-ai.server";
+import { askClaude } from "@/lib/ai-gateway";
 import { BUDDY_PROMPTS } from "@/lib/buddies";
 
 // Family buddies chat endpoint (public app API). Persona comes from BUDDY_PROMPTS.
@@ -57,7 +57,8 @@ export const Route = createFileRoute("/api/public/buddy-chat")({
           });
         }
         try {
-          const { text, truncated } = await askVisitor(request, body?.selection, {
+          const { text, truncated } = await askClaude({
+            model: "anthropic/claude-sonnet-5",
             system: BUDDY_PROMPTS[buddy] + "\n\n" + SAFETY,
             messages,
             maxTokens: 1024,

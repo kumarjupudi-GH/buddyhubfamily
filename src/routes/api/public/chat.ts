@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { askVisitor } from "@/lib/visitor-ai.server";
+import { askClaude } from "@/lib/ai-gateway";
 
 // BrainBoost Buddy homework chat endpoint (public app API).
 const SYSTEM_PROMPT = [
@@ -54,7 +54,8 @@ export const Route = createFileRoute("/api/public/chat")({
           });
         }
         try {
-          const { text, truncated } = await askVisitor(request, body?.selection, {
+          const { text, truncated } = await askClaude({
+            model: "anthropic/claude-sonnet-5",
             system: SYSTEM_PROMPT,
             messages,
             maxTokens: 2048,
