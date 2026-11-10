@@ -502,7 +502,7 @@
         }
       } else {
         body.innerHTML = (partial ? render(partial) : "") + '<p class="err"></p>';
-        body.querySelector(".err").textContent = copyFor(code);
+        body.querySelector(".err").textContent = e && e.message ? e.message : copyFor(code);
         var r = document.createElement("button");
         r.type = "button";
         r.className = "btn retry";
