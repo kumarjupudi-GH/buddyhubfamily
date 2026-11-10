@@ -356,8 +356,10 @@ textarea {
 #popsBtn svg { box-sizing: content-box; width: 14px; height: 14px; padding: 4px; border-radius: 8px; background: var(--tile); color: var(--icon); vertical-align: middle; }
 @media (prefers-reduced-motion: reduce) { .sitem { transition: none; } .sitem:hover { transform: none; } }
 :root { --paper: #ffffff; }
-.msg .viz { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 8px; margin: .5em 0; }
-.msg .viz img { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.msg .viz { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 10px; margin: .7em 0; box-shadow: 0 6px 18px -10px rgba(31,42,92,.35); cursor: zoom-in; }
+.msg .viz img { display: block; width: 100%; max-width: 560px; height: auto; margin: 0 auto; border-radius: 10px; }
+.msg .viz.big { position: fixed; inset: 0; z-index: 1000; margin: 0; border-radius: 0; display: flex; align-items: center; justify-content: center; background: rgba(10,14,30,.85); cursor: zoom-out; }
+.msg .viz.big img { max-width: 96vw; max-height: 92vh; width: auto; background: #fff; }
 .msg pre.art { font: 400 14px/1.35 var(--mono); background: var(--surface2); padding: 10px 12px; border-radius: 10px; overflow-x: auto; margin: .5em 0; white-space: pre; }
 .msg .drawing { color: var(--muted); font-style: italic; }
 .msg.bot.hint { background: var(--goldbg); color: var(--gold); border-color: var(--gold); }
@@ -607,11 +609,11 @@ textarea { box-sizing: border-box; }
   function renderFence(lang, code) {
     if (lang === "svg") {
       var svg = code.trim();
-      var ok = /^<svg[\s>]/i.test(svg) && /<\/svg>\s*$/i.test(svg) && svg.length <= 12000 &&
+      var ok = /^<svg[\s>]/i.test(svg) && /<\/svg>\s*$/i.test(svg) && svg.length <= 20000 &&
         !/<script|<foreignObject|<iframe|<image|<use[\s>]|javascript:|\son[a-z]+\s*=|href\s*=|<!ENTITY|<!DOCTYPE/i.test(svg);
       if (!ok) return '<p class="drawing">I could not draw that picture, but the steps above still work.</p>';
       if (!/^<svg[^>]*\sxmlns\s*=/i.test(svg)) svg = svg.replace(/^<svg/i, '<svg xmlns="http://www.w3.org/2000/svg"');
-      return '<div class="viz"><img alt="A picture drawn by BrainBoost Buddy to explain the idea" src="data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '"></div>';
+      return '<div class="viz" role="button" tabindex="0" title="Tap to make bigger" onclick="this.classList.toggle('big')"><img alt="A picture drawn by BrainBoost Buddy to explain the idea" src="data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '"></div>';
     }
     return '<pre class="art">' + esc(code) + '</pre>';
   }
@@ -691,7 +693,7 @@ textarea { box-sizing: border-box; }
       "",
       "Style: plain, clear language; define new words; use everyday analogies (sports, games, music, food). Keep replies short, one idea or step at a time, and end with a question or next step. Formatting: short paragraphs, numbered steps for procedures, **bold** for key terms. No tables, no headings, no LaTeX. Write math in plain text, such as 3/4, x^2, sqrt(16). Emojis are welcome in examples and pictures.",
       "",
-      "Visuals and examples (very important for kids): when it helps, give one short relatable real-life example (pizza slices, video game points, sports, allowance, animals, music) and, whenever a picture would help (fractions, shapes, number lines, the water cycle, food chains, parts of a cell, timelines, sentence parts, maps), include ONE simple picture. Pick the easiest way: (1) a row of emojis, like 🍕🍕🍕⬜ = 3/4 of a pizza; (2) a tiny text drawing inside a ``` code block (number lines, bars, boxes with arrows), under 40 characters wide; (3) a small SVG drawing inside a ```svg code block. SVG rules: start with <svg viewBox=\"0 0 300 160\" xmlns=\"http://www.w3.org/2000/svg\">; draw a light background rect first; use big readable text (font-size 14 or more), bright simple colors and thick strokes; label the important parts and keep every word fully inside the picture; no scripts, no links, no external images; keep it under 40 lines. After the picture, say in one short sentence what to notice, then give the 'Your turn' try-it question. Still keep the whole reply very short: a picture replaces words, it does not add to them.",
+      "Visuals and examples (very important for kids): when it helps, give one short relatable real-life example (pizza slices, video game points, sports, allowance, animals, music) and, whenever a picture would help (fractions, shapes, number lines, the water cycle, food chains, parts of a cell, timelines, sentence parts, maps), include ONE picture. Prefer a clean SVG diagram inside a ```svg code block for anything visual (fractions, shapes, graphs, number lines, cycles, food chains, cells, timelines, maps, sentence parts); use an emoji row (like 🍕🍕🍕⬜ = 3/4) only for tiny counting ideas, and never use text/ASCII drawings. SVG design rules (follow carefully so it looks like a polished textbook diagram): start with <svg viewBox=\"0 0 400 240\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Arial, sans-serif\">; first draw <rect width=\"400\" height=\"240\" rx=\"16\" fill=\"#f7f9ff\"/>; put a short bold title at the top center (font-size 18, fill #1f2a5c, text-anchor middle, y about 28); plan a simple grid layout with 20px margins so nothing overlaps or touches the edges; use this friendly palette only: #4f6bed blue, #22b07d green, #ff8a3d orange, #f2c230 yellow, #e5527a pink, #8b5cf6 purple, with #1f2a5c for text and outlines; shapes have rounded corners (rx 8), soft fills and stroke-width 2 to 3; labels are font-size 14 to 16, dark text, placed beside shapes (never on top of lines), centered with text-anchor middle where useful, at most 4 words each; arrows use a <marker> arrowhead defined in <defs>; keep at most 6 labelled parts; every element must stay fully inside 0-400 by 0-240; no scripts, links, images or <use>; under 60 lines. After the picture, say in one short sentence what to notice, then give the 'Your turn' try-it question. Still keep the whole reply very short: a picture replaces words, it does not add to them.",
       "",
       "Accuracy: be correct. If unsure, say so and suggest the textbook, class notes or the teacher. Teachers may require specific methods, so encourage following class instructions. For history, current events or contested topics, be balanced and factual and encourage using several sources.",
       "",
