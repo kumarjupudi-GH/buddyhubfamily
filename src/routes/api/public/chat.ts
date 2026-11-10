@@ -69,7 +69,7 @@ export const Route = createFileRoute("/api/public/chat")({
           const { text, truncated, provider } = await visitorText({
             userId: identity.userId,
             buddy: "brainboost",
-            provider: pickProvider(messages[messages.length - 1]?.content ?? "", "tutor"),
+            provider: await usableProvider(identity.userId, pickProvider(messages[messages.length - 1]?.content ?? "", "tutor")),
             system: SYSTEM_PROMPT,
             messages,
             maxTokens: 2048,

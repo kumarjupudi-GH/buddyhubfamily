@@ -67,7 +67,7 @@ export const Route = createFileRoute("/api/public/buddy-chat")({
           const { text, truncated, provider } = await visitorText({
             userId: identity.userId,
             buddy: buddy,
-            provider: pickProvider(messages[messages.length - 1]?.content ?? "", "buddy"),
+            provider: await usableProvider(identity.userId, pickProvider(messages[messages.length - 1]?.content ?? "", "buddy")),
             system: BUDDY_PROMPTS[buddy] + "\n\n" + SAFETY,
             messages,
             maxTokens: 1024,

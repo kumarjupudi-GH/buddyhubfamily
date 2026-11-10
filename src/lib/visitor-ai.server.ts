@@ -107,4 +107,11 @@ export async function visitorSummary(userId: string) {
   const today = (data ?? []).filter(row => localDay(row.created_at, settings.timezone) === day);
   const estimated = today.reduce((sum, row) => sum + (row.estimated_usd ?? 0), 0);
   return { level: budgetAlert(estimated, settings.daily_budget_usd), estimated, unknown: today.filter(r => r.estimated_usd === null).length, budget: settings.daily_budget_usd };
+}/** Use the routed provider when the adult saved that key; otherwise use another key they saved (never the host's). */
+export async function usableProvider(userId: string, preferred: VisitorProvider): Promise<VisitorProvider> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data } = await supabaseAdmin.from("visitor_ai_keys").select("provider").eq("user_id", userId);
+  const saved = (data ?? []).map(r => r.provider as VisitorProvider);
+  if (saved.includes(preferred)) return preferred;
+  return (["gemini", "claude", "chatgpt"] as VisitorProvider[]).find(p => saved.includes(p)) ?? preferred;
 }
