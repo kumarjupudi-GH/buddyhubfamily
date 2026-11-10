@@ -16,14 +16,21 @@ export async function sponsoredText(options: SponsoredOptions) {
   const last = options.messages.at(-1)?.content ?? "";
   const task = options.diagram ? "diagram" : options.buddy === "artbuddy" ? "art" : options.buddy === "brainboost" || /explain|why|how|code|solve/i.test(last) || last.length > 160 ? "tutoring" : "simple";
   const selected = selectSponsorModel(policy, task);
-  const requestId = options.requestId ?? crypto.randomUUID();
+  let requestId = options.requestId;
+  if (requestId && !z.string().uuid().safeParse(requestId).success) throw new AIError(400, "invalid_request", "Invalid question identifier.");
+  if (!requestId) {
+    const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify([options.userId, options.buddy, options.diagram, options.messages]))));
+    const hex = Array.from(digest.slice(0, 16), b => b.toString(16).padStart(2, "0")).join("");
+    requestId = `${hex.slice(0,8)}-${hex.slice(8,12)}-4${hex.slice(13,16)}-8${hex.slice(17,20)}-${hex.slice(20)}`;
+  }
+  const stableRequestId = requestId;
   const maxTokens = Math.min(options.diagram ? 10000 : 2048, Math.max(150, options.maxTokens));
   const messages = options.messages.slice(-20);
   if (new TextEncoder().encode(options.system + messages.map(m => m.content).join("\n")).length > 24000) throw new AIError(400, "invalid_request", "This conversation is too long. Please start a new chat.");
 
   async function attempt(provider: "chatgpt" | "claude", model: string, number: number): Promise<{ text: string; truncated: boolean; provider: "chatgpt" | "claude" } | null> {
     const key = await visitorKey(owner, provider);
-    const reservation = await supabaseAdmin.rpc("reserve_sponsor_spend", { _user: options.userId, _request: requestId, _attempt: number, _provider: provider, _model: model, _scope: options.diagram ? "diagram" : "chat", _cost: reserveCost(model, options.system, messages, maxTokens) });
+    const reservation = await supabaseAdmin.rpc("reserve_sponsor_spend", { _user: options.userId, _request: stableRequestId, _attempt: number, _provider: provider, _model: model, _scope: options.diagram ? "diagram" : "chat", _cost: reserveCost(model, options.system, messages, maxTokens) });
     if (reservation.error || !reservation.data) throw new AIError(403, "budget_limit", reservation.error?.message ?? "Your allowance cannot cover this question.");
     const id = reservation.data;
     const event = await supabaseAdmin.from("visitor_ai_events").insert({ user_id: options.userId, buddy: options.buddy, provider, model, request_scope: options.diagram ? "diagram" : "chat", funding_source: "sponsored", request_id: requestId }).select("id").single();

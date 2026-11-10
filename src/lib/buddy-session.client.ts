@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 // Loaded only by static buddies; bearer tokens go exclusively to this origin.
 const nativeFetch = window.fetch.bind(window);
+const recentQuestions = new Map<string, { id: string; at: number }>();
 const endpoints = new Set(["/api/public/chat", "/api/public/buddy-chat", "/api/public/teach", "/api/public/diagram", "/api/public/picture", "/api/public/visitor-session"]);
 window.fetch = async (input, init) => {
   const url = new URL(typeof input === "string" ? input : input instanceof URL ? input.href : input.url, window.location.href);
@@ -8,7 +9,12 @@ window.fetch = async (input, init) => {
   const { data } = await supabase.auth.getSession();
   const headers = new Headers(input instanceof Request ? input.headers : init?.headers);
   if (data.session) headers.set("Authorization", `Bearer ${data.session.access_token}`);
-  if (url.pathname !== "/api/public/visitor-session" && !headers.has("X-Request-ID")) headers.set("X-Request-ID", crypto.randomUUID());
+  if (url.pathname !== "/api/public/visitor-session" && !headers.has("X-Request-ID")) {
+    const fingerprint = url.pathname + (typeof init?.body === "string" ? init.body : "");
+    for (const [key, value] of recentQuestions) if (Date.now() - value.at > 120000) recentQuestions.delete(key);
+    const recent = recentQuestions.get(fingerprint) ?? { id: crypto.randomUUID(), at: Date.now() };
+    recentQuestions.set(fingerprint, recent); headers.set("X-Request-ID", recent.id);
+  }
   const response = await nativeFetch(input, { ...init, headers });
   if (url.pathname !== "/api/public/visitor-session") updateStatus().catch(() => {});
   return response;
