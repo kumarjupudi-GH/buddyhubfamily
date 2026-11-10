@@ -3,3 +3,4 @@
 - [x] Puzzle home page with 10 BuddyApps, Home button on buddies, coming-soon placeholder
 - [x] Remove leftover tracker reference from ArtBuddy
 - [ ] Split ArtBuddy into its own project (needs user: remix project — I can't create new projects)
+- [x] Home button on every app (BrainBoost, ArtBuddy) back to home page
