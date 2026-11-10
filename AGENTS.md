@@ -14,6 +14,7 @@
 - New family buddies are a small index.html config on public/apps/buddy-shared engine, with personas server-side in src/lib/buddies.ts, so prompts stay private and buddies stay consistent.
 - The home puzzle is generated from src/lib/buddy-catalog.ts; a null href routes to /coming-soon/$slug so new buddies never break links.
 - Buddy chats use pickProvider and visitorText; all inference uses authenticated visitor-owned encrypted credentials, without automatic retries or workspace fallback, so owner credits cannot be charged.
+- Sponsored AI is a separate adult-selected mode, disabled by default; only explicitly configured administrator-owned provider connections may fund it, with atomic user/pool reservations and no workspace gateway fallback, so paid exposure stays bounded.
 - Static buddies load the browser session bundle from public/apps/buddy-shared/session.js; regenerate it from src/lib/buddy-session.client.ts after session changes, using only public Vite configuration, so all buddies share the adult's authenticated account.
 - Every AI endpoint calls checkAILimit (src/lib/ai-limits.ts → consume_ai_quota in the database) before any AI call, so per-visitor and site-wide caps hold across servers.
 - ArtBuddy's additive local curriculum lives in curriculum.js and extends the existing lesson library; learning-level selection only updates local settings, so tutorials and challenges stay available without AI or accounts and saved drawings remain intact.
