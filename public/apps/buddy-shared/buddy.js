@@ -75,6 +75,10 @@
 '  </div>' +
 '</div>');
 
+  var aiScript = document.createElement("script");
+  aiScript.src = "/apps/buddy-shared/ai-picker.js";
+  document.body.appendChild(aiScript);
+
   var MAX_TURNS = 24;
   var turns = [];
   var busy = false;
@@ -437,7 +441,8 @@
         if (opts.signal.aborted) { fail("cancelled", "cancelled"); return; }
         opts.signal.addEventListener("abort", function () { fail("cancelled", "cancelled"); });
       }
-      fetch(B.endpoint || "/api/public/buddy-chat", {
+      if (!window.BuddyAI) { fail("upstream_error", "Your AI connection is loading. Please try again."); return; }
+      window.BuddyAI.fetch(B.endpoint || "/api/public/buddy-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ buddy: ID, messages: input }),
@@ -497,7 +502,7 @@
         }
       } else {
         body.innerHTML = (partial ? render(partial) : "") + '<p class="err"></p>';
-        body.querySelector(".err").textContent = copyFor(code);
+        body.querySelector(".err").textContent = e && e.message ? e.message : copyFor(code);
         var r = document.createElement("button");
         r.type = "button";
         r.className = "btn retry";

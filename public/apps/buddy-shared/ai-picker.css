@@ -1,0 +1,5 @@
+.buddy-ai-picker{--ai-bg:var(--panel,var(--card,#ffffff));--ai-ink:var(--ink,#202737);--ai-line:var(--line,#d4d9e2);--ai-accent:var(--b-acc,#285cc4);display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:10px 16px;background:var(--ai-bg);color:var(--ai-ink);border-bottom:1px solid var(--ai-line);font:500 14px system-ui,sans-serif;position:relative;z-index:5;flex-shrink:0}
+.buddy-ai-picker select{font:inherit;color:var(--ai-ink);background:var(--ai-bg);border:1px solid var(--ai-line);border-radius:6px;min-height:36px;max-width:100%;width:300px;padding:6px 10px}
+.buddy-ai-picker a{color:var(--ai-accent);text-decoration:underline;white-space:nowrap}.ai-account-status{font-size:12px}
+html[data-theme=dark] .buddy-ai-picker{--ai-bg:var(--panel,#202737);--ai-ink:var(--ink,#f4f6fa);--ai-line:var(--line,#495267);--ai-accent:var(--b-acc-d,#90bcff)}
+@media(max-width:600px){.buddy-ai-picker{gap:8px}.buddy-ai-picker select{width:calc(100% - 80px);min-width:0}.buddy-ai-picker a{margin-left:72px}}

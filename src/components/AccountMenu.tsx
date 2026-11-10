@@ -31,6 +31,7 @@ export function AccountMenu() {
         <div className="absolute right-0 z-10 mt-2 w-56 rounded-xl border border-border bg-card p-3 text-left text-sm shadow-lg">
           <p className="truncate text-muted-foreground">{user.email}</p>
           <p className="mt-1 font-semibold">{admin ? "Proprietor" : "Registered user"}</p>
+          <a href="/my-ai" className="mt-3 block text-primary underline">My AI accounts</a>
           <button
             onClick={async () => {
               await supabase.auth.signOut();
