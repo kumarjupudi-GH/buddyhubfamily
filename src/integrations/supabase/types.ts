@@ -95,18 +95,21 @@ export type Database = {
       visitor_ai_keys: {
         Row: {
           ciphertext: string
+          key_hint: string | null
           provider: string
           updated_at: string
           user_id: string
         }
         Insert: {
           ciphertext: string
+          key_hint?: string | null
           provider: string
           updated_at?: string
           user_id: string
         }
         Update: {
           ciphertext?: string
+          key_hint?: string | null
           provider?: string
           updated_at?: string
           user_id?: string
