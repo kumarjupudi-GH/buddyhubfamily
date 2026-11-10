@@ -1,5 +1,5 @@
 # Roadmap
-- [ ] Visitor-funded AI only, private daily user/provider/cost dashboard, per-user 80% alerts, and Home navigation on every buddy (awaiting billing and identity choices; no deployment without approval)
+- [ ] Visitor-funded AI only using adult-managed provider API accounts, email-only identity, private daily user/provider/cost dashboard, per-user 80% alerts, and Home navigation on every buddy (awaiting plan approval; no deployment without approval)
 - [x] Family buddy engine + 8 buddies (Zen & Zest, PennyPilot, Wrench & Wonder, Wanderly, Nudge & Notes, Sprout & Sage, Spoon & Spark, Tidy Nest)
 - [x] Puzzle home page with 10 BuddyApps, Home button on buddies, coming-soon placeholder
 - [x] Remove leftover tracker reference from ArtBuddy
