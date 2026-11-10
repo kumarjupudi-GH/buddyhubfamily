@@ -1,7 +1,8 @@
 import { createRequire } from 'node:module';
 import { describe, expect, it } from 'vitest';
 const require = createRequire(import.meta.url);
-const curriculum = require('../../public/apps/artbuddy/curriculum.js');
+require('../../public/apps/artbuddy/curriculum.js');
+const curriculum = (window as unknown as { ART_CURRICULUM: any }).ART_CURRICULUM;
 describe('ArtBuddy learning levels', () => {
   for (const [id, lessons] of Object.entries({ kindergarten:['shape-garden','happy-creature'], middle:['pattern-leaf','comic-panel'], high:['perspective-room','value-study'], adult:['contour-mug','still-life'] })) {
     it(`provides distinct ${id} tutorials and challenges`, () => {
