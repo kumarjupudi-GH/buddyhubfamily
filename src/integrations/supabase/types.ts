@@ -14,6 +14,117 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_intro_wallets: {
+        Row: {
+          created_at: string
+          granted_usd: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_usd: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_usd?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_spend_reservations: {
+        Row: {
+          attempt: number
+          created_at: string
+          id: string
+          model: string
+          provider: string
+          request_id: string
+          reserved_usd: number
+          scope: string
+          settled_usd: number | null
+          state: string
+          user_id: string
+        }
+        Insert: {
+          attempt: number
+          created_at?: string
+          id?: string
+          model: string
+          provider: string
+          request_id: string
+          reserved_usd: number
+          scope: string
+          settled_usd?: number | null
+          state?: string
+          user_id: string
+        }
+        Update: {
+          attempt?: number
+          created_at?: string
+          id?: string
+          model?: string
+          provider?: string
+          request_id?: string
+          reserved_usd?: number
+          scope?: string
+          settled_usd?: number | null
+          state?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_sponsor_policy: {
+        Row: {
+          allow_fallback: boolean
+          claude_enabled: boolean
+          claude_tasks: string[]
+          daily_questions: number
+          eligible_since: string | null
+          emergency_stop: boolean
+          enabled: boolean
+          id: boolean
+          intro_usd: number
+          key_owner: string | null
+          openai_enabled: boolean
+          per_user_usd: number
+          total_usd: number
+          updated_at: string
+        }
+        Insert: {
+          allow_fallback?: boolean
+          claude_enabled?: boolean
+          claude_tasks?: string[]
+          daily_questions?: number
+          eligible_since?: string | null
+          emergency_stop?: boolean
+          enabled?: boolean
+          id?: boolean
+          intro_usd?: number
+          key_owner?: string | null
+          openai_enabled?: boolean
+          per_user_usd?: number
+          total_usd?: number
+          updated_at?: string
+        }
+        Update: {
+          allow_fallback?: boolean
+          claude_enabled?: boolean
+          claude_tasks?: string[]
+          daily_questions?: number
+          eligible_since?: string | null
+          emergency_stop?: boolean
+          enabled?: boolean
+          id?: boolean
+          intro_usd?: number
+          key_owner?: string | null
+          openai_enabled?: boolean
+          per_user_usd?: number
+          total_usd?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ai_usage: {
         Row: {
           bucket: string
@@ -52,6 +163,7 @@ export type Database = {
           buddy: string
           created_at: string
           estimated_usd: number | null
+          funding_source: string
           id: string
           input_tokens: number | null
           modality_usage: Json | null
@@ -60,12 +172,15 @@ export type Database = {
           output_tokens: number | null
           provider: string
           rate_version: string | null
+          request_id: string | null
+          request_scope: string
           user_id: string
         }
         Insert: {
           buddy: string
           created_at?: string
           estimated_usd?: number | null
+          funding_source?: string
           id?: string
           input_tokens?: number | null
           modality_usage?: Json | null
@@ -74,12 +189,15 @@ export type Database = {
           output_tokens?: number | null
           provider: string
           rate_version?: string | null
+          request_id?: string | null
+          request_scope?: string
           user_id: string
         }
         Update: {
           buddy?: string
           created_at?: string
           estimated_usd?: number | null
+          funding_source?: string
           id?: string
           input_tokens?: number | null
           modality_usage?: Json | null
@@ -88,6 +206,8 @@ export type Database = {
           output_tokens?: number | null
           provider?: string
           rate_version?: string | null
+          request_id?: string | null
+          request_scope?: string
           user_id?: string
         }
         Relationships: []
@@ -120,18 +240,21 @@ export type Database = {
         Row: {
           adult_confirmed_at: string
           daily_budget_usd: number
+          funding_mode: string
           timezone: string
           user_id: string
         }
         Insert: {
           adult_confirmed_at?: string
           daily_budget_usd?: number
+          funding_mode?: string
           timezone?: string
           user_id: string
         }
         Update: {
           adult_confirmed_at?: string
           daily_budget_usd?: number
+          funding_mode?: string
           timezone?: string
           user_id?: string
         }
@@ -173,6 +296,7 @@ export type Database = {
         }
         Returns: string
       }
+      ensure_intro_allowance: { Args: { _user: string }; Returns: undefined }
       is_usage_admin: { Args: never; Returns: boolean }
       monthly_ai_usage: {
         Args: never
@@ -181,6 +305,24 @@ export type Database = {
           total: number
         }[]
       }
+      reserve_sponsor_spend: {
+        Args: {
+          _attempt: number
+          _cost: number
+          _model: string
+          _provider: string
+          _request: string
+          _scope: string
+          _user: string
+        }
+        Returns: string
+      }
+      settle_sponsor_spend: {
+        Args: { _cost: number; _id: string }
+        Returns: undefined
+      }
+      sponsor_balance: { Args: { _user: string }; Returns: Json }
+      visitor_daily_totals: { Args: never; Returns: Json }
     }
     Enums: {
       [_ in never]: never
