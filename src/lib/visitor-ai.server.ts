@@ -50,7 +50,7 @@ export async function visitorText(options: { userId: string; buddy: string; prov
     if (options.provider === "claude") {
       response = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" }, body: JSON.stringify({ model, system: options.system, messages: options.messages, max_tokens: options.maxTokens }) });
     } else if (options.provider === "openrouter") {
-      response = await fetch("https://openrouter.ai/api/v1/chat/completions", { method: "POST", signal: AbortSignal.timeout(45000), headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}`, "X-Title": "Family BuddyApps" }, body: JSON.stringify({ model, messages: [{ role: "system", content: options.system }, ...options.messages], max_tokens: options.maxTokens }) });
+      response = await fetch("https://openrouter.ai/api/v1/chat/completions", { method: "POST", signal: AbortSignal.timeout(45000), headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}`, "X-Title": "Family BuddyApps" }, body: JSON.stringify({ model, messages: [{ role: "system", content: options.system }, ...options.messages], max_tokens: Math.max(options.maxTokens, 4096), reasoning: { effort: "low", exclude: true } }) });
     } else if (options.provider === "chatgpt") {
       response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` }, body: JSON.stringify({ model, messages: [{ role: "system", content: options.system }, ...options.messages], max_completion_tokens: options.maxTokens }) });
     } else {
