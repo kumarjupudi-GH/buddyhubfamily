@@ -32,6 +32,129 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          role: string
+          user_id: string
+        }
+        Insert: {
+          role: string
+          user_id: string
+        }
+        Update: {
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      visitor_ai_events: {
+        Row: {
+          buddy: string
+          created_at: string
+          estimated_usd: number | null
+          id: string
+          input_tokens: number | null
+          modality_usage: Json | null
+          model: string
+          outcome: string
+          output_tokens: number | null
+          provider: string
+          rate_version: string | null
+          user_id: string
+        }
+        Insert: {
+          buddy: string
+          created_at?: string
+          estimated_usd?: number | null
+          id?: string
+          input_tokens?: number | null
+          modality_usage?: Json | null
+          model: string
+          outcome?: string
+          output_tokens?: number | null
+          provider: string
+          rate_version?: string | null
+          user_id: string
+        }
+        Update: {
+          buddy?: string
+          created_at?: string
+          estimated_usd?: number | null
+          id?: string
+          input_tokens?: number | null
+          modality_usage?: Json | null
+          model?: string
+          outcome?: string
+          output_tokens?: number | null
+          provider?: string
+          rate_version?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      visitor_ai_keys: {
+        Row: {
+          ciphertext: string
+          provider: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ciphertext: string
+          provider: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ciphertext?: string
+          provider?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      visitor_ai_settings: {
+        Row: {
+          adult_confirmed_at: string
+          daily_budget_usd: number
+          timezone: string
+          user_id: string
+        }
+        Insert: {
+          adult_confirmed_at?: string
+          daily_budget_usd?: number
+          timezone?: string
+          user_id: string
+        }
+        Update: {
+          adult_confirmed_at?: string
+          daily_budget_usd?: number
+          timezone?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      visitor_site_visits: {
+        Row: {
+          created_at: string
+          id: string
+          path: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          path: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          path?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -47,6 +170,7 @@ export type Database = {
         }
         Returns: string
       }
+      is_usage_admin: { Args: never; Returns: boolean }
       monthly_ai_usage: {
         Args: never
         Returns: {
