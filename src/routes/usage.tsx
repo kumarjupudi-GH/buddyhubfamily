@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getMonthlyUsage } from "@/lib/usage.functions";
+import { VisitorAccount } from "@/components/visitor-account";
 
 export const Route = createFileRoute("/usage")({
   head: () => ({
@@ -12,15 +12,15 @@ export const Route = createFileRoute("/usage")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  loader: () => getMonthlyUsage(),
-  component: UsagePage,
+  component: VisitorAccount,
   errorComponent: ({ error }) => <p className="p-8">{error instanceof Error ? error.message : "Something went wrong."}</p>,
 });
 
 const NAMES: Record<string, string> = { claude: "Claude (explanations)", chatgpt: "ChatGPT (coding & reasoning)", gemini: "Google Gemini (everyday)" };
 
 function UsagePage() {
-  const { rows, used, budget, level } = Route.useLoaderData();
+  const rows: Array<{ provider: string; total: number }> = [];
+  const used = 0, budget = 1000, level: string = "ok";
   const pct = Math.min(100, Math.round((used / budget) * 100));
   return (
     <main className="mx-auto max-w-xl p-6 space-y-5">

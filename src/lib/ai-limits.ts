@@ -19,7 +19,7 @@ export function limitMessage(result: string): string | null {
 async function visitorId(request: Request): Promise<string> {
   const ip =
     request.headers.get("cf-connecting-ip") ||
-    (request.headers.get("x-forwarded-for") || "").split(",")[0]!.trim() ||
+    (request.headers.get("x-forwarded-for") || "").split(",")[0]?.trim() ||
     "unknown";
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("fb-ai:" + ip));
   return Array.from(new Uint8Array(digest).slice(0, 12), (b) => b.toString(16).padStart(2, "0")).join("");
@@ -28,13 +28,13 @@ async function visitorId(request: Request): Promise<string> {
 // Returns null when allowed, or a 429 message when the limit is reached.
 // Free Google calls fail open (Google's own free cap still applies); pictures,
 // which use paid credits, fail closed.
-export async function checkAILimit(request: Request, scope: AIScope): Promise<string | null> {
+export async function checkAILimit(request: Request, scope: AIScope, accountId?: string): Promise<string | null> {
   const limits = AI_LIMITS[scope];
   try {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin.rpc("consume_ai_quota", {
       _scope: scope,
-      _visitor: await visitorId(request),
+      _visitor: accountId ?? await visitorId(request),
       _per_hour: limits.perVisitorPerHour,
       _per_day: limits.sitePerDay,
     });
