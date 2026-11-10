@@ -18,7 +18,7 @@ export async function visitorKey(userId: string, provider: VisitorProvider) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin.from("visitor_ai_keys").select("ciphertext").eq("user_id", userId).eq("provider", provider).maybeSingle();
   if (error) throw new AIError(503, "account_unavailable", "AI account connections are unavailable.");
-  if (!data) throw new AIError(403, "connection_required", `An adult needs to connect ${provider === "chatgpt" ? "OpenAI" : provider === "claude" ? "Claude" : "Gemini"} API access at /account. Your host's credits will not be used.`);
+  if (!data) throw new AIError(403, "connection_required", `An adult needs to connect ${provider === "chatgpt" ? "OpenAI" : provider === "claude" ? "Claude" : provider === "openrouter" ? "OpenRouter" : "Gemini"} API access at /account. Your host's credits will not be used.`);
   return decryptVisitorKey(data.ciphertext, `${userId}:${provider}`);
 }
 const completionSchema = z.object({ choices: z.array(z.object({ message: z.object({ content: z.string().nullable() }), finish_reason: z.string().optional() })), usage: z.object({ prompt_tokens: z.number(), completion_tokens: z.number(), prompt_tokens_details: z.object({ cached_tokens: z.number().optional() }).optional() }).optional() });
@@ -38,17 +38,19 @@ async function finishAttempt(id: string, model: string, outcome: string, input: 
 }
 function providerFailure(status: number) {
   if (status === 401 || status === 403) return new AIError(403, "provider_access", "Your connected provider rejected access. An adult should check the API connection at /account.");
-  if (status === 402 || status === 429) return new AIError(status, "rate_limited", "Your AI provider's credits or quota are unavailable. An adult should check their provider account; the host's credits will not be used.");
+  if (status === 402 || status === 429) return new AIError(status, "rate_limited", "Today's free AI questions are used up, or the provider is busy. Please wait a minute or try again tomorrow. Your AI provider's credits or quota are unavailable. An adult should check their provider account; the host's credits will not be used.");
   return new AIError(502, "upstream_error", "Your AI provider could not complete this request. Please try again later.");
 }
 export async function visitorText(options: { userId: string; buddy: string; provider: VisitorProvider; system: string; messages: ChatTurn[]; maxTokens: number; diagram?: boolean }) {
-  const model = options.diagram ? VISITOR_MODELS.diagram : VISITOR_MODELS[options.provider];
+  const model = options.provider === "openrouter" ? VISITOR_MODELS.openrouter : options.diagram ? VISITOR_MODELS.diagram : VISITOR_MODELS[options.provider];
   const key = await visitorKey(options.userId, options.provider);
   const id = await beginAttempt(options.userId, options.buddy, options.provider, model);
   try {
     let response: Response;
     if (options.provider === "claude") {
       response = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" }, body: JSON.stringify({ model, system: options.system, messages: options.messages, max_tokens: options.maxTokens }) });
+    } else if (options.provider === "openrouter") {
+      response = await fetch("https://openrouter.ai/api/v1/chat/completions", { method: "POST", signal: AbortSignal.timeout(45000), headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}`, "X-Title": "Family BuddyApps" }, body: JSON.stringify({ model, messages: [{ role: "system", content: options.system }, ...options.messages], max_tokens: options.maxTokens }) });
     } else if (options.provider === "chatgpt") {
       response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` }, body: JSON.stringify({ model, messages: [{ role: "system", content: options.system }, ...options.messages], max_completion_tokens: options.maxTokens }) });
     } else {
@@ -61,7 +63,7 @@ export async function visitorText(options: { userId: string; buddy: string; prov
       const data = claudeSchema.parse(raw);
       text = data.content.filter(b => b.type === "text").map(b => b.text ?? "").join(""); truncated = data.stop_reason === "max_tokens";
       cached = data.usage.cache_read_input_tokens ?? 0; input = data.usage.input_tokens + cached; output = data.usage.output_tokens;
-    } else if (options.provider === "chatgpt") {
+    } else if (options.provider === "chatgpt" || options.provider === "openrouter") {
       const data = completionSchema.parse(raw); text = data.choices[0]?.message.content ?? ""; truncated = data.choices[0]?.finish_reason === "length";
       input = data.usage?.prompt_tokens ?? null; output = data.usage?.completion_tokens ?? null; cached = data.usage?.prompt_tokens_details?.cached_tokens ?? 0;
     } else {
@@ -112,6 +114,7 @@ export async function usableProvider(userId: string, preferred: VisitorProvider)
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data } = await supabaseAdmin.from("visitor_ai_keys").select("provider").eq("user_id", userId);
   const saved = (data ?? []).map(r => r.provider as VisitorProvider);
+  if (saved.includes("openrouter")) return "openrouter"; // free models first
   if (saved.includes(preferred)) return preferred;
   return (["gemini", "claude", "chatgpt"] as VisitorProvider[]).find(p => saved.includes(p)) ?? preferred;
 }
