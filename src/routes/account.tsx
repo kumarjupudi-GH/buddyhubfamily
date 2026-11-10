@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { VisitorAccount } from "@/components/visitor-account";
+export const Route = createFileRoute("/account")({ head: () => ({ meta: [{ title: "Your AI account — Family BuddyApps" }, { name: "description", content: "Manage your adult family API connections and daily spending budget." }, { property: "og:title", content: "Your AI account — Family BuddyApps" }, { property: "og:description", content: "Adult-managed API access and private daily usage." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: VisitorAccount });
