@@ -31,7 +31,7 @@
 
   /* ---------- persistent state ---------- */
   const KEY = 'artbuddy.v1';
-  const fresh = () => ({ diff: 0, level: 'kindergarten', stars: 0, done: {}, gallery: [], last: null });
+  const fresh = () => ({ diff: 0, stars: 0, done: {}, gallery: [], last: null });
   function loadState() { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === 'object') return Object.assign(fresh(), s); } catch (e) { } return fresh(); }
   function saveState() {
     try { localStorage.setItem(KEY, JSON.stringify(S)); }
@@ -39,14 +39,11 @@
   }
   let S = loadState();
   const diff = () => DIFFS[S.diff] || DIFFS[0];
-  const curriculum = window.ART_CURRICULUM;
-  const learningLevel = () => curriculum.getLevel(S.level);
 
   /* ---------- lesson plan & SVG rendering ---------- */
   function buildPlan(l, d) {
     const plan = l.steps.filter(s => s.tier <= d.tier).map(s => ({ kind: 'draw', t: s.t, say: s.say, d: s.d }));
     plan.push({ kind: 'color', t: 'Add Color', say: 'Time for color! Use any colors you love. They don’t have to match mine!' });
-    if (LS && LS.challenge && LS.l.id === l.id) plan.push({ kind: 'challenge', t: l.challenge.name, say: l.challenge.prompt });
     if (d.tier >= 3 && l.shade) plan.push({ kind: 'shade', t: 'Add Shading', say: 'Add soft shadows on one side with a darker color. Press lightly!' });
     return plan;
   }
@@ -57,7 +54,7 @@
     plan.forEach((p, i) => {
       if (i > upto) return;
       if (p.kind === 'draw') { if (i === upto && !o.final && !o.ghost) cur += p.d; else old += p.d; }
-      else if (p.kind === 'color') colors = true; else if (p.kind === 'shade') shade = true;
+      else if (p.kind === 'color') colors = true; else shade = true;
     });
     const cls = o.ghost ? 'ghost' : (colors ? 'done' : 'old');
     return `<svg class="art-svg" viewBox="0 0 400 400" style="${style}" role="img" aria-label="${esc(l.name)} drawing">` +
@@ -75,7 +72,7 @@
 
   function go(name, extra) { V = Object.assign({ name }, extra); render(); window.scrollTo(0, 0); }
   function render() {
-    const fn = { home, category, results, intro, lesson, done, art, tech, challenges }[V.name] || home;
+    const fn = { home, category, results, intro, lesson, done, art, tech }[V.name] || home;
     app.innerHTML = fn();
     if (V.name === 'lesson') initLesson();
     if (V.name === 'done') confetti();
@@ -85,7 +82,6 @@
   /* ---------- shared UI pieces ---------- */
   const logo = () => 'ArtBuddy'.split('').map(c => `<span>${c}</span>`).join('');
   const topbar = (back) => `<header class="top">${back ? `<button class="btn ghost back" data-a="home" aria-label="Home">🏠 Home</button>` : `<div class="logo" aria-label="ArtBuddy">${logo()}</div>`}
-    <a class="btn ghost" href="/" aria-label="Back to Family BuddyApps home" title="Website home">🏠 Website home</a>
     <button class="chip stars" data-a="art" aria-label="My Art and stars">⭐ ${S.stars} · My Art</button></header>`;
   const diffPills = () => `<div class="diffs" role="radiogroup" aria-label="How tricky?">${DIFFS.map((d, i) =>
     `<button class="diff ${i === S.diff ? 'on' : ''}" role="radio" aria-checked="${i === S.diff}" data-a="diff" data-v="${i}"><span class="em">${d.emoji}</span>${d.label}<small>${d.hint}</small></button>`).join('')}</div>`;
@@ -106,8 +102,6 @@
       <form id="sf" class="search" autocomplete="off"><input id="q" type="text" maxlength="60" placeholder="Try: tiger, rocket, flower…" aria-label="What do you want to draw?">
       <button class="btn orange big" type="submit">Let’s go! 🔍</button></form>
       <div class="sugg">${sugg.map(s => `<button class="chip" data-a="search" data-v="${s}">${esc(s)}</button>`).join('')}</div></div></section>
-    <section><h2>Your learning level</h2><div class="levels" role="radiogroup" aria-label="Learning level">${curriculum.levels.map(level => `<button class="level ${level.id === learningLevel().id ? 'on' : ''}" role="radio" aria-checked="${level.id === learningLevel().id}" data-a="level" data-v="${level.id}">${level.label}<small>${level.focus}</small></button>`).join('')}</div></section>
-    <section><div class="section-heading"><h2>${learningLevel().label} tutorials</h2><button class="chip" data-a="challenges">🎯 Drawing challenges</button></div><div class="lgrid">${curriculum.lessonsFor(S.level).map(lessonCard).join('')}</div></section>
     <section><h2>How tricky should it be?</h2>${diffPills()}</section>
     <section><h2>Pick something to draw</h2><div class="cats">${CATS.map(c => `<button class="cat" style="background:${c.color}" data-a="cat" data-v="${c.id}"><span class="em">${c.emoji}</span>${c.name}</button>`).join('')}</div></section>
     <section class="two">
@@ -115,9 +109,6 @@
       ${last ? `<button class="card tile" data-a="lesson" data-v="${last.id}"><span style="font-size:44px">${last.emoji}</span><span>Draw ${esc(last.name)} again<small>Keep practicing!</small></span></button>`
         : `<button class="card tile" data-a="lesson" data-v="tiger"><span style="font-size:44px">🐯</span><span>Start with a Tiger<small>A great first drawing</small></span></button>`}
     </section></div>`;
-  }
-  function challenges() {
-    return `<div>${topbar(true)}<section><h1>🎯 ${learningLevel().label} challenges</h1><div class="lgrid">${curriculum.lessonsFor(S.level).map(l => `<article class="card challenge-card"><div class="art">${finalSVG(l)}</div><h2>${esc(l.challenge.name)}</h2><p>${esc(l.challenge.prompt)}</p><ul>${l.challenge.checks.map(c => `<li>${esc(c)}</li>`).join('')}</ul><button class="btn teal" data-a="challenge" data-v="${l.id}">Start challenge</button><button class="chip" data-a="lesson" data-v="${l.id}">View tutorial</button></article>`).join('')}</div></section></div>`;
   }
   function category() {
     const c = catOf(V.id);
@@ -141,7 +132,7 @@
     <section><h1>${l.emoji} ${esc(l.name)}</h1>
       <h3>Shapes we’ll use</h3><div class="shapes">${l.shapes.map(s => `<span class="shape">${SHAPE_ICON[s] || s}</span>`).join('')}</div>
       <div class="trick"><b>🎨 Today’s trick: ${esc(l.tech[0])}</b><br>${esc(l.tech[1])}</div>
-      <p class="meta">${esc(learningLevel().label)} · ${plan.length} guided steps</p><h3>How hard?</h3>${diffPills()}
+      <h3>How hard?</h3>${diffPills()}
       <p style="margin:14px 0 0"><button class="btn orange big" data-a="start" data-v="${l.id}">Let’s draw! ✏️</button></p></section></div>
     <section><h3>Watch it grow – ${plan.length} steps</h3><div class="strip">${draws.map((x, n) => `<figure><div class="art">${svg(l, plan, x.i)}</div>Step ${n + 1}</figure>`).join('')}<figure><div class="art">${finalSVG(l)}</div>All done!</figure></div></section></div>`;
   }
@@ -156,7 +147,7 @@
     <div class="toolbar" aria-label="Brush size">${SIZES.map((s, i) => `<button class="tb sz ${i === 1 ? 'on' : ''}" data-a="size" data-v="${s}" aria-label="Brush size ${i + 1}"><i style="width:${8 + i * 8}px;height:${8 + i * 8}px"></i></button>`).join('')}</div>`;
   function lesson() {
     const l = LS.l;
-    return `<div><div class="lhead"><button class="btn ghost" data-a="leave" aria-label="Back">⬅️</button><h2>${l.emoji} ${esc(l.name)}</h2><a class="chip" href="/" aria-label="Back to Family BuddyApps home">🏠 Website home</a><span class="chip">${diff().emoji} ${diff().label}</span></div>
+    return `<div><div class="lhead"><button class="btn ghost" data-a="leave" aria-label="Back">⬅️</button><h2>${l.emoji} ${esc(l.name)}</h2><span class="chip">${diff().emoji} ${diff().label}</span></div>
     <div class="progress" aria-hidden="true"><i id="bar"></i></div><div class="dots" id="dots"></div>
     <div class="work">
       <section class="card panel"><h3 id="stepTitle"></h3><div class="art bigart" id="example"></div><div class="caption" id="caption"></div>
@@ -164,7 +155,7 @@
       <section class="card panel"><h3>✏️ Your turn!</h3>
         <div class="stage" id="stage"><div id="ghost" aria-hidden="true"></div><canvas id="cv" width="600" height="600" aria-label="Drawing canvas"></canvas></div>
         ${toolbar()}
-        <label class="toggle"><input type="checkbox" id="trace"> Show helper lines (trace it)</label>${LS.challenge ? `<fieldset class="challenge-checks"><legend>Challenge checklist</legend>${l.challenge.checks.map(c => `<label><input type="checkbox"> ${esc(c)}</label>`).join('')}</fieldset>` : ''}</section></div>
+        <label class="toggle"><input type="checkbox" id="trace"> Show helper lines (trace it)</label></section></div>
     <div class="teacher"><div class="mascot small bounce" aria-hidden="true">✏️</div><div style="flex:1"><div class="bubble" id="bubble"></div>
       <form class="ask" id="askf" autocomplete="off"><input id="askq" maxlength="140" placeholder="Ask ArtBuddy a question…" aria-label="Ask ArtBuddy"><button class="chip" type="submit">Ask</button></form></div></div>
     <div class="nav"><button class="btn ghost big" data-a="prev" id="prev">⬅️ Back</button>
@@ -233,10 +224,9 @@
   }
 
   /* ---------- lesson session ---------- */
-  function startLesson(id, challenge = false) {
+  function startLesson(id) {
     const l = byId(id); if (!l) return;
-    LS = { l, challenge, plan: [], i: 0, helps: 0, inked: false, pal: null, img: null, earned: 0, newBadges: [], saved: false };
-    LS.plan = buildPlan(l, diff());
+    LS = { l, plan: buildPlan(l, diff()), i: 0, helps: 0, inked: false, pal: null, img: null, earned: 0, newBadges: [], saved: false };
     S.last = id; saveState();
     go('lesson');
   }
@@ -269,12 +259,6 @@
   }
 
   function bubble(html) { const b = $('#bubble'); if (b) b.innerHTML = html; }
-  function checkHtml(c, src) {
-    if (!c) return '';
-    return c.ok
-      ? '<div class="aicheck">✓ Best of Claude & Google' + (src ? ' — picked ' + (src === 'google' ? 'Google' : 'Claude') : '') + '</div>'
-      : '<div class="aicheck fix">Google’s double-check: ' + esc(c.note || 'Ask a grown-up to double-check this one.') + '</div>';
-  }
   function updateStep(dir) {
     const { l, plan, i } = LS, p = plan[i];
     $('#stepTitle').textContent = `Step ${i + 1}: ${p.t}`;
@@ -296,7 +280,7 @@
     try {
       const r = await fetch('/api/public/teach', { method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ kind, lesson: l.name, step: plan[i].t, instruction: plan[i].say, difficulty: diff().label, question: question || '' }) });
-      if (!r.ok) throw new Error('no ai'); const j = await r.json(); return j.text ? { text: j.text, check: j.check || null, source: j.source || null } : null;
+      if (!r.ok) throw new Error('no ai'); const j = await r.json(); return j.text || null;
     } catch (e) { return null; }
   }
   const HELP = [
@@ -309,13 +293,13 @@
     if (n >= 1) { const t = $('#trace'); if (t) { t.checked = true; $('#stage').classList.add('trace'); } }
     bubble('🤔 Let me think…');
     const ai = AI.ok ? await askAI('help', '') : null;
-    bubble(ai ? esc(ai.text) + checkHtml(ai.check, ai.source) : HELP[Math.min(n, 2)](p));
+    bubble(ai ? esc(ai) : HELP[Math.min(n, 2)](p));
   }
   async function ask(q) {
     q = q.trim(); if (!q) return;
     bubble('🤔 Let me think…');
     const ai = AI.ok ? await askAI('chat', q) : null;
-    if (ai) return bubble(esc(ai.text) + checkHtml(ai.check, ai.source));
+    if (ai) return bubble(esc(ai));
     const t = q.toLowerCase();
     if (/erase|mistake|oops|wrong|messed/.test(t)) bubble('Mistakes are okay! Tap the 🧽 eraser or the ↩️ undo arrow. Even pro artists do that!');
     else if (/color|colour/.test(t)) bubble('Pick any color you like at the bottom of the tools. Your colors don’t have to match mine! 🌈');
@@ -354,9 +338,6 @@
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-a]'); if (!b) return; const a = b.dataset.a, v = b.dataset.v;
     switch (a) {
-      case 'level': S.level = curriculum.getLevel(v).id; S.diff = learningLevel().difficulty; saveState(); return go('home');
-      case 'challenges': return go('challenges');
-      case 'challenge': return startLesson(v, true);
       case 'home': return go('home');
       case 'art': return go('art');
       case 'tech': return go('tech');

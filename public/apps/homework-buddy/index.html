@@ -261,8 +261,6 @@ select {
 }
 .who { display: block; font: 700 12px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
 .note { margin-top: 8px; font-size: 14px; color: var(--muted); }
-.check { margin-top: 6px; font-size: 12.5px; color: var(--muted); opacity: .85; }
-.check.fix { opacity: 1; font-weight: 600; color: var(--accent); }
 .err { color: var(--danger); }
 .retry { margin-top: 10px; }
 .dots { display: inline-flex; gap: 5px; align-items: center; height: 24px; }
@@ -434,7 +432,6 @@ textarea { box-sizing: border-box; }
 .vbtns { display: flex; gap: 8px; flex-wrap: wrap; }
 @media (max-width: 560px) { .composer { flex-wrap: wrap; } .composer textarea { flex: 1 1 100%; } .composer .btn.primary { flex: 1; } }
 </style>
-  <script type="module" src="/apps/buddy-shared/session.js"></script>
 </head>
 <body>
 
@@ -500,7 +497,6 @@ textarea { box-sizing: border-box; }
         </div>
       </div>
       <div class="tools">
-        <a class="btn small" href="/" aria-label="Back to Family BuddyApps home" title="Home"><svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span class="lbl"> Home</span></a>
         <button class="btn small" id="voiceBtn" type="button" aria-pressed="true" aria-label="Voice replies: on" title="Voice replies: on" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><span class="lbl" id="voiceLbl"> Voice on</span></button>
         <button class="btn small" id="meBtn" type="button" aria-expanded="false" aria-controls="me" aria-label="My name and grade" title="My name and grade"><svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span class="lbl" id="meLbl"> Who's here?</span></button>
         <button class="btn small" id="popsBtn" type="button" aria-expanded="false" aria-controls="pops" aria-label="Power-ups"><svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg><span class="lbl"> Power-ups</span></button>
@@ -549,7 +545,6 @@ textarea { box-sizing: border-box; }
   </div>
 </div>
 
-<script src="../buddy-shared/picture.js"></script>
 <script>
 (function () {
   var MAX_TURNS = 24;
@@ -943,7 +938,7 @@ textarea { box-sizing: border-box; }
   }
   function copyFor(code) {
     switch (code) {
-      case "rate_limited": return "BrainBoost Buddy needs a short break (lots of questions right now). Wait a bit, then press Try again.";
+      case "rate_limited": return "BrainBoost Buddy needs a short break (too many messages, or your Claude usage limit was reached). Wait a bit, then press Try again.";
       case "session_expired": return "You were signed out. Sign in to Claude again, then press Try again.";
       case "refused": return "I can't help with that one. Try asking it a different way, or ask about your schoolwork.";
       case "empty_completion": return "I didn't come up with an answer. Try asking in a different way.";
@@ -976,9 +971,6 @@ textarea { box-sizing: border-box; }
         body.appendChild(n);
       }
       decorateReply(body, res.text);
-      showCheck(body, res.check, res.source);
-      if (window.BuddyPicture) { var q = turns.length > 1 ? turns[turns.length - 2].content : ""; window.BuddyPicture.add(body, q, res.text); }
-      addDiagram(body, turns.length > 1 ? turns[turns.length - 2].content : "", res.text);
       speakReply(res.text, lastViaVoice);
     } catch (e) {
       setVoice("idle");
@@ -1001,7 +993,7 @@ textarea { box-sizing: border-box; }
         disableAll("BrainBoost Buddy can't use Claude here. Open this page while signed in to Claude and allow BrainBoost Buddy when asked, then reload the page.");
       } else {
         body.innerHTML = (partial ? render(partial) : "") + '<p class="err"></p>';
-        body.querySelector(".err").textContent = (copyFor(code).indexOf("Something went wrong") === 0 && e && e.message ? e.message : copyFor(code));
+        body.querySelector(".err").textContent = copyFor(code);
         var r = document.createElement("button");
         r.type = "button";
         r.className = "btn retry";
@@ -1347,50 +1339,6 @@ textarea { box-sizing: border-box; }
     });
     body.appendChild(b);
   }
-  // ---- Google-drawn diagrams (geometry, graphs, number lines, fractions)
-  var DIAGRAM_RX = /triangle|angle|circle|radius|diameter|square|rectangle|polygon|perimeter|area|volume|geometry|pythag|graph|plot|slope|parabola|coordinate|axis|number line|fraction|shape|cube|cylinder|cone|sphere|degrees|parallel|perpendicular|symmetr|diagram|draw|visual|chart|planet|orbit|solar system|water cycle|life cycle|atom|cell|food chain|circuit|magnet|moon phase|season|volcano|skeleton|digestive/i;
-  function addDiagram(body, question, answer) {
-    if (!body || !question) return;
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "pic-btn";
-    btn.textContent = "📐 Draw a diagram";
-    var run = async function () {
-      btn.disabled = true;
-      btn.textContent = "📐 Drawing the diagram…";
-      try {
-        var r = await fetch("/api/public/diagram", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question: String(question).slice(0, 500), answer: String(answer).slice(0, 2000) })
-        });
-        var j = await r.json().catch(function () { return {}; });
-        if (!r.ok || !j.svg) throw new Error(j.error || "Couldn't draw a diagram this time.");
-        var holder = document.createElement("div");
-        holder.innerHTML = renderFence("svg", j.svg) + '<p class="pic-note">Diagram drawn by Google Gemini — check the labels with your answer.</p>';
-        body.insertBefore(holder, btn);
-        btn.remove();
-        toBottom();
-      } catch (e) {
-        btn.disabled = false;
-        btn.textContent = "📐 Try the diagram again";
-        btn.title = e.message;
-      }
-    };
-    btn.addEventListener("click", run);
-    body.appendChild(btn);
-    // Auto-draw for geometry / graph style questions when the answer has no drawing yet.
-    if (DIAGRAM_RX.test(question) && !/```svg/i.test(answer)) run();
-  }
-  function showCheck(body, check, source) {
-    if (!body || !check) return;
-    var p = document.createElement("p");
-    p.className = "check " + (check.ok ? "ok" : "fix");
-    p.textContent = check.ok
-      ? "✓ Best answer from Claude & Google" + (source ? " — picked " + (source === "google" ? "Google's" : "Claude's") : "")
-      : "Google's double-check: " + (check.note || "This answer may need a second look — ask a grown-up.");
-    body.appendChild(p);
-  }
   function setVoiceOn(on, persist) {
     voiceOn = on;
     var svg = voiceBtn.querySelector("svg");
@@ -1476,12 +1424,12 @@ textarea { box-sizing: border-box; }
           if (settled) return;
           if (!x.ok || !x.j || typeof x.j.text !== "string") {
             var err = (x.j && x.j.error) || {};
-            fail(x.status === 429 ? "rate_limited" : (err.code || "upstream_error"), err.message || ("HTTP " + x.status));
+            fail(err.code || (x.status === 429 ? "rate_limited" : "upstream_error"), err.message || ("HTTP " + x.status));
             return;
           }
           settled = true;
           if (opts.onText) { try { opts.onText({ text: x.j.text, delta: x.j.text }); } catch (e) {} }
-          resolve({ text: x.j.text, truncated: !!x.j.truncated, check: x.j.check || null, source: x.j.source || null, modelTierApplied: "default" });
+          resolve({ text: x.j.text, truncated: !!x.j.truncated, modelTierApplied: "default" });
         }).catch(function () { fail("upstream_error", "network error"); });
       });
     };

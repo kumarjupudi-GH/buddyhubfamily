@@ -1,1 +1,0 @@
-ALTER TABLE public.visitor_ai_keys ADD COLUMN IF NOT EXISTS key_hint text;

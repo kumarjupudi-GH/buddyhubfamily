@@ -1,7 +1,6 @@
 // Shared engine for the family buddies. Generalized from BrainBoost Buddy
 // (public/apps/homework-buddy/index.html). Each page sets window.BUDDY first.
 (function () {
-  var sessionScript = document.createElement("script"); sessionScript.type = "module"; sessionScript.src = "/apps/buddy-shared/session.js"; document.head.appendChild(sessionScript);
   var B = window.BUDDY || {};
   var ID = B.id || "buddy";
   var NAME = B.name || "Buddy";
@@ -454,7 +453,7 @@
         }
         settled = true;
         if (opts.onText) { try { opts.onText({ text: x.j.text }); } catch (e) {} }
-        resolve({ text: x.j.text, truncated: !!x.j.truncated, check: x.j.check || null, source: x.j.source || null });
+        resolve({ text: x.j.text, truncated: !!x.j.truncated });
       }).catch(function () { fail("upstream_error", "network error"); });
     });
   }
@@ -479,8 +478,6 @@
         body.appendChild(n);
       }
       decorateReply(body, res.text);
-      showCheck(body, res.check, res.source);
-      if (window.BuddyPicture) { var q = turns.length > 1 ? turns[turns.length - 2].content : ""; window.BuddyPicture.add(body, q, res.text); }
       speakReply(res.text, lastViaVoice);
     } catch (e) {
       setVoice("idle");
@@ -837,15 +834,6 @@
       speakText(text);
     });
     body.appendChild(b);
-  }
-  function showCheck(body, check, source) {
-    if (!body || !check) return;
-    var p = document.createElement("p");
-    p.className = "check " + (check.ok ? "ok" : "fix");
-    p.textContent = check.ok
-      ? "✓ Best answer from Claude & Google" + (source ? " — picked " + (source === "google" ? "Google's" : "Claude's") : "")
-      : "Google's double-check: " + (check.note || "This answer may need a second look — ask a grown-up.");
-    body.appendChild(p);
   }
   function setVoiceOn(on, persist) {
     voiceOn = on;

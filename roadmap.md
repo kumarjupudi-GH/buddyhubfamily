@@ -1,19 +1,5 @@
 # Roadmap
-- [x] Smart routing preview: disabled-by-default sponsor controls, one-time grant eligibility, atomic reservations, OpenAI primary/controlled Claude fallback, authoritative counts, account balances; 44 tests pass and signed-in home/account verified
-- [ ] Smart routing live validation: real OpenAI/Claude answers, diagrams, model-quality comparisons and concurrent reservation/grant checks need a verified administrator role, provider connections and explicit small test budget; publishing needs separate approval
-- [x] ArtBuddy: four learning levels, eight illustrated tutorials and eight drawing challenges; saved art and desktop/mobile flows verified (preview only)
-- [x] Add missing website Home navigation in BrainBoost and ArtBuddy; family buddies already have it
-- [ ] Visitor-funded AI: preview implementation and signed-out safeguards tested; authenticated provider calls and private reports await user sign-in and provider connections; owner admin role awaits verified account; no deployment without approval
 - [x] Family buddy engine + 8 buddies (Zen & Zest, PennyPilot, Wrench & Wonder, Wanderly, Nudge & Notes, Sprout & Sage, Spoon & Spark, Tidy Nest)
 - [x] Puzzle home page with 10 BuddyApps, Home button on buddies, coming-soon placeholder
 - [x] Remove leftover tracker reference from ArtBuddy
-- [x] Google (Gemini) double-check on all answers — all ten buddies show a "Checked by Google" badge or a correction note
-- [x] Pictures/diagrams in answers — "Show me a picture" button on every buddy answer (except ArtBuddy, which already draws)
 - [ ] Split ArtBuddy into its own project (needs user: remix project — I can't create new projects)
-- [x] BrainBoost: Google Gemini (3.8 Flash) draws labeled diagrams for geometry/graph answers (auto) + "Draw a diagram" button
-- [x] Switch all text AI from Claude to free Google Gemini + usage limits
-- [ ] Test the seven newer buddies with real questions + diagrams
-- [ ] Publish latest changes (answer-check, pictures, diagrams)
-- [ ] AI out of credits (diagnosed): needs user to add AI credits; 80% admin alert waits on user choosing how to be alerted
-- [x] Plan B: better teaching prompts, Claude/ChatGPT/Gemini routing, richer diagrams, /usage page with 80% alert (preview only, awaiting approval to publish)
-- [x] Show key last-4 hint + Google AI key how-to on account/home card

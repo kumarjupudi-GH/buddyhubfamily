@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { pickProvider } from "@/lib/ai-router";
-import { checkAILimit } from "@/lib/ai-limits";
-import { AIError } from "@/lib/google-ai";
+import { askClaude } from "@/lib/ai-gateway";
 
 // BrainBoost Buddy homework chat endpoint (public app API).
 const SYSTEM_PROMPT = [
@@ -12,11 +10,6 @@ const SYSTEM_PROMPT = [
   "Help students understand their work with hints and steps instead of writing graded assignments for them.",
   "If a student seems distressed or unsafe, respond kindly and encourage them to talk to a trusted adult;",
   "if they may be in immediate danger, suggest calling 911 (US) or calling or texting 988.",
-  "\n\nHow to teach: be factually accurate and say so if you are unsure. First explain the concept simply with a real-life example.",
-  "Then show a fully worked example, numbered step by step, saying WHY each step works.",
-  "Only after that, give the student a similar practice problem to try (do not solve their graded assignment for them).",
-  "When something is visual (shapes, graphs, orbits, cycles, body parts), describe it in an orderly way that matches a labeled diagram.",
-  "Finish with one short follow-up question that checks understanding.",
 ].join(" ");
 
 const MAX_TURNS = 40;
@@ -48,9 +41,6 @@ export const Route = createFileRoute("/api/public/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const { visitorIdentity, visitorText, usableProvider } = await import("@/lib/visitor-ai.server");
-        let identity;
-        try { identity = await visitorIdentity(request); } catch (e) { return json(e instanceof Error && "status" in e ? Number(e.status) : 503, { error: { code: "account_required", message: e instanceof Error ? e.message : "Account unavailable." } }); }
         let body: any;
         try {
           body = await request.json();
@@ -63,24 +53,21 @@ export const Route = createFileRoute("/api/public/chat")({
             error: { code: "invalid_request", message: "messages must be a list of user/assistant turns." },
           });
         }
-        const limited = await checkAILimit(request, "chat", identity.userId);
-        if (limited) return json(429, { error: { code: "rate_limited", message: limited } });
         try {
-          const { text, truncated, provider } = await visitorText({
-            userId: identity.userId,
-            fundingMode: identity.settings.funding_mode === "sponsored" ? "sponsored" : "visitor",
-            requestId: request.headers.get("X-Request-ID") ?? undefined,
-            buddy: "brainboost",
-            provider: identity.settings.funding_mode === "sponsored" ? "chatgpt" : await usableProvider(identity.userId, pickProvider(messages[messages.length - 1]?.content ?? "", "tutor")),
+          const { text, truncated } = await askClaude({
+            model: "anthropic/claude-sonnet-5",
             system: SYSTEM_PROMPT,
             messages,
             maxTokens: 2048,
           });
-          return json(200, { text, truncated, source: provider });
+          if (!text.trim()) {
+            return json(502, { error: { code: "upstream_error", message: "The AI sent an empty answer." } });
+          }
+          return json(200, { text, truncated });
         } catch (e: any) {
           const status = typeof e?.status === "number" ? e.status : 502;
           return json(status, {
-            error: { code: e?.code || "upstream_error", message: e?.message || "The AI had a problem. Try again." },
+            error: { code: "upstream_error", message: e?.message || "The AI had a problem. Try again." },
           });
         }
       },

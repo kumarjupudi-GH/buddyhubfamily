@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AIError } from "@/lib/google-ai";
-import { checkAILimit } from "@/lib/ai-limits";
+import { askClaude } from "@/lib/ai-gateway";
 
 // ArtBuddy AI art teacher endpoint (public app API).
 const SYSTEM = `You are ArtBuddy, a warm and cheerful art teacher inside a drawing app for kids aged 5-12.
@@ -27,9 +26,6 @@ export const Route = createFileRoute("/api/public/teach")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const { visitorIdentity, visitorText } = await import("@/lib/visitor-ai.server");
-        let identity;
-        try { identity = await visitorIdentity(request); } catch (e) { return json(e instanceof Error && "status" in e ? Number(e.status) : 503, { error: e instanceof Error ? e.message : "Account unavailable." }); }
         let body: any;
         try {
           body = await request.json();
@@ -42,13 +38,9 @@ export const Route = createFileRoute("/api/public/teach")({
           kind === "help"
             ? 'The child pressed "Help me!". Explain this step in a simpler, different way and encourage them.'
             : `The child asked a question:\n<child_message>${clean(body?.question, 140)}</child_message>\nAnswer helpfully about drawing.`;
-        const limited = await checkAILimit(request, "chat", identity.userId);
-        if (limited) return json(429, { error: limited });
         try {
-          const { text } = await visitorText({
-            userId: identity.userId, buddy: "artbuddy", provider: "gemini",
-            fundingMode: identity.settings.funding_mode === "sponsored" ? "sponsored" : "visitor",
-            requestId: request.headers.get("X-Request-ID") ?? undefined,
+          const { text } = await askClaude({
+            model: "anthropic/claude-haiku-4-5",
             system: SYSTEM,
             messages: [{ role: "user", content: `${ctx}\n\n${task}` }],
             maxTokens: 150,
@@ -58,9 +50,9 @@ export const Route = createFileRoute("/api/public/teach")({
             .replace(/https?:\/\/\S+/g, "")
             .trim()
             .slice(0, 260);
-          return json(200, { text: cleaned, source: "google" });
-        } catch (e) {
-          return json(e instanceof AIError ? e.status : 502, { error: e instanceof Error ? e.message : "AI unavailable" });
+          return json(200, { text: cleaned });
+        } catch {
+          return json(502, { error: "AI unavailable" });
         }
       },
     },
