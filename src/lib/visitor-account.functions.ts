@@ -7,7 +7,7 @@ export const getVisitorAccount = createServerFn({ method: "GET" }).middleware([r
   const { visitorSummary } = await import("@/lib/visitor-ai.server");
   const [settings, keys, roles, events] = await Promise.all([
     context.supabase.from("visitor_ai_settings").select("*").eq("user_id", context.userId).maybeSingle(),
-    supabaseAdmin.from("visitor_ai_keys").select("provider,updated_at").eq("user_id", context.userId),
+    supabaseAdmin.from("visitor_ai_keys").select("provider,updated_at,key_hint").eq("user_id", context.userId),
     context.supabase.rpc("is_usage_admin"),
     context.supabase.from("visitor_ai_events").select("*").eq("user_id", context.userId).order("created_at", { ascending: false }).limit(200),
   ]);
@@ -25,7 +25,7 @@ export const saveVisitorConnection = createServerFn({ method: "POST" }).middlewa
   if (!settings) throw new Error("Save adult account settings first.");
   const { encryptVisitorKey } = await import("@/lib/visitor-crypto.server");
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { error } = await supabaseAdmin.from("visitor_ai_keys").upsert({ user_id: context.userId, provider: data.provider, ciphertext: await encryptVisitorKey(data.key, `${context.userId}:${data.provider}`), updated_at: new Date().toISOString() });
+  const { error } = await supabaseAdmin.from("visitor_ai_keys").upsert({ user_id: context.userId, provider: data.provider, ciphertext: await encryptVisitorKey(data.key, `${context.userId}:${data.provider}`), key_hint: data.key.slice(-4), updated_at: new Date().toISOString() });
   if (error) throw new Error("Connection could not be saved.");
   return { ok: true };
 });
