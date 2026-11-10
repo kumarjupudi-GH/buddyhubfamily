@@ -48,7 +48,7 @@ export async function providerRequest(provider: Provider, key: string, path: str
   if (provider === "claude") { headers.set("x-api-key", key); headers.set("anthropic-version", "2023-06-01"); }
   else if (provider === "gemini") headers.set("x-goog-api-key", key);
   else headers.set("authorization", `Bearer ${key}`);
-  const response = await fetch(base + path, { method: body ? "POST" : "GET", headers, body: body ? JSON.stringify(body) : undefined });
+  const response = await fetch(base + path, { method: body ? "POST" : "GET", headers, ...(body ? { body: JSON.stringify(body) } : {}) });
   if (!response.ok) throw Object.assign(new Error(response.status === 401 || response.status === 403 ? "Your AI provider rejected access. Check your key and model permissions in My AI." : response.status === 429 ? "Your AI account has reached a usage or rate limit. Check your provider account before trying again." : "Your AI provider could not complete this request. No other provider was used."), { status: response.status });
   return response.json();
 }
