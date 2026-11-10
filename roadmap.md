@@ -14,3 +14,4 @@
 - [ ] Publish latest changes (answer-check, pictures, diagrams)
 - [ ] AI out of credits (diagnosed): needs user to add AI credits; 80% admin alert waits on user choosing how to be alerted
 - [x] Plan B: better teaching prompts, Claude/ChatGPT/Gemini routing, richer diagrams, /usage page with 80% alert (preview only, awaiting approval to publish)
+- [x] Show key last-4 hint + Google AI key how-to on account/home card
