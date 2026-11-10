@@ -1,4 +1,5 @@
 # Roadmap
+- [x] ArtBuddy: four learning levels, eight illustrated tutorials and eight drawing challenges; saved art and desktop/mobile flows verified (preview only)
 - [x] Add missing website Home navigation in BrainBoost and ArtBuddy; family buddies already have it
 - [ ] Visitor-funded AI: preview implementation and signed-out safeguards tested; authenticated provider calls and private reports await user sign-in and provider connections; owner admin role awaits verified account; no deployment without approval
 - [x] Family buddy engine + 8 buddies (Zen & Zest, PennyPilot, Wrench & Wonder, Wanderly, Nudge & Notes, Sprout & Sage, Spoon & Spark, Tidy Nest)
