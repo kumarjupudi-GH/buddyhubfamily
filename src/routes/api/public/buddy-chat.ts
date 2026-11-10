@@ -42,7 +42,7 @@ export const Route = createFileRoute("/api/public/buddy-chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const { visitorIdentity, visitorText } = await import("@/lib/visitor-ai.server");
+        const { visitorIdentity, visitorText, usableProvider } = await import("@/lib/visitor-ai.server");
         let identity;
         try { identity = await visitorIdentity(request); } catch (e) { return json(e instanceof Error && "status" in e ? Number(e.status) : 503, { error: { code: "account_required", message: e instanceof Error ? e.message : "Account unavailable." } }); }
         let body: any;
@@ -67,7 +67,7 @@ export const Route = createFileRoute("/api/public/buddy-chat")({
           const { text, truncated, provider } = await visitorText({
             userId: identity.userId,
             buddy: buddy,
-            provider: pickProvider(messages[messages.length - 1]?.content ?? "", "buddy"),
+            provider: await usableProvider(identity.userId, pickProvider(messages[messages.length - 1]?.content ?? "", "buddy")),
             system: BUDDY_PROMPTS[buddy] + "\n\n" + SAFETY,
             messages,
             maxTokens: 1024,

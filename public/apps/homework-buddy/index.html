@@ -1001,7 +1001,7 @@ textarea { box-sizing: border-box; }
         disableAll("BrainBoost Buddy can't use Claude here. Open this page while signed in to Claude and allow BrainBoost Buddy when asked, then reload the page.");
       } else {
         body.innerHTML = (partial ? render(partial) : "") + '<p class="err"></p>';
-        body.querySelector(".err").textContent = copyFor(code);
+        body.querySelector(".err").textContent = (copyFor(code).indexOf("Something went wrong") === 0 && e && e.message ? e.message : copyFor(code));
         var r = document.createElement("button");
         r.type = "button";
         r.className = "btn retry";
