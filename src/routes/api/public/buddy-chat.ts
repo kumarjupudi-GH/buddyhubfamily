@@ -66,8 +66,10 @@ export const Route = createFileRoute("/api/public/buddy-chat")({
         try {
           const { text, truncated, provider } = await visitorText({
             userId: identity.userId,
+            fundingMode: identity.settings.funding_mode === "sponsored" ? "sponsored" : "visitor",
+            requestId: request.headers.get("X-Request-ID") ?? undefined,
             buddy: buddy,
-            provider: await usableProvider(identity.userId, pickProvider(messages[messages.length - 1]?.content ?? "", "buddy")),
+            provider: identity.settings.funding_mode === "sponsored" ? "chatgpt" : await usableProvider(identity.userId, pickProvider(messages[messages.length - 1]?.content ?? "", "buddy")),
             system: BUDDY_PROMPTS[buddy] + "\n\n" + SAFETY,
             messages,
             maxTokens: 1024,

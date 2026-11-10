@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { askGoogle } from "@/lib/google-ai";
+import { AIError } from "@/lib/google-ai";
 import { checkAILimit } from "@/lib/ai-limits";
 
 // ArtBuddy AI art teacher endpoint (public app API).
@@ -47,6 +47,8 @@ export const Route = createFileRoute("/api/public/teach")({
         try {
           const { text } = await visitorText({
             userId: identity.userId, buddy: "artbuddy", provider: "gemini",
+            fundingMode: identity.settings.funding_mode === "sponsored" ? "sponsored" : "visitor",
+            requestId: request.headers.get("X-Request-ID") ?? undefined,
             system: SYSTEM,
             messages: [{ role: "user", content: `${ctx}\n\n${task}` }],
             maxTokens: 150,
@@ -57,8 +59,8 @@ export const Route = createFileRoute("/api/public/teach")({
             .trim()
             .slice(0, 260);
           return json(200, { text: cleaned, source: "google" });
-        } catch {
-          return json(502, { error: "AI unavailable" });
+        } catch (e) {
+          return json(e instanceof AIError ? e.status : 502, { error: e instanceof Error ? e.message : "AI unavailable" });
         }
       },
     },

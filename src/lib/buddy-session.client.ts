@@ -8,6 +8,7 @@ window.fetch = async (input, init) => {
   const { data } = await supabase.auth.getSession();
   const headers = new Headers(input instanceof Request ? input.headers : init?.headers);
   if (data.session) headers.set("Authorization", `Bearer ${data.session.access_token}`);
+  if (url.pathname !== "/api/public/visitor-session" && !headers.has("X-Request-ID")) headers.set("X-Request-ID", crypto.randomUUID());
   const response = await nativeFetch(input, { ...init, headers });
   if (url.pathname !== "/api/public/visitor-session") updateStatus().catch(() => {});
   return response;

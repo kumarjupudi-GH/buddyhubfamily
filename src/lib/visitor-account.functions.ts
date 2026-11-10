@@ -1,10 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
+import { readBalance } from "@/lib/sponsor-policy";
 
 export const getVisitorAccount = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { visitorSummary } = await import("@/lib/visitor-ai.server");
+  const grant = await supabaseAdmin.rpc("ensure_intro_allowance", { _user: context.userId });
+  if (grant.error) throw new Error("Introductory allowance checks are unavailable.");
+  const [balance, totals] = await Promise.all([context.supabase.rpc("sponsor_balance", { _user: context.userId }), context.supabase.rpc("visitor_daily_totals")]);
+  if (balance.error || totals.error) throw new Error("Usage totals are unavailable.");
   const [settings, keys, roles, events] = await Promise.all([
     context.supabase.from("visitor_ai_settings").select("*").eq("user_id", context.userId).maybeSingle(),
     supabaseAdmin.from("visitor_ai_keys").select("provider,updated_at,key_hint").eq("user_id", context.userId),
@@ -12,7 +17,7 @@ export const getVisitorAccount = createServerFn({ method: "GET" }).middleware([r
     context.supabase.from("visitor_ai_events").select("*").eq("user_id", context.userId).order("created_at", { ascending: false }).limit(200),
   ]);
   if (settings.error || keys.error || roles.error || events.error) throw new Error("Account usage could not be loaded.");
-  return { email: context.claims.email as string | undefined, settings: settings.data, keys: keys.data ?? [], admin: roles.data, events: events.data ?? [], summary: await visitorSummary(context.userId) };
+  return { email: context.claims.email as string | undefined, settings: settings.data, keys: keys.data ?? [], admin: roles.data, events: events.data ?? [], summary: await visitorSummary(context.userId), allowance: readBalance(balance.data), totals: z.object({ questions: z.number(), diagrams: z.number(), pictures: z.number() }).parse(totals.data) };
 });
 export const saveVisitorSettings = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).inputValidator(z.object({ budget: z.number().positive().max(100000), timezone: z.string().max(100), adult: z.literal(true) })).handler(async ({ data, context }) => {
   try { new Intl.DateTimeFormat("en", { timeZone: data.timezone }).format(); } catch { throw new Error("Choose a valid timezone."); }
