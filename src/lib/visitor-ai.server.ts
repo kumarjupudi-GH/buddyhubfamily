@@ -114,6 +114,13 @@ export async function visitorSummary(userId: string) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: settings } = await supabaseAdmin.from("visitor_ai_settings").select("*").eq("user_id", userId).maybeSingle();
   if (!settings) return { level: "ok", estimated: 0, unknown: 0, budget: null };
+  if (settings.funding_mode === "sponsored") {
+    const { readBalance } = await import("@/lib/sponsor-policy");
+    const { data: balance, error: balanceError } = await supabaseAdmin.rpc("sponsor_balance", { _user: userId });
+    if (balanceError) throw new Error("Introductory allowance is unavailable.");
+    const allowance = readBalance(balance);
+    return { level: budgetAlert(allowance.used, allowance.granted), estimated: allowance.used, unknown: 0, budget: allowance.granted, allowance };
+  }
   const { data, error } = await supabaseAdmin.from("visitor_ai_events").select("created_at,estimated_usd").eq("user_id", userId).gte("created_at", new Date(Date.now() - 48 * 3600000).toISOString());
   if (error) throw new Error("Daily usage is unavailable.");
   const day = localDay(new Date(), settings.timezone);

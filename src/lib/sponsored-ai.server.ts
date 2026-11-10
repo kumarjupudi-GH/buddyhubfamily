@@ -33,7 +33,7 @@ export async function sponsoredText(options: SponsoredOptions) {
     const reservation = await supabaseAdmin.rpc("reserve_sponsor_spend", { _user: options.userId, _request: stableRequestId, _attempt: number, _provider: provider, _model: model, _scope: options.diagram ? "diagram" : "chat", _cost: reserveCost(model, options.system, messages, maxTokens) });
     if (reservation.error || !reservation.data) throw new AIError(403, "budget_limit", reservation.error?.message ?? "Your allowance cannot cover this question.");
     const id = reservation.data;
-    const event = await supabaseAdmin.from("visitor_ai_events").insert({ user_id: options.userId, buddy: options.buddy, provider, model, request_scope: options.diagram ? "diagram" : "chat", funding_source: "sponsored", request_id: requestId }).select("id").single();
+    const event = await supabaseAdmin.from("visitor_ai_events").insert({ user_id: options.userId, buddy: options.buddy, provider, model, request_scope: options.diagram ? "diagram" : "chat", funding_source: "sponsored", request_id: stableRequestId }).select("id").single();
     async function settle(cost: number | null, outcome: string, input: number | null = null, output: number | null = null) {
       const settled = cost === null ? await supabaseAdmin.from("ai_spend_reservations").update({ state: "uncertain" }).eq("id", id).eq("state", "reserved") : await supabaseAdmin.rpc("settle_sponsor_spend", { _id: id, _cost: cost });
       if (settled.error) throw new AIError(503, "usage_unavailable", "Usage recording is unavailable. No retry will be sent.");
