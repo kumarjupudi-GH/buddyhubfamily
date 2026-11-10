@@ -1,29 +1,8976 @@
-var rn=Symbol.for("@supabase/supabase-js.traceContextExtractor");function wr(){return globalThis[rn]}function ne(e,t){var r={};for(var s in e)if(Object.prototype.hasOwnProperty.call(e,s)&&t.indexOf(s)<0)r[s]=e[s];if(e!=null&&typeof Object.getOwnPropertySymbols==="function"){for(var n=0,s=Object.getOwnPropertySymbols(e);n<s.length;n++)if(t.indexOf(s[n])<0&&Object.prototype.propertyIsEnumerable.call(e,s[n]))r[s[n]]=e[s[n]]}return r}function _r(e,t,r,s){function n(i){return i instanceof r?i:new r(function(o){o(i)})}return new(r||(r=Promise))(function(i,o){function a(u){try{c(s.next(u))}catch(h){o(h)}}function l(u){try{c(s.throw(u))}catch(h){o(h)}}function c(u){u.done?i(u.value):n(u.value).then(a,l)}c((s=s.apply(e,t||[])).next())})}var br=(e)=>{if(e)return(...t)=>e(...t);return(...t)=>fetch(...t)};class Ce extends Error{constructor(e,t="FunctionsError",r){super(e);this.name=t,this.context=r}toJSON(){return{name:this.name,message:this.message,context:this.context}}}class rt extends Ce{constructor(e){super("Failed to send a request to the Edge Function","FunctionsFetchError",e)}}class Ie extends Ce{constructor(e){super("Relay Error invoking the Edge Function","FunctionsRelayError",e)}}class je extends Ce{constructor(e){super("Edge Function returned a non-2xx status code","FunctionsHttpError",e)}}var Pe;(function(e){e.Any="any",e.ApNortheast1="ap-northeast-1",e.ApNortheast2="ap-northeast-2",e.ApSouth1="ap-south-1",e.ApSoutheast1="ap-southeast-1",e.ApSoutheast2="ap-southeast-2",e.CaCentral1="ca-central-1",e.EuCentral1="eu-central-1",e.EuWest1="eu-west-1",e.EuWest2="eu-west-2",e.EuWest3="eu-west-3",e.SaEast1="sa-east-1",e.UsEast1="us-east-1",e.UsWest1="us-west-1",e.UsWest2="us-west-2"})(Pe||(Pe={}));class st{constructor(e,{headers:t={},customFetch:r,region:s=Pe.Any}={}){this.url=e,this.headers=t,this.region=s,this.fetch=br(r)}setAuth(e){this.headers.Authorization=`Bearer ${e}`}invoke(e){return _r(this,arguments,void 0,function*(t,r={}){var s,n;let i,o,a;try{let{headers:l,method:c,body:u,signal:h,timeout:d}=r,f={},{region:g}=r;if(!g)g=this.region;let p=new URL(`${this.url}/${t}`);if(g&&g!=="any")f["x-region"]=g,p.searchParams.set("forceFunctionRegion",g);let v,w=!!l&&Object.keys(l).some((ee)=>ee.toLowerCase()==="content-type");if(u&&!w)if(typeof Blob<"u"&&u instanceof Blob||u instanceof ArrayBuffer)f["Content-Type"]=u.type||"application/octet-stream",v=u;else if(typeof u==="string")f["Content-Type"]="text/plain",v=u;else if(typeof FormData<"u"&&u instanceof FormData)v=u;else f["Content-Type"]="application/json",v=JSON.stringify(u);else if(u&&typeof u!=="string"&&!(typeof Blob<"u"&&u instanceof Blob)&&!(u instanceof ArrayBuffer)&&!(typeof FormData<"u"&&u instanceof FormData))v=JSON.stringify(u);else v=u;let y=h;if(d)if(o=new AbortController,i=setTimeout(()=>o.abort(),d),h)y=o.signal,a=()=>o.abort(),h.addEventListener("abort",a);else y=o.signal;let b=yield this.fetch(p.toString(),{method:c||"POST",headers:Object.assign(Object.assign(Object.assign({},f),this.headers),l),body:v,signal:y}).catch((ee)=>{throw new rt(ee)}),k=b.headers.get("x-relay-error");if(k&&k==="true")throw new Ie(b);if(!b.ok)throw new je(b);let E=((s=b.headers.get("Content-Type"))!==null&&s!==void 0?s:"text/plain").split(";")[0].trim().toLowerCase(),T;if(E==="application/json")T=yield b.json();else if(E==="application/octet-stream"||E==="application/pdf")T=yield b.blob();else if(E==="text/event-stream")T=b;else if(E==="multipart/form-data")T=yield b.formData();else T=yield b.text();return{data:T,error:null,response:b}}catch(l){return{data:null,error:l,response:l instanceof je||l instanceof Ie?l.context:void 0}}finally{if(i)clearTimeout(i);if(a)(n=r.signal)===null||n===void 0||n.removeEventListener("abort",a)}})}}var oe=class extends Error{constructor(e){super(e.message);this.name="PostgrestError",this.details=e.details,this.hint=e.hint,this.code=e.code}toJSON(){return{name:this.name,message:this.message,details:this.details,hint:this.hint,code:this.code}}},Ar=3,Sr=(e)=>Math.min(1000*2**e,30000),sn=[520,503],Or=["GET","HEAD","OPTIONS"];function Ne(e){return Ne=typeof Symbol=="function"&&typeof Symbol.iterator=="symbol"?function(t){return typeof t}:function(t){return t&&typeof Symbol=="function"&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Ne(e)}function nn(e,t){if(Ne(e)!="object"||!e)return e;var r=e[Symbol.toPrimitive];if(r!==void 0){var s=r.call(e,t||"default");if(Ne(s)!="object")return s;throw TypeError("@@toPrimitive must return a primitive value.")}return(t==="string"?String:Number)(e)}function on(e){var t=nn(e,"string");return Ne(t)=="symbol"?t:t+""}function an(e,t,r){return(t=on(t))in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function Er(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var s=Object.getOwnPropertySymbols(e);t&&(s=s.filter(function(n){return Object.getOwnPropertyDescriptor(e,n).enumerable})),r.push.apply(r,s)}return r}function ie(e){for(var t=1;t<arguments.length;t++){var r=arguments[t]!=null?arguments[t]:{};t%2?Er(Object(r),!0).forEach(function(s){an(e,s,r[s])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(r)):Er(Object(r)).forEach(function(s){Object.defineProperty(e,s,Object.getOwnPropertyDescriptor(r,s))})}return e}function kr(e,t){return new Promise((r)=>{if(t===null||t===void 0?void 0:t.aborted){r();return}let s=setTimeout(()=>{t===null||t===void 0||t.removeEventListener("abort",n),r()},e);function n(){clearTimeout(s),r()}t===null||t===void 0||t.addEventListener("abort",n)})}function ln(e,t,r,s){if(!s||r>=Ar)return!1;if(!Or.includes(e))return!1;if(!sn.includes(t))return!1;return!0}async function xr(e,t,r,s){let n=0;while(!0){let l=ie({},r.headers);if(n>0)l["X-Retry-Count"]=String(n);let c;try{c=await e(t,{method:r.method,headers:l,body:r.body,signal:r.signal})}catch(u){var i;if((u===null||u===void 0?void 0:u.name)==="AbortError"||(u===null||u===void 0?void 0:u.code)==="ABORT_ERR"||(u===null||u===void 0?void 0:u.name)==="TimeoutError"&&((i=r.signal)===null||i===void 0?void 0:i.aborted))throw u;if(!Or.includes(r.method))throw u;if(s&&n<Ar){let h=Sr(n);n++,await kr(h,r.signal);continue}throw u}if(ln(r.method,c.status,n,s)){var o,a;let u=(o=(a=c.headers)===null||a===void 0?void 0:a.get("Retry-After"))!==null&&o!==void 0?o:null,h=u!==null?Math.max(0,parseInt(u,10)||0)*1000:Sr(n);await c.text(),n++,await kr(h,r.signal);continue}return c}}var cn=class{constructor(e){var t,r,s,n,i;if(this.shouldThrowOnError=!1,this.retryEnabled=!0,this.method=e.method,this.url=e.url,this.headers=new Headers(e.headers),this.schema=e.schema,this.body=e.body,this.shouldThrowOnError=(t=e.shouldThrowOnError)!==null&&t!==void 0?t:!1,this.signal=e.signal,this.isMaybeSingle=(r=e.isMaybeSingle)!==null&&r!==void 0?r:!1,this.shouldStripNulls=(s=e.shouldStripNulls)!==null&&s!==void 0?s:!1,this.urlLengthLimit=(n=e.urlLengthLimit)!==null&&n!==void 0?n:8000,this.retryEnabled=(i=e.retry)!==null&&i!==void 0?i:!0,e.fetch)this.fetch=e.fetch;else this.fetch=fetch}throwOnError(){return this.shouldThrowOnError=!0,this}stripNulls(){if(this.headers.get("Accept")==="text/csv")throw Error("stripNulls() cannot be used with csv()");return this.shouldStripNulls=!0,this}setHeader(e,t){return this.headers=new Headers(this.headers),this.headers.set(e,t),this}retry(e){return this.retryEnabled=e,this}then(e,t){var r=this;if(this.schema===void 0);else if(["GET","HEAD"].includes(this.method))this.headers.set("Accept-Profile",this.schema);else this.headers.set("Content-Profile",this.schema);if(this.method!=="GET"&&this.method!=="HEAD")this.headers.set("Content-Type","application/json");if(this.shouldStripNulls){let o=this.headers.get("Accept");if(o==="application/vnd.pgrst.object+json")this.headers.set("Accept","application/vnd.pgrst.object+json;nulls=stripped");else if(!o||o==="application/json")this.headers.set("Accept","application/vnd.pgrst.array+json;nulls=stripped")}let s=this.fetch,i=(async()=>{let o={};r.headers.forEach((l,c)=>{o[c]=l});let a=await xr(s,r.url.toString(),{method:r.method,headers:o,body:JSON.stringify(r.body,(l,c)=>typeof c==="bigint"?c.toString():c),signal:r.signal},r.retryEnabled);return await r.processResponse(a)})();if(!this.shouldThrowOnError)i=i.catch((o)=>{var a;let l="",c="",u="",h=o===null||o===void 0?void 0:o.cause;if(h){var d,f,g,p;let y=(d=h===null||h===void 0?void 0:h.message)!==null&&d!==void 0?d:"",b=(f=h===null||h===void 0?void 0:h.code)!==null&&f!==void 0?f:"";if(l=`${(g=o===null||o===void 0?void 0:o.name)!==null&&g!==void 0?g:"FetchError"}: ${o===null||o===void 0?void 0:o.message}`,l+=`
+// ../persist/node_modules/@supabase/supabase-js/dist/tracingRegistry.mjs
+var EXTRACTOR_KEY = Symbol.for("@supabase/supabase-js.traceContextExtractor");
+function getTraceContextExtractor() {
+  return globalThis[EXTRACTOR_KEY];
+}
 
-Caused by: ${(p=h===null||h===void 0?void 0:h.name)!==null&&p!==void 0?p:"Error"}: ${y}`,b)l+=` (${b})`;if(h===null||h===void 0?void 0:h.stack)l+=`
-${h.stack}`}else{var v;l=(v=o===null||o===void 0?void 0:o.stack)!==null&&v!==void 0?v:""}let w=this.url.toString().length;if((o===null||o===void 0?void 0:o.name)==="AbortError"||(o===null||o===void 0?void 0:o.code)==="ABORT_ERR"){if(u="",c="Request was aborted (timeout or manual cancellation)",w>this.urlLengthLimit)c+=`. Note: Your request URL is ${w} characters, which may exceed server limits. If selecting many fields, consider using views. If filtering with large arrays (e.g., .in('id', [many IDs])), consider using an RPC function to pass values server-side.`}else if((h===null||h===void 0?void 0:h.name)==="HeadersOverflowError"||(h===null||h===void 0?void 0:h.code)==="UND_ERR_HEADERS_OVERFLOW"){if(u="",c="HTTP headers exceeded server limits (typically 16KB)",w>this.urlLengthLimit)c+=`. Your request URL is ${w} characters. If selecting many fields, consider using views. If filtering with large arrays (e.g., .in('id', [200+ IDs])), consider using an RPC function instead.`}return{success:!1,error:{message:`${(a=o===null||o===void 0?void 0:o.name)!==null&&a!==void 0?a:"FetchError"}: ${o===null||o===void 0?void 0:o.message}`,details:l,hint:c,code:u},data:null,count:null,status:0,statusText:""}});return i.then(e,t)}async processResponse(e){var t=this;let r=null,s=null,n=null,{status:i,statusText:o}=e;if(e.ok){var a,l;if(t.method!=="HEAD"){var c;let f=await e.text();if(f==="");else if(t.headers.get("Accept")==="text/csv")s=f;else if(t.headers.get("Accept")&&((c=t.headers.get("Accept"))===null||c===void 0?void 0:c.includes("application/vnd.pgrst.plan+text")))s=f;else try{s=JSON.parse(f)}catch(g){if(r={message:f},s=null,t.shouldThrowOnError)throw new oe({message:f,details:"",hint:"",code:""})}}let h=(a=t.headers.get("Prefer"))===null||a===void 0?void 0:a.match(/count=(exact|planned|estimated)/),d=(l=e.headers.get("content-range"))===null||l===void 0?void 0:l.split("/");if(h&&d&&d.length>1)n=parseInt(d[1]);if(t.isMaybeSingle&&Array.isArray(s))if(s.length>1){if(r={code:"PGRST116",details:`Results contain ${s.length} rows, application/vnd.pgrst.object+json requires 1 row`,hint:null,message:"JSON object requested, multiple (or no) rows returned"},s=null,n=null,i=406,o="Not Acceptable",t.shouldThrowOnError){var u;throw new oe(ie(ie({},r),{},{hint:(u=r.hint)!==null&&u!==void 0?u:""}))}}else if(s.length===1)s=s[0];else s=null}else{let h=await e.text();try{if(r=JSON.parse(h),Array.isArray(r)&&e.status===404)s=[],r=null,i=200,o="OK"}catch(d){if(e.status===404&&h==="")i=204,o="No Content";else r={message:h}}if(r&&t.shouldThrowOnError)throw new oe(r)}return{success:r===null,error:r,data:s,count:n,status:i,statusText:o}}returns(){return this}overrideTypes(){return this}},un=class extends cn{throwOnError(){return super.throwOnError()}select(e){let t=!1,r=(e!==null&&e!==void 0?e:"*").split("").map((s)=>{if(/\s/.test(s)&&!t)return"";if(s==='"')t=!t;return s}).join("");return this.url.searchParams.set("select",r),this.headers.append("Prefer","return=representation"),this}order(e,{ascending:t=!0,nullsFirst:r,foreignTable:s,referencedTable:n=s}={}){let i=n?`${n}.order`:"order",o=this.url.searchParams.get(i);return this.url.searchParams.set(i,`${o?`${o},`:""}${e}.${t?"asc":"desc"}${r===void 0?"":r?".nullsfirst":".nullslast"}`),this}limit(e,{foreignTable:t,referencedTable:r=t}={}){let s=typeof r>"u"?"limit":`${r}.limit`;return this.url.searchParams.set(s,`${e}`),this}range(e,t,{foreignTable:r,referencedTable:s=r}={}){let n=typeof s>"u"?"offset":`${s}.offset`,i=typeof s>"u"?"limit":`${s}.limit`;return this.url.searchParams.set(n,`${e}`),this.url.searchParams.set(i,`${t-e+1}`),this}abortSignal(e){return this.signal=e,this}single(){return this.headers.set("Accept","application/vnd.pgrst.object+json"),this}maybeSingle(){return this.isMaybeSingle=!0,this}csv(){return this.headers.set("Accept","text/csv"),this}geojson(){return this.headers.set("Accept","application/geo+json"),this}explain({analyze:e=!1,verbose:t=!1,settings:r=!1,buffers:s=!1,wal:n=!1,format:i="text"}={}){var o;let a=[e?"analyze":null,t?"verbose":null,r?"settings":null,s?"buffers":null,n?"wal":null].filter(Boolean).join("|"),l=(o=this.headers.get("Accept"))!==null&&o!==void 0?o:"application/json";if(this.headers.set("Accept",`application/vnd.pgrst.plan+${i}; for="${l}"; options=${a};`),i==="json")return this;else return this}rollback(){return this.headers.append("Prefer","tx=rollback"),this}returns(){return this}maxAffected(e){return this.headers.append("Prefer","handling=strict"),this.headers.append("Prefer",`max-affected=${e}`),this}},Tr=new RegExp("[,()]"),pe=class extends un{throwOnError(){return super.throwOnError()}eq(e,t){return this.url.searchParams.append(e,`eq.${t}`),this}neq(e,t){return this.url.searchParams.append(e,`neq.${t}`),this}gt(e,t){return this.url.searchParams.append(e,`gt.${t}`),this}gte(e,t){return this.url.searchParams.append(e,`gte.${t}`),this}lt(e,t){return this.url.searchParams.append(e,`lt.${t}`),this}lte(e,t){return this.url.searchParams.append(e,`lte.${t}`),this}like(e,t){return this.url.searchParams.append(e,`like.${t}`),this}likeAllOf(e,t){return this.url.searchParams.append(e,`like(all).{${t.join(",")}}`),this}likeAnyOf(e,t){return this.url.searchParams.append(e,`like(any).{${t.join(",")}}`),this}ilike(e,t){return this.url.searchParams.append(e,`ilike.${t}`),this}ilikeAllOf(e,t){return this.url.searchParams.append(e,`ilike(all).{${t.join(",")}}`),this}ilikeAnyOf(e,t){return this.url.searchParams.append(e,`ilike(any).{${t.join(",")}}`),this}regexMatch(e,t){return this.url.searchParams.append(e,`match.${t}`),this}regexIMatch(e,t){return this.url.searchParams.append(e,`imatch.${t}`),this}is(e,t){return this.url.searchParams.append(e,`is.${t}`),this}isDistinct(e,t){return this.url.searchParams.append(e,`isdistinct.${t}`),this}in(e,t){let r=Array.from(new Set(t)).map((s)=>{if(typeof s==="string"&&Tr.test(s))return`"${s}"`;else return`${s}`}).join(",");return this.url.searchParams.append(e,`in.(${r})`),this}notIn(e,t){let r=Array.from(new Set(t)).map((s)=>{if(typeof s==="string"&&Tr.test(s))return`"${s}"`;else return`${s}`}).join(",");return this.url.searchParams.append(e,`not.in.(${r})`),this}contains(e,t){if(typeof t==="string")this.url.searchParams.append(e,`cs.${t}`);else if(Array.isArray(t))this.url.searchParams.append(e,`cs.{${t.join(",")}}`);else this.url.searchParams.append(e,`cs.${JSON.stringify(t)}`);return this}containedBy(e,t){if(typeof t==="string")this.url.searchParams.append(e,`cd.${t}`);else if(Array.isArray(t))this.url.searchParams.append(e,`cd.{${t.join(",")}}`);else this.url.searchParams.append(e,`cd.${JSON.stringify(t)}`);return this}rangeGt(e,t){return this.url.searchParams.append(e,`sr.${t}`),this}rangeGte(e,t){return this.url.searchParams.append(e,`nxl.${t}`),this}rangeLt(e,t){return this.url.searchParams.append(e,`sl.${t}`),this}rangeLte(e,t){return this.url.searchParams.append(e,`nxr.${t}`),this}rangeAdjacent(e,t){return this.url.searchParams.append(e,`adj.${t}`),this}overlaps(e,t){if(typeof t==="string")this.url.searchParams.append(e,`ov.${t}`);else this.url.searchParams.append(e,`ov.{${t.join(",")}}`);return this}textSearch(e,t,{config:r,type:s}={}){let n="";if(s==="plain")n="pl";else if(s==="phrase")n="ph";else if(s==="websearch")n="w";let i=r===void 0?"":`(${r})`;return this.url.searchParams.append(e,`${n}fts${i}.${t}`),this}match(e){return Object.entries(e).filter(([t,r])=>r!==void 0).forEach(([t,r])=>{this.url.searchParams.append(t,`eq.${r}`)}),this}not(e,t,r){return this.url.searchParams.append(e,`not.${t}.${r}`),this}or(e,{foreignTable:t,referencedTable:r=t}={}){let s=r?`${r}.or`:"or";return this.url.searchParams.append(s,`(${e})`),this}filter(e,t,r){return this.url.searchParams.append(e,`${t}.${r}`),this}},hn=class{constructor(e,{headers:t={},schema:r,fetch:s,urlLengthLimit:n=8000,retry:i}){this.url=e,this.headers=new Headers(t),this.schema=r,this.fetch=s,this.urlLengthLimit=n,this.retry=i}cloneRequestState(){return{url:new URL(this.url.toString()),headers:new Headers(this.headers)}}select(e,t){let{head:r=!1,count:s}=t!==null&&t!==void 0?t:{},n=r?"HEAD":"GET",i=!1,o=(e!==null&&e!==void 0?e:"*").split("").map((c)=>{if(/\s/.test(c)&&!i)return"";if(c==='"')i=!i;return c}).join(""),{url:a,headers:l}=this.cloneRequestState();if(a.searchParams.set("select",o),s)l.append("Prefer",`count=${s}`);return new pe({method:n,url:a,headers:l,schema:this.schema,fetch:this.fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}insert(e,{count:t,defaultToNull:r=!0}={}){var s;let n="POST",{url:i,headers:o}=this.cloneRequestState();if(t)o.append("Prefer",`count=${t}`);if(!r)o.append("Prefer","missing=default");if(Array.isArray(e)){let a=e.reduce((l,c)=>l.concat(Object.keys(c)),[]);if(a.length>0){let l=[...new Set(a)].map((c)=>`"${c}"`);i.searchParams.set("columns",l.join(","))}}return new pe({method:"POST",url:i,headers:o,schema:this.schema,body:e,fetch:(s=this.fetch)!==null&&s!==void 0?s:fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}upsert(e,{onConflict:t,ignoreDuplicates:r=!1,count:s,defaultToNull:n=!0}={}){var i;let o="POST",{url:a,headers:l}=this.cloneRequestState();if(l.append("Prefer",`resolution=${r?"ignore":"merge"}-duplicates`),t!==void 0)a.searchParams.set("on_conflict",t);if(s)l.append("Prefer",`count=${s}`);if(!n)l.append("Prefer","missing=default");if(Array.isArray(e)){let c=e.reduce((u,h)=>u.concat(Object.keys(h)),[]);if(c.length>0){let u=[...new Set(c)].map((h)=>`"${h}"`);a.searchParams.set("columns",u.join(","))}}return new pe({method:"POST",url:a,headers:l,schema:this.schema,body:e,fetch:(i=this.fetch)!==null&&i!==void 0?i:fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}update(e,{count:t}={}){var r;let s="PATCH",{url:n,headers:i}=this.cloneRequestState();if(t)i.append("Prefer",`count=${t}`);return new pe({method:"PATCH",url:n,headers:i,schema:this.schema,body:e,fetch:(r=this.fetch)!==null&&r!==void 0?r:fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}delete({count:e}={}){var t;let r="DELETE",{url:s,headers:n}=this.cloneRequestState();if(e)n.append("Prefer",`count=${e}`);return new pe({method:"DELETE",url:s,headers:n,schema:this.schema,fetch:(t=this.fetch)!==null&&t!==void 0?t:fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}};function dn(e,t){try{let o=JSON.parse(e);if(o&&typeof o==="object"&&!Array.isArray(o)){var r,s,n,i;return new oe({message:String((r=o.message)!==null&&r!==void 0?r:e),details:(s=o.details)!==null&&s!==void 0?s:"",hint:(n=o.hint)!==null&&n!==void 0?n:"",code:(i=o.code)!==null&&i!==void 0?i:""})}}catch(o){}return new oe({message:e||t,details:"",hint:"",code:""})}function Rr(e,t,r){var s;let n=e;return{success:!1,error:new oe({message:`${(s=n===null||n===void 0?void 0:n.name)!==null&&s!==void 0?s:"FetchError"}: ${n===null||n===void 0?void 0:n.message}`,details:"",hint:"",code:""}),data:null,count:null,status:t,statusText:r}}var Pr=class e{constructor(t,{headers:r={},schema:s,fetch:n,timeout:i,urlLengthLimit:o=8000,retry:a}={}){this.url=t,this.headers=new Headers(r),this.schemaName=s,this.urlLengthLimit=o;let l=n!==null&&n!==void 0?n:globalThis.fetch;if(i!==void 0&&i>0)this.fetch=(c,u)=>{let h=new AbortController,d=setTimeout(()=>h.abort(),i),f=u===null||u===void 0?void 0:u.signal;if(f){if(f.aborted)return clearTimeout(d),l(c,u);let g=()=>{clearTimeout(d),h.abort()};return f.addEventListener("abort",g,{once:!0}),l(c,ie(ie({},u),{},{signal:h.signal})).finally(()=>{clearTimeout(d),f.removeEventListener("abort",g)})}return l(c,ie(ie({},u),{},{signal:h.signal})).finally(()=>clearTimeout(d))};else this.fetch=l;this.retry=a}from(t){if(!t||typeof t!=="string"||t.trim()==="")throw Error("Invalid relation name: relation must be a non-empty string.");return new hn(new URL(`${this.url}/${t}`),{headers:new Headers(this.headers),schema:this.schemaName,fetch:this.fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}schema(t){return new e(this.url,{headers:this.headers,schema:t,fetch:this.fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}async getOpenApiSpec(){var t=this,r;let s=new Headers(t.headers);if(s.set("Accept","application/openapi+json"),t.schemaName)s.set("Accept-Profile",t.schemaName);let n={};s.forEach((c,u)=>{n[u]=c});let i=(r=t.fetch)!==null&&r!==void 0?r:globalThis.fetch,o;try{var a;o=await xr(i,`${t.url}/`,{method:"GET",headers:n},(a=t.retry)!==null&&a!==void 0?a:!0)}catch(c){return Rr(c,0,"")}let l;try{l=await o.text()}catch(c){return Rr(c,o.status,o.statusText)}if(o.ok)try{return{success:!0,error:null,data:JSON.parse(l),count:null,status:o.status,statusText:o.statusText}}catch(c){}return{success:!1,error:dn(l,o.statusText),data:null,count:null,status:o.status,statusText:o.statusText}}rpc(t,r={},{head:s=!1,get:n=!1,count:i}={}){var o;let a,l=new URL(`${this.url}/rpc/${t}`),c,u=(f)=>f!==null&&typeof f==="object"&&(!Array.isArray(f)||f.some(u)),h=s&&Object.values(r).some(u);if(h)a="POST",c=r;else if(s||n)a=s?"HEAD":"GET",Object.entries(r).filter(([f,g])=>g!==void 0).map(([f,g])=>[f,Array.isArray(g)?`{${g.join(",")}}`:`${g}`]).forEach(([f,g])=>{l.searchParams.append(f,g)});else a="POST",c=r;let d=new Headers(this.headers);if(h)d.set("Prefer",i?`count=${i},return=minimal`:"return=minimal");else if(i)d.set("Prefer",`count=${i}`);return new pe({method:a,url:l,headers:d,schema:this.schemaName,body:c,fetch:(o=this.fetch)!==null&&o!==void 0?o:fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}};class Cr{constructor(){}static detectEnvironment(){var e;if(typeof WebSocket<"u")return{type:"native",wsConstructor:WebSocket};let t=globalThis;if(typeof globalThis<"u"&&typeof t.WebSocket<"u")return{type:"native",wsConstructor:t.WebSocket};let r=typeof global<"u"?global:void 0;if(r&&typeof r.WebSocket<"u")return{type:"native",wsConstructor:r.WebSocket};if(typeof globalThis<"u"&&typeof t.WebSocketPair<"u"&&typeof globalThis.WebSocket>"u")return{type:"cloudflare",error:"Cloudflare Workers detected. WebSocket clients are not supported in Cloudflare Workers.",workaround:"Use Cloudflare Workers WebSocket API for server-side WebSocket handling, or deploy to a different runtime."};if(typeof globalThis<"u"&&t.EdgeRuntime||typeof navigator<"u"&&((e=navigator.userAgent)===null||e===void 0?void 0:e.includes("Vercel-Edge")))return{type:"unsupported",error:"Edge runtime detected (Vercel Edge/Netlify Edge). WebSockets are not supported in edge functions.",workaround:"Use serverless functions or a different deployment target for WebSocket functionality."};let s=globalThis.process;if(s){let n=s.versions;if(n&&n.node)return{type:"unsupported",error:"Node.js detected but native WebSocket not found.",workaround:"Ensure you are running Node.js 22+ or provide a WebSocket implementation via the transport option."}}return{type:"unsupported",error:"Unknown JavaScript runtime without WebSocket support.",workaround:"Ensure you're running in a supported environment (browser, Node.js, Deno) or provide a custom WebSocket implementation."}}static getWebSocketConstructor(){let e=this.detectEnvironment();if(e.wsConstructor)return e.wsConstructor;let t=e.error||"WebSocket not supported in this environment.";if(e.workaround)t+=`
+// ../persist/node_modules/tslib/tslib.es6.mjs
+function __rest(s, e) {
+  var t = {};
+  for (var p in s)
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+      t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") {
+    for (var i = 0, p = Object.getOwnPropertySymbols(s);i < p.length; i++)
+      if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+        t[p[i]] = s[p[i]];
+  }
+  return t;
+}
+function __awaiter(thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function(resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function(resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+}
 
-Suggested solution: ${e.workaround}`;throw Error(t)}static isWebSocketSupported(){try{return this.detectEnvironment().type==="native"}catch(e){return!1}}}var Nt=Cr;var Ir="2.118.0";var jr=`realtime-js/${Ir}`,Nr="1.0.0",Lt="2.0.0",Lr=Lt;var Ur=1e4,$r=15000,Dr=1e4;var Br=100;var H={closed:"closed",errored:"errored",joined:"joined",joining:"joining",leaving:"leaving"},nt={close:"phx_close",error:"phx_error",join:"phx_join",reply:"phx_reply",leave:"phx_leave",access_token:"access_token"};var Le={connecting:"connecting",open:"open",closing:"closing",closed:"closed"};class it{constructor(e){this.HEADER_LENGTH=1,this.USER_BROADCAST_PUSH_META_LENGTH=6,this.KINDS={userBroadcastPush:3,userBroadcast:4},this.BINARY_ENCODING=0,this.JSON_ENCODING=1,this.BROADCAST_EVENT="broadcast",this.allowedMetadataKeys=[],this.allowedMetadataKeys=e!==null&&e!==void 0?e:[]}encode(e,t){if(e.event===this.BROADCAST_EVENT&&!(e.payload instanceof ArrayBuffer)&&typeof e.payload.event==="string")return t(this._binaryEncodeUserBroadcastPush(e));let r=[e.join_ref,e.ref,e.topic,e.event,e.payload];return t(JSON.stringify(r))}_binaryEncodeUserBroadcastPush(e){var t;if(this._isArrayBuffer((t=e.payload)===null||t===void 0?void 0:t.payload))return this._encodeBinaryUserBroadcastPush(e);else return this._encodeJsonUserBroadcastPush(e)}_encodeBinaryUserBroadcastPush(e){var t,r;let s=(r=(t=e.payload)===null||t===void 0?void 0:t.payload)!==null&&r!==void 0?r:new ArrayBuffer(0);return this._encodeUserBroadcastPush(e,this.BINARY_ENCODING,s)}_encodeJsonUserBroadcastPush(e){var t,r;let s=(r=(t=e.payload)===null||t===void 0?void 0:t.payload)!==null&&r!==void 0?r:{},i=new TextEncoder().encode(JSON.stringify(s)).buffer;return this._encodeUserBroadcastPush(e,this.JSON_ENCODING,i)}_encodeUserBroadcastPush(e,t,r){var s,n;let i=new TextEncoder,o=i.encode(e.topic),a=i.encode((s=e.ref)!==null&&s!==void 0?s:""),l=i.encode((n=e.join_ref)!==null&&n!==void 0?n:""),c=i.encode(e.payload.event),u=this.allowedMetadataKeys?this._pick(e.payload,this.allowedMetadataKeys):{},h=i.encode(Object.keys(u).length===0?"":JSON.stringify(u));if(l.length>255)throw Error(`joinRef length ${l.length} exceeds maximum of 255`);if(a.length>255)throw Error(`ref length ${a.length} exceeds maximum of 255`);if(o.length>255)throw Error(`topic length ${o.length} exceeds maximum of 255`);if(c.length>255)throw Error(`userEvent length ${c.length} exceeds maximum of 255`);if(h.length>255)throw Error(`metadata length ${h.length} exceeds maximum of 255`);let d=this.USER_BROADCAST_PUSH_META_LENGTH+l.length+a.length+o.length+c.length+h.length,f=new ArrayBuffer(this.HEADER_LENGTH+d),g=new DataView(f),p=new Uint8Array(f),v=0;g.setUint8(v++,this.KINDS.userBroadcastPush),g.setUint8(v++,l.length),g.setUint8(v++,a.length),g.setUint8(v++,o.length),g.setUint8(v++,c.length),g.setUint8(v++,h.length),g.setUint8(v++,t),p.set(l,v),v+=l.length,p.set(a,v),v+=a.length,p.set(o,v),v+=o.length,p.set(c,v),v+=c.length,p.set(h,v),v+=h.length;var w=new Uint8Array(f.byteLength+r.byteLength);return w.set(new Uint8Array(f),0),w.set(new Uint8Array(r),f.byteLength),w.buffer}decode(e,t){if(this._isArrayBuffer(e)){let r=this._binaryDecode(e);return t(r)}if(typeof e==="string"){let r=JSON.parse(e),[s,n,i,o,a]=r;return t({join_ref:s,ref:n,topic:i,event:o,payload:a})}return t({})}_binaryDecode(e){let t=new DataView(e),r=t.getUint8(0),s=new TextDecoder;switch(r){case this.KINDS.userBroadcast:return this._decodeUserBroadcast(e,t,s)}}_decodeUserBroadcast(e,t,r){let s=t.getUint8(1),n=t.getUint8(2),i=t.getUint8(3),o=t.getUint8(4),a=this.HEADER_LENGTH+4,l=r.decode(e.slice(a,a+s));a=a+s;let c=r.decode(e.slice(a,a+n));a=a+n;let u=r.decode(e.slice(a,a+i));a=a+i;let h=e.slice(a,e.byteLength),d=o===this.JSON_ENCODING?JSON.parse(r.decode(h)):h,f={type:this.BROADCAST_EVENT,event:c,payload:d};if(i>0)f.meta=JSON.parse(u);return{join_ref:null,ref:null,topic:l,event:this.BROADCAST_EVENT,payload:f}}_isArrayBuffer(e){var t;return e instanceof ArrayBuffer||((t=e===null||e===void 0?void 0:e.constructor)===null||t===void 0?void 0:t.name)==="ArrayBuffer"}_pick(e,t){if(!e||typeof e!=="object")return{};return Object.fromEntries(Object.entries(e).filter(([r])=>t.includes(r)))}}var R;(function(e){e.abstime="abstime",e.bool="bool",e.date="date",e.daterange="daterange",e.float4="float4",e.float8="float8",e.int2="int2",e.int4="int4",e.int4range="int4range",e.int8="int8",e.int8range="int8range",e.json="json",e.jsonb="jsonb",e.money="money",e.numeric="numeric",e.oid="oid",e.reltime="reltime",e.text="text",e.time="time",e.timestamp="timestamp",e.timestamptz="timestamptz",e.timetz="timetz",e.tsrange="tsrange",e.tstzrange="tstzrange"})(R||(R={}));var $t=(e,t,r={})=>{var s;let n=(s=r.skipTypes)!==null&&s!==void 0?s:[];if(!t)return{};return Object.keys(t).reduce((i,o)=>(i[o]=fn(o,e,t,n),i),{})},fn=(e,t,r,s)=>{let n=t.find((a)=>a.name===e),i=n===null||n===void 0?void 0:n.type,o=r[e];if(i&&!s.includes(i))return Fr(i,o);return Ut(o)},Fr=(e,t)=>{if(e.charAt(0)==="_"){let r=e.slice(1,e.length);return mn(t,r)}switch(e){case R.bool:return pn(t);case R.float4:case R.float8:case R.int2:case R.int4:case R.int8:case R.numeric:case R.oid:return gn(t);case R.json:case R.jsonb:return yn(t);case R.timestamp:return vn(t);case R.abstime:case R.date:case R.daterange:case R.int4range:case R.int8range:case R.money:case R.reltime:case R.text:case R.time:case R.timestamptz:case R.timetz:case R.tsrange:case R.tstzrange:return Ut(t);default:return Ut(t)}},Ut=(e)=>e,pn=(e)=>{switch(e){case"t":return!0;case"f":return!1;default:return e}},gn=(e)=>{if(typeof e==="string"){let t=parseFloat(e);if(!Number.isNaN(t))return t}return e},yn=(e)=>{if(typeof e==="string")try{return JSON.parse(e)}catch(t){return e}return e},mn=(e,t)=>{if(typeof e!=="string")return e;let r=e.length-1,s=e[r];if(e[0]==="{"&&s==="}"){let i,o=e.slice(1,r);try{i=JSON.parse("["+o+"]")}catch(a){i=o?o.split(","):[]}return i.map((a)=>Fr(t,a))}return e},vn=(e)=>{if(typeof e==="string")return e.replace(" ","T");return e},ot=(e)=>{let t=new URL(e);if(t.protocol=t.protocol.replace(/^ws/i,"http"),t.pathname=t.pathname.replace(/\/+$/,"").replace(/\/socket\/websocket$/i,"").replace(/\/socket$/i,"").replace(/\/websocket$/i,""),t.pathname===""||t.pathname==="/")t.pathname="/api/broadcast";else t.pathname=t.pathname+"/api/broadcast";return t.href};var me=(e)=>{if(typeof e==="function")return e;else return function(){return e}},_n=typeof self<"u"?self:null,ye=typeof window<"u"?window:null,K=_n||ye||globalThis,bn="2.0.0",Sn=1e4,En=1000,kn=100,W={connecting:0,open:1,closing:2,closed:3},N={closed:"closed",errored:"errored",joined:"joined",joining:"joining",leaving:"leaving"},X={close:"phx_close",error:"phx_error",join:"phx_join",reply:"phx_reply",leave:"phx_leave"},Dt={longpoll:"longpoll",websocket:"websocket"},Tn={complete:4},Bt="base64url.bearer.phx.",at=class{constructor(e,t,r,s){this.channel=e,this.event=t,this.payload=r||function(){return{}},this.receivedResp=null,this.timeout=s,this.timeoutTimer=null,this.recHooks=[],this.sent=!1,this.ref=void 0}resend(e){this.timeout=e,this.reset(),this.send()}send(){if(this.hasReceived("timeout"))return;this.startTimeout(),this.sent=!0,this.channel.socket.push({topic:this.channel.topic,event:this.event,payload:this.payload(),ref:this.ref,join_ref:this.channel.joinRef()})}receive(e,t){if(this.hasReceived(e))t(this.receivedResp.response);return this.recHooks.push({status:e,callback:t}),this}reset(){this.cancelRefEvent(),this.ref=null,this.refEvent=null,this.receivedResp=null,this.sent=!1}destroy(){this.cancelRefEvent(),this.cancelTimeout()}matchReceive({status:e,response:t,_ref:r}){this.recHooks.filter((s)=>s.status===e).forEach((s)=>s.callback(t))}cancelRefEvent(){if(!this.refEvent)return;this.channel.off(this.refEvent)}cancelTimeout(){clearTimeout(this.timeoutTimer),this.timeoutTimer=null}startTimeout(){if(this.timeoutTimer)this.cancelTimeout();this.ref=this.channel.socket.makeRef(),this.refEvent=this.channel.replyEventName(this.ref),this.channel.on(this.refEvent,(e)=>{this.cancelRefEvent(),this.cancelTimeout(),this.receivedResp=e,this.matchReceive(e)}),this.timeoutTimer=setTimeout(()=>{this.trigger("timeout",{})},this.timeout)}hasReceived(e){return this.receivedResp&&this.receivedResp.status===e}trigger(e,t){this.channel.trigger(this.refEvent,{status:e,response:t})}},Mr=class{constructor(e,t){this.callback=e,this.timerCalc=t,this.timer=void 0,this.tries=0}reset(){this.tries=0,clearTimeout(this.timer)}scheduleTimeout(){clearTimeout(this.timer),this.timer=setTimeout(()=>{this.tries=this.tries+1,this.callback()},this.timerCalc(this.tries+1))}},Rn=class{constructor(e,t,r){this.state=N.closed,this.topic=e,this.params=me(t||{}),this.socket=r,this.bindings=[],this.bindingRef=0,this.timeout=this.socket.timeout,this.joinedOnce=!1,this.joinPush=new at(this,X.join,this.params,this.timeout),this.pushBuffer=[],this.stateChangeRefs=[],this.rejoinTimer=new Mr(()=>{if(this.socket.isConnected())this.rejoin()},this.socket.rejoinAfterMs),this.stateChangeRefs.push(this.socket.onError(()=>this.rejoinTimer.reset())),this.stateChangeRefs.push(this.socket.onOpen(()=>{if(this.rejoinTimer.reset(),this.isErrored())this.rejoin()})),this.joinPush.receive("ok",()=>{this.state=N.joined,this.rejoinTimer.reset(),this.pushBuffer.forEach((s)=>s.send()),this.pushBuffer=[]}),this.joinPush.receive("error",(s)=>{if(this.state=N.errored,this.socket.hasLogger())this.socket.log("channel",`error ${this.topic}`,s);if(this.socket.isConnected())this.rejoinTimer.scheduleTimeout()}),this.onClose(()=>{if(this.rejoinTimer.reset(),this.socket.hasLogger())this.socket.log("channel",`close ${this.topic}`);this.state=N.closed,this.socket.remove(this)}),this.onError((s)=>{if(this.socket.hasLogger())this.socket.log("channel",`error ${this.topic}`,s);if(this.isJoining())this.joinPush.reset();if(this.state=N.errored,this.socket.isConnected())this.rejoinTimer.scheduleTimeout()}),this.joinPush.receive("timeout",()=>{if(this.socket.hasLogger())this.socket.log("channel",`timeout ${this.topic}`,this.joinPush.timeout);if(new at(this,X.leave,me({}),this.timeout).send(),this.state=N.errored,this.joinPush.reset(),this.socket.isConnected())this.rejoinTimer.scheduleTimeout()}),this.on(X.reply,(s,n)=>{this.trigger(this.replyEventName(n),s)})}join(e=this.timeout){if(this.joinedOnce)throw Error("tried to join multiple times. 'join' can only be called a single time per channel instance");else return this.timeout=e,this.joinedOnce=!0,this.rejoin(),this.joinPush}teardown(){this.pushBuffer.forEach((e)=>e.destroy()),this.pushBuffer=[],this.rejoinTimer.reset(),this.joinPush.destroy(),this.state=N.closed,this.bindings=[]}onClose(e){this.on(X.close,e)}onError(e){return this.on(X.error,(t)=>e(t))}on(e,t){let r=this.bindingRef++;return this.bindings.push({event:e,ref:r,callback:t}),r}off(e,t){this.bindings=this.bindings.filter((r)=>!(r.event===e&&(typeof t>"u"||t===r.ref)))}canPush(){return this.socket.isConnected()&&this.isJoined()}push(e,t,r=this.timeout){if(t=t||{},!this.joinedOnce)throw Error(`tried to push '${e}' to '${this.topic}' before joining. Use channel.join() before pushing events`);let s=new at(this,e,function(){return t},r);if(this.canPush())s.send();else s.startTimeout(),this.pushBuffer.push(s);return s}leave(e=this.timeout){this.rejoinTimer.reset(),this.joinPush.cancelTimeout(),this.state=N.leaving;let t=()=>{if(this.socket.hasLogger())this.socket.log("channel",`leave ${this.topic}`);this.trigger(X.close,"leave")},r=new at(this,X.leave,me({}),e);if(r.receive("ok",()=>t()).receive("timeout",()=>t()),r.send(),!this.canPush())r.trigger("ok",{});return r}onMessage(e,t,r){return t}filterBindings(e,t,r){return!0}isMember(e,t,r,s){if(this.topic!==e)return!1;if(s&&s!==this.joinRef()){if(this.socket.hasLogger())this.socket.log("channel","dropping outdated message",{topic:e,event:t,payload:r,joinRef:s});return!1}else return!0}joinRef(){return this.joinPush.ref}rejoin(e=this.timeout){if(this.isLeaving())return;this.socket.leaveOpenTopic(this.topic),this.state=N.joining,this.joinPush.resend(e)}trigger(e,t,r,s){let n=this.onMessage(e,t,r,s);if(t&&!n)throw Error("channel onMessage callbacks must return the payload, modified or unmodified");let i=this.bindings.filter((o)=>o.event===e&&this.filterBindings(o,t,r));for(let o=0;o<i.length;o++)i[o].callback(n,r,s||this.joinRef())}replyEventName(e){return`chan_reply_${e}`}isClosed(){return this.state===N.closed}isErrored(){return this.state===N.errored}isJoined(){return this.state===N.joined}isJoining(){return this.state===N.joining}isLeaving(){return this.state===N.leaving}},ct=class{static request(e,t,r,s,n,i,o){if(K.XDomainRequest){let a=new K.XDomainRequest;return this.xdomainRequest(a,e,t,s,n,i,o)}else if(K.XMLHttpRequest){let a=new K.XMLHttpRequest;return this.xhrRequest(a,e,t,r,s,n,i,o)}else if(K.fetch&&K.AbortController)return this.fetchRequest(e,t,r,s,n,i,o);else throw Error("No suitable XMLHttpRequest implementation found")}static fetchRequest(e,t,r,s,n,i,o){let a={method:e,headers:r,body:s},l=null;if(n){l=new AbortController;let c=setTimeout(()=>l.abort(),n);a.signal=l.signal}return K.fetch(t,a).then((c)=>c.text()).then((c)=>this.parseJSON(c)).then((c)=>o&&o(c)).catch((c)=>{if(c.name==="AbortError"&&i)i();else o&&o(null)}),l}static xdomainRequest(e,t,r,s,n,i,o){if(e.timeout=n,e.open(t,r),e.onload=()=>{let a=this.parseJSON(e.responseText);o&&o(a)},i)e.ontimeout=i;return e.onprogress=()=>{},e.send(s),e}static xhrRequest(e,t,r,s,n,i,o,a){e.open(t,r,!0),e.timeout=i;for(let[l,c]of Object.entries(s))e.setRequestHeader(l,c);if(e.onerror=()=>a&&a(null),e.onreadystatechange=()=>{if(e.readyState===Tn.complete&&a){let l=this.parseJSON(e.responseText);a(l)}},o)e.ontimeout=o;return e.send(n),e}static parseJSON(e){if(!e||e==="")return null;try{return JSON.parse(e)}catch{return console&&console.log("failed to parse JSON response",e),null}}static serialize(e,t){let r=[];for(var s in e){if(!Object.prototype.hasOwnProperty.call(e,s))continue;let n=t?`${t}[${s}]`:s,i=e[s];if(typeof i==="object")r.push(this.serialize(i,n));else r.push(encodeURIComponent(n)+"="+encodeURIComponent(i))}return r.join("&")}static appendParams(e,t){if(Object.keys(t).length===0)return e;let r=e.match(/\?/)?"&":"?";return`${e}${r}${this.serialize(t)}`}},An=(e)=>{let t="",r=new Uint8Array(e),s=r.byteLength;for(let n=0;n<s;n++)t+=String.fromCharCode(r[n]);return btoa(t)},ge=class{constructor(e,t){if(t&&t.length===2&&t[1].startsWith(Bt))this.authToken=atob(t[1].slice(Bt.length));this.endPoint=null,this.token=null,this.skipHeartbeat=!0,this.reqs=new Set,this.awaitingBatchAck=!1,this.currentBatch=null,this.currentBatchTimer=null,this.batchBuffer=[],this.onopen=function(){},this.onerror=function(){},this.onmessage=function(){},this.onclose=function(){},this.pollEndpoint=this.normalizeEndpoint(e),this.readyState=W.connecting,setTimeout(()=>this.poll(),0)}normalizeEndpoint(e){return e.replace("ws://","http://").replace("wss://","https://").replace(new RegExp("(.*)/"+Dt.websocket),"$1/"+Dt.longpoll)}endpointURL(){return ct.appendParams(this.pollEndpoint,{token:this.token})}closeAndRetry(e,t,r){this.close(e,t,r),this.readyState=W.connecting}ontimeout(){this.onerror("timeout"),this.closeAndRetry(1005,"timeout",!1)}isActive(){return this.readyState===W.open||this.readyState===W.connecting}poll(){let e={Accept:"application/json"};if(this.authToken)e["X-Phoenix-AuthToken"]=this.authToken;this.ajax("GET",e,null,()=>this.ontimeout(),(t)=>{if(t){var{status:r,token:s,messages:n}=t;if(r===410&&this.token!==null){this.onerror(410),this.closeAndRetry(3410,"session_gone",!1);return}this.token=s}else r=0;switch(r){case 200:n.forEach((i)=>{setTimeout(()=>this.onmessage({data:i}),0)}),this.poll();break;case 204:this.poll();break;case 410:this.readyState=W.open,this.onopen({}),this.poll();break;case 403:this.onerror(403),this.close(1008,"forbidden",!1);break;case 0:case 500:this.onerror(500),this.closeAndRetry(1011,"internal server error",500);break;default:throw Error(`unhandled poll status ${r}`)}})}send(e){if(typeof e!=="string")e=An(e);if(this.currentBatch)this.currentBatch.push(e);else if(this.awaitingBatchAck)this.batchBuffer.push(e);else this.currentBatch=[e],this.currentBatchTimer=setTimeout(()=>{this.batchSend(this.currentBatch),this.currentBatch=null},0)}batchSend(e,t=0){this.awaitingBatchAck=!0;let r=t+kn,s=e.slice(t,r);this.ajax("POST",{"Content-Type":"application/x-ndjson"},s.join(`
-`),()=>this.onerror("timeout"),(n)=>{if(!n||n.status!==200)this.awaitingBatchAck=!1,this.onerror(n&&n.status),this.closeAndRetry(1011,"internal server error",!1);else if(r<e.length)this.batchSend(e,r);else if(this.batchBuffer.length>0)this.batchSend(this.batchBuffer),this.batchBuffer=[];else this.awaitingBatchAck=!1})}close(e,t,r){for(let n of this.reqs)n.abort();this.readyState=W.closed;let s=Object.assign({code:1000,reason:void 0,wasClean:!0},{code:e,reason:t,wasClean:r});if(this.batchBuffer=[],clearTimeout(this.currentBatchTimer),this.currentBatchTimer=null,typeof CloseEvent<"u")this.onclose(new CloseEvent("close",s));else this.onclose(s)}ajax(e,t,r,s,n){let i,o=()=>{this.reqs.delete(i),s()};i=ct.request(e,this.endpointURL(),t,r,this.timeout,o,(a)=>{if(this.reqs.delete(i),this.isActive())n(a)}),this.reqs.add(i)}},qr=class e{constructor(t,r={}){let s=r.events||{state:"presence_state",diff:"presence_diff"};this.state=Object.create(null),this.pendingDiffs=[],this.channel=t,this.joinRef=null,this.caller={onJoin:function(){},onLeave:function(){},onSync:function(){}},this.channel.on(s.state,(n)=>{let{onJoin:i,onLeave:o,onSync:a}=this.caller;this.joinRef=this.channel.joinRef(),this.state=e.syncState(this.state,n,i,o),this.pendingDiffs.forEach((l)=>{this.state=e.syncDiff(this.state,l,i,o)}),this.pendingDiffs=[],a()}),this.channel.on(s.diff,(n)=>{let{onJoin:i,onLeave:o,onSync:a}=this.caller;if(this.inPendingSyncState())this.pendingDiffs.push(n);else this.state=e.syncDiff(this.state,n,i,o),a()})}onJoin(t){this.caller.onJoin=t}onLeave(t){this.caller.onLeave=t}onSync(t){this.caller.onSync=t}list(t){return e.list(this.state,t)}inPendingSyncState(){return!this.joinRef||this.joinRef!==this.channel.joinRef()}static syncState(t,r,s,n){let i=this.toNullProtoObj(this.clone(t));r=this.toNullProtoObj(r);let o=Object.create(null),a=Object.create(null);return this.map(i,(l,c)=>{if(!r[l])a[l]=c}),this.map(r,(l,c)=>{let u=i[l];if(u){let h=c.metas.map((p)=>p.phx_ref),d=u.metas.map((p)=>p.phx_ref),f=c.metas.filter((p)=>d.indexOf(p.phx_ref)<0),g=u.metas.filter((p)=>h.indexOf(p.phx_ref)<0);if(f.length>0)o[l]=c,o[l].metas=f;if(g.length>0)a[l]=this.clone(u),a[l].metas=g}else o[l]=c}),this.syncDiff(i,{joins:o,leaves:a},s,n)}static syncDiff(t,r,s,n){t=this.toNullProtoObj(t);let{joins:i,leaves:o}=this.clone(r);if(!s)s=function(){};if(!n)n=function(){};return this.map(i,(a,l)=>{let c=t[a];if(t[a]=this.clone(l),c){let u=t[a].metas.map((d)=>d.phx_ref),h=c.metas.filter((d)=>u.indexOf(d.phx_ref)<0);t[a].metas.unshift(...h)}s(a,c,l)}),this.map(o,(a,l)=>{let c=t[a];if(!c)return;let u=l.metas.map((h)=>h.phx_ref);if(c.metas=c.metas.filter((h)=>u.indexOf(h.phx_ref)<0),n(a,c,l),c.metas.length===0)delete t[a]}),t}static list(t,r){if(!r)r=function(s,n){return n};return this.map(t,(s,n)=>r(s,n))}static map(t,r){return Object.getOwnPropertyNames(t).map((s)=>r(s,t[s]))}static toNullProtoObj(t){if(Object.getPrototypeOf(t)===null)return t;let r=Object.create(null);return Object.getOwnPropertyNames(t).forEach((s)=>{r[s]=t[s]}),r}static clone(t){return JSON.parse(JSON.stringify(t))}},lt={HEADER_LENGTH:1,META_LENGTH:4,KINDS:{push:0,reply:1,broadcast:2},encode(e,t){if(e.payload.constructor===ArrayBuffer)return t(this.binaryEncode(e));else{let r=[e.join_ref,e.ref,e.topic,e.event,e.payload];return t(JSON.stringify(r))}},decode(e,t){if(e.constructor===ArrayBuffer)return t(this.binaryDecode(e));else{let[r,s,n,i,o]=JSON.parse(e);return t({join_ref:r,ref:s,topic:n,event:i,payload:o})}},binaryEncode(e){let{join_ref:t,ref:r,event:s,topic:n,payload:i}=e,o=new TextEncoder,a=o.encode(t),l=o.encode(r),c=o.encode(n),u=o.encode(s);this.assertFieldSize(a.byteLength,"join_ref"),this.assertFieldSize(l.byteLength,"ref"),this.assertFieldSize(c.byteLength,"topic"),this.assertFieldSize(u.byteLength,"event");let h=this.META_LENGTH+a.byteLength+l.byteLength+c.byteLength+u.byteLength,d=new ArrayBuffer(this.HEADER_LENGTH+h),f=new Uint8Array(d),g=new DataView(d),p=0;g.setUint8(p++,this.KINDS.push),g.setUint8(p++,a.byteLength),g.setUint8(p++,l.byteLength),g.setUint8(p++,c.byteLength),g.setUint8(p++,u.byteLength),f.set(a,p),p+=a.byteLength,f.set(l,p),p+=l.byteLength,f.set(c,p),p+=c.byteLength,f.set(u,p),p+=u.byteLength;var v=new Uint8Array(d.byteLength+i.byteLength);return v.set(f,0),v.set(new Uint8Array(i),d.byteLength),v.buffer},assertFieldSize(e,t){if(e>255)throw Error(`unable to convert ${t} to binary: must be less than or equal to 255 bytes, but is ${e} bytes`)},binaryDecode(e){let t=new DataView(e),r=t.getUint8(0),s=new TextDecoder;switch(r){case this.KINDS.push:return this.decodePush(e,t,s);case this.KINDS.reply:return this.decodeReply(e,t,s);case this.KINDS.broadcast:return this.decodeBroadcast(e,t,s)}},decodePush(e,t,r){let s=t.getUint8(1),n=t.getUint8(2),i=t.getUint8(3),o=this.HEADER_LENGTH+this.META_LENGTH-1,a=r.decode(e.slice(o,o+s));o=o+s;let l=r.decode(e.slice(o,o+n));o=o+n;let c=r.decode(e.slice(o,o+i));o=o+i;let u=e.slice(o,e.byteLength);return{join_ref:a,ref:null,topic:l,event:c,payload:u}},decodeReply(e,t,r){let s=t.getUint8(1),n=t.getUint8(2),i=t.getUint8(3),o=t.getUint8(4),a=this.HEADER_LENGTH+this.META_LENGTH,l=r.decode(e.slice(a,a+s));a=a+s;let c=r.decode(e.slice(a,a+n));a=a+n;let u=r.decode(e.slice(a,a+i));a=a+i;let h=r.decode(e.slice(a,a+o));a=a+o;let d=e.slice(a,e.byteLength),f={status:h,response:d};return{join_ref:l,ref:c,topic:u,event:X.reply,payload:f}},decodeBroadcast(e,t,r){let s=t.getUint8(1),n=t.getUint8(2),i=this.HEADER_LENGTH+2,o=r.decode(e.slice(i,i+s));i=i+s;let a=r.decode(e.slice(i,i+n));i=i+n;let l=e.slice(i,e.byteLength);return{join_ref:null,ref:null,topic:o,event:a,payload:l}}},Hr=class{constructor(e,t={}){this.stateChangeCallbacks={open:[],close:[],error:[],message:[]},this.channels=[],this.sendBuffer=[],this.ref=0,this.fallbackRef=null,this.timeout=t.timeout||Sn,this.transport=t.transport||K.WebSocket||ge,this.conn=void 0,this.primaryPassedHealthCheck=!1,this.longPollFallbackMs=t.longPollFallbackMs,this.fallbackTimer=null;let r=null;try{r=K&&K.sessionStorage}catch{}if(this.sessionStore=t.sessionStorage||r,this.establishedConnections=0,this.defaultEncoder=lt.encode.bind(lt),this.defaultDecoder=lt.decode.bind(lt),this.closeWasClean=!0,this.disconnecting=!1,this.binaryType=t.binaryType||"arraybuffer",this.connectClock=1,this.pageHidden=!1,this.encode=void 0,this.decode=void 0,this.transport!==ge)this.encode=t.encode||this.defaultEncoder,this.decode=t.decode||this.defaultDecoder;else this.encode=this.defaultEncoder,this.decode=this.defaultDecoder;let s=null;if(ye&&ye.addEventListener)ye.addEventListener("pagehide",(n)=>{if(this.conn)this.disconnect(),s=this.connectClock}),ye.addEventListener("pageshow",(n)=>{if(s===this.connectClock)s=null,this.connect()}),ye.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")this.pageHidden=!0;else if(this.pageHidden=!1,!this.isConnected()&&!this.closeWasClean)this.teardown(()=>this.connect())});if(this.heartbeatIntervalMs=t.heartbeatIntervalMs||30000,this.autoSendHeartbeat=t.autoSendHeartbeat??!0,this.heartbeatCallback=t.heartbeatCallback??(()=>{}),this.rejoinAfterMs=(n)=>{if(t.rejoinAfterMs)return t.rejoinAfterMs(n);else return[1000,2000,5000][n-1]||1e4},this.reconnectAfterMs=(n)=>{if(t.reconnectAfterMs)return t.reconnectAfterMs(n);else return[10,50,100,150,200,250,500,1000,2000][n-1]||5000},this.logger=t.logger||null,!this.logger&&t.debug)this.logger=(n,i,o)=>{console.log(`${n}: ${i}`,o)};this.longpollerTimeout=t.longpollerTimeout||20000,this.params=me(t.params||{}),this.endPoint=`${e}/${Dt.websocket}`,this.vsn=t.vsn||bn,this.heartbeatTimeoutTimer=null,this.heartbeatTimer=null,this.heartbeatSentAt=null,this.pendingHeartbeatRef=null,this.reconnectTimer=new Mr(()=>{if(this.pageHidden){this.log("Not reconnecting as page is hidden!"),this.teardown();return}this.teardown(async()=>{if(t.beforeReconnect)await t.beforeReconnect();this.connect()})},this.reconnectAfterMs),this.authToken=t.authToken&&me(t.authToken)}getLongPollTransport(){return ge}replaceTransport(e){if(this.connectClock++,this.closeWasClean=!0,clearTimeout(this.fallbackTimer),this.reconnectTimer.reset(),this.conn)this.conn.close(),this.conn=null;this.transport=e}protocol(){return location.protocol.match(/^https/)?"wss":"ws"}endPointURL(){let e=ct.appendParams(ct.appendParams(this.endPoint,this.params()),{vsn:this.vsn});if(e.charAt(0)!=="/")return e;if(e.charAt(1)==="/")return`${this.protocol()}:${e}`;return`${this.protocol()}://${location.host}${e}`}disconnect(e,t,r){this.connectClock++,this.disconnecting=!0,this.closeWasClean=!0,clearTimeout(this.fallbackTimer),this.reconnectTimer.reset(),this.teardown(()=>{this.disconnecting=!1,e&&e()},t,r)}connect(e){if(e)console&&console.log("passing params to connect is deprecated. Instead pass :params to the Socket constructor"),this.params=me(e);if(this.conn&&!this.disconnecting)return;if(this.longPollFallbackMs&&this.transport!==ge)this.connectWithFallback(ge,this.longPollFallbackMs);else this.transportConnect()}log(e,t,r){this.logger&&this.logger(e,t,r)}hasLogger(){return this.logger!==null}onOpen(e){let t=this.makeRef();return this.stateChangeCallbacks.open.push([t,e]),t}onClose(e){let t=this.makeRef();return this.stateChangeCallbacks.close.push([t,e]),t}onError(e){let t=this.makeRef();return this.stateChangeCallbacks.error.push([t,e]),t}onMessage(e){let t=this.makeRef();return this.stateChangeCallbacks.message.push([t,e]),t}onHeartbeat(e){this.heartbeatCallback=e}ping(e){if(!this.isConnected())return!1;let t=this.makeRef(),r=Date.now();this.push({topic:"phoenix",event:"heartbeat",payload:{},ref:t});let s=this.onMessage((n)=>{if(n.ref===t)this.off([s]),e(Date.now()-r)});return!0}transportName(e){switch(e){case ge:return"LongPoll";default:return e.name}}transportConnect(){this.connectClock++,this.closeWasClean=!1;let e=void 0;if(this.authToken)e=["phoenix",`${Bt}${btoa(this.authToken()).replace(/=/g,"")}`];this.conn=new this.transport(this.endPointURL(),e),this.conn.binaryType=this.binaryType,this.conn.timeout=this.longpollerTimeout,this.conn.onopen=()=>this.onConnOpen(),this.conn.onerror=(t)=>this.onConnError(t),this.conn.onmessage=(t)=>this.onConnMessage(t),this.conn.onclose=(t)=>this.onConnClose(t)}getSession(e){return this.sessionStore&&this.sessionStore.getItem(e)}storeSession(e,t){this.sessionStore&&this.sessionStore.setItem(e,t)}connectWithFallback(e,t=2500){clearTimeout(this.fallbackTimer);let r=!1,s=!0,n,i,o=this.transportName(e),a=(l)=>{this.log("transport",`falling back to ${o}...`,l),this.off([n,i]),s=!1,this.replaceTransport(e),this.transportConnect()};if(this.getSession(`phx:fallback:${o}`))return a("memorized");if(this.fallbackTimer=setTimeout(a,t),i=this.onError((l)=>{if(this.log("transport","error",l),s&&!r)clearTimeout(this.fallbackTimer),a(l)}),this.fallbackRef)this.off([this.fallbackRef]);this.fallbackRef=this.onOpen(()=>{if(r=!0,!s){let l=this.transportName(e);if(!this.primaryPassedHealthCheck)this.storeSession(`phx:fallback:${l}`,"true");return this.log("transport",`established ${l} fallback`)}clearTimeout(this.fallbackTimer),this.fallbackTimer=setTimeout(a,t),this.ping((l)=>{this.log("transport","connected to primary after",l),this.primaryPassedHealthCheck=!0,clearTimeout(this.fallbackTimer)})}),this.transportConnect()}clearHeartbeats(){clearTimeout(this.heartbeatTimer),clearTimeout(this.heartbeatTimeoutTimer)}onConnOpen(){if(this.hasLogger())this.log("transport",`connected to ${this.endPointURL()}`);if(this.closeWasClean=!1,this.disconnecting=!1,this.establishedConnections++,this.flushSendBuffer(),this.reconnectTimer.reset(),this.autoSendHeartbeat)this.resetHeartbeat();this.triggerStateCallbacks("open")}heartbeatTimeout(){if(this.pendingHeartbeatRef){if(this.pendingHeartbeatRef=null,this.heartbeatSentAt=null,this.hasLogger())this.log("transport","heartbeat timeout. Attempting to re-establish connection");try{this.heartbeatCallback("timeout")}catch(e){this.log("error","error in heartbeat callback",e)}this.triggerChanError(Error("heartbeat timeout")),this.closeWasClean=!1,this.teardown(()=>this.reconnectTimer.scheduleTimeout(),En,"heartbeat timeout")}}resetHeartbeat(){if(this.conn&&this.conn.skipHeartbeat)return;this.pendingHeartbeatRef=null,this.clearHeartbeats(),this.heartbeatTimer=setTimeout(()=>this.sendHeartbeat(),this.heartbeatIntervalMs)}teardown(e,t,r){if(!this.conn)return e&&e();let s=this.conn;this.waitForBufferDone(s,()=>{if(t)s.close(t,r||"");else s.close();this.waitForSocketClosed(s,()=>{if(this.conn===s)this.conn.onopen=function(){},this.conn.onerror=function(){},this.conn.onmessage=function(){},this.conn.onclose=function(){},this.conn=null;e&&e()})})}waitForBufferDone(e,t,r=1){if(r===5||!e.bufferedAmount){t();return}setTimeout(()=>{this.waitForBufferDone(e,t,r+1)},150*r)}waitForSocketClosed(e,t,r=1){if(r===5||e.readyState===W.closed){t();return}setTimeout(()=>{this.waitForSocketClosed(e,t,r+1)},150*r)}onConnClose(e){if(this.conn)this.conn.onclose=()=>{};if(this.hasLogger())this.log("transport","close",e);if(this.triggerChanError(e),this.clearHeartbeats(),!this.closeWasClean)this.reconnectTimer.scheduleTimeout();this.triggerStateCallbacks("close",e)}onConnError(e){if(this.hasLogger())this.log("transport","error",e);let t=this.transport,r=this.establishedConnections;if(this.triggerStateCallbacks("error",e,t,r),t===this.transport||r>0)this.triggerChanError(e)}triggerChanError(e){this.channels.forEach((t)=>{if(!(t.isErrored()||t.isLeaving()||t.isClosed()))t.trigger(X.error,e)})}connectionState(){switch(this.conn&&this.conn.readyState){case W.connecting:return"connecting";case W.open:return"open";case W.closing:return"closing";default:return"closed"}}isConnected(){return this.connectionState()==="open"}remove(e){this.off(e.stateChangeRefs),this.channels=this.channels.filter((t)=>t!==e)}off(e){for(let t in this.stateChangeCallbacks)this.stateChangeCallbacks[t]=this.stateChangeCallbacks[t].filter(([r])=>e.indexOf(r)===-1)}channel(e,t={}){let r=new Rn(e,t,this);return this.channels.push(r),r}push(e){if(this.hasLogger()){let{topic:t,event:r,payload:s,ref:n,join_ref:i}=e;this.log("push",`${t} ${r} (${i}, ${n})`,s)}if(this.isConnected())this.encode(e,(t)=>this.conn.send(t));else this.sendBuffer.push(()=>this.encode(e,(t)=>this.conn.send(t)))}makeRef(){let e=this.ref+1;if(e===this.ref)this.ref=0;else this.ref=e;return this.ref.toString()}sendHeartbeat(){if(!this.isConnected()){try{this.heartbeatCallback("disconnected")}catch(e){this.log("error","error in heartbeat callback",e)}return}if(this.pendingHeartbeatRef){this.heartbeatTimeout();return}this.pendingHeartbeatRef=this.makeRef(),this.heartbeatSentAt=Date.now(),this.push({topic:"phoenix",event:"heartbeat",payload:{},ref:this.pendingHeartbeatRef});try{this.heartbeatCallback("sent")}catch(e){this.log("error","error in heartbeat callback",e)}this.heartbeatTimeoutTimer=setTimeout(()=>this.heartbeatTimeout(),this.heartbeatIntervalMs)}flushSendBuffer(){if(this.isConnected()&&this.sendBuffer.length>0)this.sendBuffer.forEach((e)=>e()),this.sendBuffer=[]}onConnMessage(e){this.decode(e.data,(t)=>{let{topic:r,event:s,payload:n,ref:i,join_ref:o}=t;if(i&&i===this.pendingHeartbeatRef){let a=this.heartbeatSentAt?Date.now()-this.heartbeatSentAt:void 0;this.clearHeartbeats();try{this.heartbeatCallback(n.status==="ok"?"ok":"error",a)}catch(l){this.log("error","error in heartbeat callback",l)}if(this.pendingHeartbeatRef=null,this.heartbeatSentAt=null,this.autoSendHeartbeat)this.heartbeatTimer=setTimeout(()=>this.sendHeartbeat(),this.heartbeatIntervalMs)}if(this.hasLogger())this.log("receive",`${n.status||""} ${r} ${s} ${i&&"("+i+")"||""}`.trim(),n);for(let a=0;a<this.channels.length;a++){let l=this.channels[a];if(!l.isMember(r,s,n,o))continue;l.trigger(s,n,i,o)}this.triggerStateCallbacks("message",t)})}triggerStateCallbacks(e,...t){try{this.stateChangeCallbacks[e].forEach(([r,s])=>{try{s(...t)}catch(n){this.log("error",`error in ${e} callback`,n)}})}catch(r){this.log("error",`error triggering ${e} callbacks`,r)}}leaveOpenTopic(e){let t=this.channels.find((r)=>r.topic===e&&(r.isJoined()||r.isJoining()));if(t){if(this.hasLogger())this.log("transport",`leaving duplicate topic "${e}"`);t.leave()}}};class ae{constructor(e,t){let r=xn(t);this.presence=new qr(e.getChannel(),r),this.presence.onJoin((s,n,i)=>{let o=ae.onJoinPayload(s,n,i);e.getChannel().trigger("presence",o)}),this.presence.onLeave((s,n,i)=>{let o=ae.onLeavePayload(s,n,i);e.getChannel().trigger("presence",o)}),this.presence.onSync(()=>{e.getChannel().trigger("presence",{event:"sync"})})}get state(){return ae.transformState(this.presence.state)}static transformState(e){return e=On(e),Object.getOwnPropertyNames(e).reduce((t,r)=>{let s=e[r];return t[r]=ut(s),t},{})}static onJoinPayload(e,t,r){let s=Kr(t),n=ut(r);return{event:"join",key:e,currentPresences:s,newPresences:n}}static onLeavePayload(e,t,r){let s=Kr(t),n=ut(r);return{event:"leave",key:e,currentPresences:s,leftPresences:n}}}function ut(e){return e.metas.map((t)=>{let r=Object.getOwnPropertyDescriptors(t),s=Object.defineProperties({},r);return s.presence_ref=s.phx_ref,delete s.phx_ref,delete s.phx_ref_prev,s})}function On(e){return JSON.parse(JSON.stringify(e))}function xn(e){return(e===null||e===void 0?void 0:e.events)&&{events:e.events}}function Kr(e){return(e===null||e===void 0?void 0:e.metas)?ut(e):[]}var Ft;(function(e){e.SYNC="sync",e.JOIN="join",e.LEAVE="leave"})(Ft||(Ft={}));class Ue{get state(){return this.presenceAdapter.state}constructor(e,t){this.channel=e,this.presenceAdapter=new ae(this.channel.channelAdapter,t)}}function Wr(e){if(e instanceof Error)return e;if(typeof e==="string")return Error(e);if(e&&typeof e==="object"){let t=e;if(typeof t.code==="number"){let r=typeof t.reason==="string"&&t.reason?` (${t.reason})`:"";return Error(`socket closed: ${t.code}${r}`,{cause:e})}return Error("channel error: transport failure",{cause:e})}return Error("channel error: connection lost")}class ht{constructor(e,t,r){let s=Pn(r);this.channel=e.getSocket().channel(t,s),this.socket=e}get state(){return this.channel.state}set state(e){this.channel.state=e}get joinedOnce(){return this.channel.joinedOnce}get joinPush(){return this.channel.joinPush}get rejoinTimer(){return this.channel.rejoinTimer}on(e,t){return this.channel.on(e,t)}off(e,t){this.channel.off(e,t)}subscribe(e){return this.channel.join(e)}unsubscribe(e){return this.channel.leave(e)}teardown(){this.channel.teardown()}onClose(e){this.channel.onClose(e)}onError(e){return this.channel.onError(e)}push(e,t,r){let s;try{s=this.channel.push(e,t,r)}catch(n){throw Error(`tried to push '${e}' to '${this.channel.topic}' before joining. Use channel.subscribe() before pushing events`)}if(this.channel.pushBuffer.length>Br){let n=this.channel.pushBuffer.shift();n.cancelTimeout(),this.socket.log("channel",`discarded push due to buffer overflow: ${n.event}`,n.payload())}return s}updateJoinPayload(e){let t=this.channel.joinPush.payload();this.channel.joinPush.payload=()=>Object.assign(Object.assign({},t),e)}canPush(){return this.socket.isConnected()&&this.state===H.joined}isJoined(){return this.state===H.joined}isJoining(){return this.state===H.joining}isClosed(){return this.state===H.closed}isLeaving(){return this.state===H.leaving}updateFilterBindings(e){this.channel.filterBindings=e}updatePayloadTransform(e){this.channel.onMessage=e}getChannel(){return this.channel}}function Pn(e){return{config:Object.assign({broadcast:{ack:!1,self:!1},presence:{key:"",enabled:!1},private:!1},e.config)}}var Cn=/[,()"\\]/,In=(e)=>Cn.test(e)||e!==e.trim(),jn=(e)=>`"${e.replace(/\\/g,"\\\\").replace(/"/g,"\\\"")}"`,Vr=(e)=>{let t=e===null?"null":String(e);return In(t)?jn(t):t},Nn=(e)=>e===null?"null":String(e),Ln=(e,t)=>{if(e==="in"){let r=Array.isArray(t)?t:[t];if(r.length===0)throw Error("Realtime `in` filter requires at least one value.");return`in.(${Array.from(new Set(r)).map((n)=>Vr(n)).join(",")})`}if(e==="is")return`is.${Nn(t)}`;return`${e}.${Vr(t)}`};class $e{constructor(){this.filters=[]}add(e,t,r,s=!1){let n=s?"not.":"";return this.filters.push(`${e}=${n}${Ln(t,r)}`),this}eq(e,t){return this.add(e,"eq",t)}neq(e,t){return this.add(e,"neq",t)}gt(e,t){return this.add(e,"gt",t)}gte(e,t){return this.add(e,"gte",t)}lt(e,t){return this.add(e,"lt",t)}lte(e,t){return this.add(e,"lte",t)}in(e,t){return this.add(e,"in",t)}like(e,t){return this.add(e,"like",t)}ilike(e,t){return this.add(e,"ilike",t)}match(e,t){return this.add(e,"match",t)}imatch(e,t){return this.add(e,"imatch",t)}is(e,t){return this.add(e,"is",t)}isDistinct(e,t){return this.add(e,"isdistinct",t)}not(e,t,r){return this.add(e,t,r,!0)}build(){return this.filters.join(",")}toString(){return this.build()}}var Mt;(function(e){e.ALL="*",e.INSERT="INSERT",e.UPDATE="UPDATE",e.DELETE="DELETE"})(Mt||(Mt={}));var te;(function(e){e.BROADCAST="broadcast",e.PRESENCE="presence",e.POSTGRES_CHANGES="postgres_changes",e.SYSTEM="system"})(te||(te={}));var V;(function(e){e.SUBSCRIBED="SUBSCRIBED",e.TIMED_OUT="TIMED_OUT",e.CLOSED="CLOSED",e.CHANNEL_ERROR="CHANNEL_ERROR"})(V||(V={}));class B{get state(){return this.channelAdapter.state}set state(e){this.channelAdapter.state=e}get joinedOnce(){return this.channelAdapter.joinedOnce}get timeout(){return this.socket.timeout}get joinPush(){return this.channelAdapter.joinPush}get rejoinTimer(){return this.channelAdapter.rejoinTimer}constructor(e,t={config:{}},r){var s,n;if(this.topic=e,this.params=t,this.socket=r,this.bindings={},this.subTopic=e.replace(/^realtime:/i,""),this.params.config=Object.assign({broadcast:{ack:!1,self:!1},presence:{key:"",enabled:!1},private:!1},t.config),this.channelAdapter=new ht(this.socket.socketAdapter,e,this.params),this.presence=new Ue(this),this._onClose(()=>{this.socket._remove(this)}),this._updateFilterTransform(),this.broadcastEndpointURL=ot(this.socket.socketAdapter.endPointURL()),this.private=this.params.config.private||!1,!this.private&&((n=(s=this.params.config)===null||s===void 0?void 0:s.broadcast)===null||n===void 0?void 0:n.replay))throw Error(`tried to use replay on public channel '${this.topic}'. It must be a private channel.`)}subscribe(e,t=this.timeout){var r,s,n,i;if(!this.socket.isConnected())this.socket.connect();if(this.channelAdapter.isClosed()){let{config:{broadcast:o,presence:a,private:l,postgres_changes_options:c}}=this.params,u=(s=(r=this.bindings.postgres_changes)===null||r===void 0?void 0:r.map((p)=>p.filter))!==null&&s!==void 0?s:[],h=!!this.bindings[te.PRESENCE]&&this.bindings[te.PRESENCE].length>0||((n=this.params.config.presence)===null||n===void 0?void 0:n.enabled)===!0,d={},f=Object.assign({broadcast:o,presence:Object.assign(Object.assign({},a),{enabled:h}),postgres_changes:u,private:l},c?{postgres_changes_options:c}:{});if(this.socket.accessTokenValue)d.access_token=this.socket.accessTokenValue;this._onError((p)=>{e===null||e===void 0||e(V.CHANNEL_ERROR,Wr(p))}),this._onClose(()=>e===null||e===void 0?void 0:e(V.CLOSED)),this.updateJoinPayload(Object.assign({config:f},d)),this._updateFilterMessage();let g=(c===null||c===void 0?void 0:c.wait)&&u.length>0?Math.max(t,((i=c.timeout)!==null&&i!==void 0?i:$r)+Dr):t;this.channelAdapter.subscribe(g).receive("ok",async({postgres_changes:p})=>{if(!this.socket._isManualToken())this.socket.setAuth();if(p===void 0){e===null||e===void 0||e(V.SUBSCRIBED);return}this._updatePostgresBindings(p,e)}).receive("error",(p)=>{this.state=H.errored;let v=Object.values(p).join(", ")||"error";e===null||e===void 0||e(V.CHANNEL_ERROR,Error(v,{cause:p}))}).receive("timeout",()=>{e===null||e===void 0||e(V.TIMED_OUT)})}return this}_updatePostgresBindings(e,t){var r;let s=this.bindings.postgres_changes,n=(r=s===null||s===void 0?void 0:s.length)!==null&&r!==void 0?r:0,i=[];for(let o=0;o<n;o++){let a=s[o],{filter:{event:l,schema:c,table:u,filter:h}}=a,d=e&&e[o];if(d&&d.event===l&&B.isFilterValueEqual(d.schema,c)&&B.isFilterValueEqual(d.table,u)&&B.isFilterValueEqual(d.filter,h))i.push(Object.assign(Object.assign({},a),{id:d.id}));else{this.unsubscribe(),this.state=H.errored,t===null||t===void 0||t(V.CHANNEL_ERROR,Error("mismatch between server and client bindings for postgres changes"));return}}if(this.bindings.postgres_changes=i,this.state!=H.errored&&t)t(V.SUBSCRIBED)}presenceState(){return this.presence.state}async track(e,t={}){return await this.send({type:"presence",event:"track",payload:e},t)}async untrack(e={}){return await this.send({type:"presence",event:"untrack"},e)}on(e,t,r){let s=this.channelAdapter.isJoined()||this.channelAdapter.isJoining(),n=e===te.PRESENCE||e===te.POSTGRES_CHANGES;if(s&&n)throw this.socket.log("channel",`cannot add \`${e}\` callbacks for ${this.topic} after \`subscribe()\`.`),Error(`cannot add \`${e}\` callbacks for ${this.topic} after \`subscribe()\`.`);return this._on(e,t,r)}async httpSend(e,t,r={}){var s;if(t===void 0||t===null)return Promise.reject(Error("Payload is required for httpSend()"));let n=t instanceof ArrayBuffer||ArrayBuffer.isView(t),i={apikey:this.socket.apiKey?this.socket.apiKey:"","Content-Type":n?"application/octet-stream":"application/json"};if(this.socket.accessTokenValue)i.Authorization=`Bearer ${this.socket.accessTokenValue}`;let o=new URL(this.broadcastEndpointURL);if(o.pathname+=`/${encodeURIComponent(this.subTopic)}/events/${encodeURIComponent(e)}`,this.private)o.searchParams.set("private","true");let a={method:"POST",headers:i,body:n?t:JSON.stringify(t)},l=await this._fetchWithTimeout(o.toString(),a,(s=r.timeout)!==null&&s!==void 0?s:this.timeout);if(l.status===202)return{success:!0};if(l.status===404)return Promise.reject(Error("httpSend() requires Realtime server v2.97.0 or newer; the endpoint returned 404. Update your Supabase CLI to a recent version, or upgrade the Realtime server in your self-hosted setup. See https://github.com/supabase/supabase-js/blob/master/packages/core/realtime-js/migrations/httpsend-server-version.md"));let c=l.statusText;try{let u=await l.json();c=u.error||u.message||c}catch(u){}return Promise.reject(Error(c))}async send(e,t={}){var r,s;if(!this.channelAdapter.canPush()&&e.type==="broadcast"){let n="Realtime send() is automatically falling back to REST API. This behavior will be deprecated in the future. Please use httpSend() explicitly for REST delivery.";if(this.socket.hasLogger())this.socket.log("channel",n);else console.warn(n);let{event:i,payload:o}=e,a={apikey:this.socket.apiKey?this.socket.apiKey:"","Content-Type":"application/json"};if(this.socket.accessTokenValue)a.Authorization=`Bearer ${this.socket.accessTokenValue}`;let l={method:"POST",headers:a,body:JSON.stringify({messages:[{topic:this.subTopic,event:i,payload:o,private:this.private}]})};try{let c=await this._fetchWithTimeout(this.broadcastEndpointURL,l,(r=t.timeout)!==null&&r!==void 0?r:this.timeout);return await((s=c.body)===null||s===void 0?void 0:s.cancel()),c.ok?"ok":"error"}catch(c){if(c instanceof Error&&c.name==="AbortError")return"timed out";else return"error"}}else return new Promise((n)=>{var i,o,a;let l=this.channelAdapter.push(e.type,e,t.timeout||this.timeout);if(e.type==="broadcast"&&!((a=(o=(i=this.params)===null||i===void 0?void 0:i.config)===null||o===void 0?void 0:o.broadcast)===null||a===void 0?void 0:a.ack))n("ok");l.receive("ok",()=>n("ok")),l.receive("error",()=>n("error")),l.receive("timeout",()=>n("timed out"))})}updateJoinPayload(e){this.channelAdapter.updateJoinPayload(e)}async unsubscribe(e=this.timeout){return new Promise((t)=>{this.channelAdapter.unsubscribe(e).receive("ok",()=>t("ok")).receive("timeout",()=>t("timed out")).receive("error",()=>t("error"))})}teardown(){this.channelAdapter.teardown()}async _fetchWithTimeout(e,t,r){let s=new AbortController,n=setTimeout(()=>s.abort(),r),i=await this.socket.fetch(e,Object.assign(Object.assign({},t),{signal:s.signal}));return clearTimeout(n),i}_on(e,t,r){var s;let n=e.toLocaleLowerCase(),i=t===null||t===void 0?void 0:t.filter;if(i instanceof $e||typeof i==="object"&&i!==null&&typeof i.build==="function")t=Object.assign(Object.assign({},t),{filter:i.build()});if(n===te.POSTGRES_CHANGES){if((s=this.bindings[n])===null||s===void 0?void 0:s.find((c)=>B.isSamePostgresFilter(c.filter,t)))return this.socket.log("error",`duplicate \`postgres_changes\` binding for ${this.topic} ignored`,t),this}let o=this.channelAdapter.on(e,r),a={type:n,filter:t,callback:r,ref:o};if(this.bindings[n])this.bindings[n].push(a);else this.bindings[n]=[a];return this._updateFilterMessage(),this}_onClose(e){this.channelAdapter.onClose(e)}_onError(e){this.channelAdapter.onError(e)}_updateFilterMessage(){this.channelAdapter.updateFilterBindings((e,t,r)=>{var s,n,i,o,a,l,c;let u=e.event.toLocaleLowerCase();if(this._notThisChannelEvent(u,r))return!1;let h=(s=this.bindings[u])===null||s===void 0?void 0:s.find((d)=>d.ref===e.ref);if(!h)return!0;if(["broadcast","presence","postgres_changes"].includes(u))if("id"in h){let d=h.id,f=(n=h.filter)===null||n===void 0?void 0:n.event;return d&&((i=t.ids)===null||i===void 0?void 0:i.includes(d))&&(f==="*"||(f===null||f===void 0?void 0:f.toLocaleLowerCase())===((o=t.data)===null||o===void 0?void 0:o.type.toLocaleLowerCase()))}else{let d=(l=(a=h===null||h===void 0?void 0:h.filter)===null||a===void 0?void 0:a.event)===null||l===void 0?void 0:l.toLocaleLowerCase();return d==="*"||d===((c=t===null||t===void 0?void 0:t.event)===null||c===void 0?void 0:c.toLocaleLowerCase())}else return h.type.toLocaleLowerCase()===u})}_notThisChannelEvent(e,t){let{close:r,error:s,leave:n,join:i}=nt;return t&&[r,s,n,i].includes(e)&&t!==this.joinPush.ref}_updateFilterTransform(){this.channelAdapter.updatePayloadTransform((e,t,r)=>{if(typeof t==="object"&&"ids"in t){let s=t.data,{schema:n,table:i,commit_timestamp:o,type:a,errors:l}=s;return Object.assign(Object.assign({},{schema:n,table:i,commit_timestamp:o,eventType:a,new:{},old:{},errors:l}),this._getPayloadRecords(s))}return t})}copyBindings(e){if(this.joinedOnce)throw Error("cannot copy bindings into joined channel");for(let t in e.bindings)for(let r of e.bindings[t])this._on(r.type,r.filter,r.callback)}static isFilterValueEqual(e,t){return(e!==null&&e!==void 0?e:void 0)===(t!==null&&t!==void 0?t:void 0)}static isSamePostgresFilter(e,t){var r,s,n,i;let o=(s=(r=e===null||e===void 0?void 0:e.select)===null||r===void 0?void 0:r.join())!==null&&s!==void 0?s:void 0,a=(i=(n=t===null||t===void 0?void 0:t.select)===null||n===void 0?void 0:n.join())!==null&&i!==void 0?i:void 0;return(e===null||e===void 0?void 0:e.event)===(t===null||t===void 0?void 0:t.event)&&B.isFilterValueEqual(e===null||e===void 0?void 0:e.schema,t===null||t===void 0?void 0:t.schema)&&B.isFilterValueEqual(e===null||e===void 0?void 0:e.table,t===null||t===void 0?void 0:t.table)&&B.isFilterValueEqual(e===null||e===void 0?void 0:e.filter,t===null||t===void 0?void 0:t.filter)&&o===a}_getPayloadRecords(e){let t={new:{},old:{}};if(e.type==="INSERT"||e.type==="UPDATE")t.new=$t(e.columns,e.record);if(e.type==="UPDATE"||e.type==="DELETE")t.old=$t(e.columns,e.old_record);return t}}class dt{constructor(e,t){this.socket=new Hr(e,t)}get timeout(){return this.socket.timeout}get endPoint(){return this.socket.endPoint}get transport(){return this.socket.transport}get heartbeatIntervalMs(){return this.socket.heartbeatIntervalMs}get heartbeatCallback(){return this.socket.heartbeatCallback}set heartbeatCallback(e){this.socket.heartbeatCallback=e}get heartbeatTimer(){return this.socket.heartbeatTimer}get pendingHeartbeatRef(){return this.socket.pendingHeartbeatRef}get reconnectTimer(){return this.socket.reconnectTimer}get vsn(){return this.socket.vsn}get encode(){return this.socket.encode}get decode(){return this.socket.decode}get reconnectAfterMs(){return this.socket.reconnectAfterMs}get sendBuffer(){return this.socket.sendBuffer}get stateChangeCallbacks(){return this.socket.stateChangeCallbacks}connect(){this.socket.connect()}disconnect(e,t,r,s=1e4){return new Promise((n)=>{setTimeout(()=>n("timeout"),s),this.socket.disconnect(()=>{e(),n("ok")},t,r)})}push(e){this.socket.push(e)}log(e,t,r){this.socket.log(e,t,r)}hasLogger(){return this.socket.hasLogger()}makeRef(){return this.socket.makeRef()}onOpen(e){this.socket.onOpen(e)}onClose(e){this.socket.onClose(e)}onError(e){this.socket.onError(e)}onMessage(e){this.socket.onMessage(e)}isConnected(){return this.socket.isConnected()}isConnecting(){return this.socket.connectionState()==Le.connecting}isDisconnecting(){return this.socket.connectionState()==Le.closing}connectionState(){return this.socket.connectionState()}endPointURL(){return this.socket.endPointURL()}sendHeartbeat(){this.socket.sendHeartbeat()}getSocket(){return this.socket}}var Gr={HEARTBEAT_INTERVAL:25000,RECONNECT_DELAY:10,HEARTBEAT_TIMEOUT_FALLBACK:100},$n=[1000,2000,5000,1e4],Dn=1e4;function Bn(){let e=new Map;return{get length(){return e.size},clear(){e.clear()},getItem(t){return e.has(t)?e.get(t):null},key(t){var r;return(r=Array.from(e.keys())[t])!==null&&r!==void 0?r:null},removeItem(t){e.delete(t)},setItem(t,r){e.set(t,String(r))}}}function Fn(){try{if(typeof globalThis<"u"&&globalThis.sessionStorage)return globalThis.sessionStorage}catch(e){}return Bn()}var Mn=`
+// ../persist/node_modules/@supabase/functions-js/dist/module/helper.js
+var resolveFetch = (customFetch) => {
+  if (customFetch)
+    return (...args) => customFetch(...args);
+  return (...args) => fetch(...args);
+};
+
+// ../persist/node_modules/@supabase/functions-js/dist/module/types.js
+class FunctionsError extends Error {
+  constructor(message, name = "FunctionsError", context) {
+    super(message);
+    this.name = name, this.context = context;
+  }
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      context: this.context
+    };
+  }
+}
+
+class FunctionsFetchError extends FunctionsError {
+  constructor(context) {
+    super("Failed to send a request to the Edge Function", "FunctionsFetchError", context);
+  }
+}
+
+class FunctionsRelayError extends FunctionsError {
+  constructor(context) {
+    super("Relay Error invoking the Edge Function", "FunctionsRelayError", context);
+  }
+}
+
+class FunctionsHttpError extends FunctionsError {
+  constructor(context) {
+    super("Edge Function returned a non-2xx status code", "FunctionsHttpError", context);
+  }
+}
+var FunctionRegion;
+(function(FunctionRegion) {
+  FunctionRegion.Any = "any", FunctionRegion.ApNortheast1 = "ap-northeast-1", FunctionRegion.ApNortheast2 = "ap-northeast-2", FunctionRegion.ApSouth1 = "ap-south-1", FunctionRegion.ApSoutheast1 = "ap-southeast-1", FunctionRegion.ApSoutheast2 = "ap-southeast-2", FunctionRegion.CaCentral1 = "ca-central-1", FunctionRegion.EuCentral1 = "eu-central-1", FunctionRegion.EuWest1 = "eu-west-1", FunctionRegion.EuWest2 = "eu-west-2", FunctionRegion.EuWest3 = "eu-west-3", FunctionRegion.SaEast1 = "sa-east-1", FunctionRegion.UsEast1 = "us-east-1", FunctionRegion.UsWest1 = "us-west-1", FunctionRegion.UsWest2 = "us-west-2";
+})(FunctionRegion || (FunctionRegion = {}));
+
+// ../persist/node_modules/@supabase/functions-js/dist/module/FunctionsClient.js
+class FunctionsClient {
+  constructor(url, { headers = {}, customFetch, region = FunctionRegion.Any } = {}) {
+    this.url = url, this.headers = headers, this.region = region, this.fetch = resolveFetch(customFetch);
+  }
+  setAuth(token) {
+    this.headers.Authorization = `Bearer ${token}`;
+  }
+  invoke(functionName_1) {
+    return __awaiter(this, arguments, void 0, function* (functionName, options = {}) {
+      var _a, _b;
+      let timeoutId, timeoutController, onAbort;
+      try {
+        let { headers, method, body: functionArgs, signal, timeout } = options, _headers = {}, { region } = options;
+        if (!region)
+          region = this.region;
+        let url = new URL(`${this.url}/${functionName}`);
+        if (region && region !== "any")
+          _headers["x-region"] = region, url.searchParams.set("forceFunctionRegion", region);
+        let body, hasContentTypeHeader = !!headers && Object.keys(headers).some((key) => key.toLowerCase() === "content-type");
+        if (functionArgs && !hasContentTypeHeader)
+          if (typeof Blob < "u" && functionArgs instanceof Blob || functionArgs instanceof ArrayBuffer)
+            _headers["Content-Type"] = functionArgs.type || "application/octet-stream", body = functionArgs;
+          else if (typeof functionArgs === "string")
+            _headers["Content-Type"] = "text/plain", body = functionArgs;
+          else if (typeof FormData < "u" && functionArgs instanceof FormData)
+            body = functionArgs;
+          else
+            _headers["Content-Type"] = "application/json", body = JSON.stringify(functionArgs);
+        else if (functionArgs && typeof functionArgs !== "string" && !(typeof Blob < "u" && functionArgs instanceof Blob) && !(functionArgs instanceof ArrayBuffer) && !(typeof FormData < "u" && functionArgs instanceof FormData))
+          body = JSON.stringify(functionArgs);
+        else
+          body = functionArgs;
+        let effectiveSignal = signal;
+        if (timeout)
+          if (timeoutController = new AbortController, timeoutId = setTimeout(() => timeoutController.abort(), timeout), signal)
+            effectiveSignal = timeoutController.signal, onAbort = () => timeoutController.abort(), signal.addEventListener("abort", onAbort);
+          else
+            effectiveSignal = timeoutController.signal;
+        let response = yield this.fetch(url.toString(), {
+          method: method || "POST",
+          headers: Object.assign(Object.assign(Object.assign({}, _headers), this.headers), headers),
+          body,
+          signal: effectiveSignal
+        }).catch((fetchError) => {
+          throw new FunctionsFetchError(fetchError);
+        }), isRelayError = response.headers.get("x-relay-error");
+        if (isRelayError && isRelayError === "true")
+          throw new FunctionsRelayError(response);
+        if (!response.ok)
+          throw new FunctionsHttpError(response);
+        let responseType = ((_a = response.headers.get("Content-Type")) !== null && _a !== void 0 ? _a : "text/plain").split(";")[0].trim().toLowerCase(), data;
+        if (responseType === "application/json")
+          data = yield response.json();
+        else if (responseType === "application/octet-stream" || responseType === "application/pdf")
+          data = yield response.blob();
+        else if (responseType === "text/event-stream")
+          data = response;
+        else if (responseType === "multipart/form-data")
+          data = yield response.formData();
+        else
+          data = yield response.text();
+        return { data, error: null, response };
+      } catch (error) {
+        return {
+          data: null,
+          error,
+          response: error instanceof FunctionsHttpError || error instanceof FunctionsRelayError ? error.context : void 0
+        };
+      } finally {
+        if (timeoutId)
+          clearTimeout(timeoutId);
+        if (onAbort)
+          (_b = options.signal) === null || _b === void 0 || _b.removeEventListener("abort", onAbort);
+      }
+    });
+  }
+}
+// ../persist/node_modules/@supabase/postgrest-js/dist/index.mjs
+var PostgrestError = class extends Error {
+  constructor(context) {
+    super(context.message);
+    this.name = "PostgrestError", this.details = context.details, this.hint = context.hint, this.code = context.code;
+  }
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      details: this.details,
+      hint: this.hint,
+      code: this.code
+    };
+  }
+}, DEFAULT_MAX_RETRIES = 3, getRetryDelay = (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), RETRYABLE_STATUS_CODES = [520, 503], RETRYABLE_METHODS = [
+  "GET",
+  "HEAD",
+  "OPTIONS"
+];
+function _typeof(o) {
+  return _typeof = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(o$1) {
+    return typeof o$1;
+  } : function(o$1) {
+    return o$1 && typeof Symbol == "function" && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
+  }, _typeof(o);
+}
+function toPrimitive(t, r) {
+  if (_typeof(t) != "object" || !t)
+    return t;
+  var e = t[Symbol.toPrimitive];
+  if (e !== void 0) {
+    var i = e.call(t, r || "default");
+    if (_typeof(i) != "object")
+      return i;
+    throw TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (r === "string" ? String : Number)(t);
+}
+function toPropertyKey(t) {
+  var i = toPrimitive(t, "string");
+  return _typeof(i) == "symbol" ? i : i + "";
+}
+function _defineProperty(e, r, t) {
+  return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
+}
+function ownKeys(e, r) {
+  var t = Object.keys(e);
+  if (Object.getOwnPropertySymbols) {
+    var o = Object.getOwnPropertySymbols(e);
+    r && (o = o.filter(function(r$1) {
+      return Object.getOwnPropertyDescriptor(e, r$1).enumerable;
+    })), t.push.apply(t, o);
+  }
+  return t;
+}
+function _objectSpread2(e) {
+  for (var r = 1;r < arguments.length; r++) {
+    var t = arguments[r] != null ? arguments[r] : {};
+    r % 2 ? ownKeys(Object(t), !0).forEach(function(r$1) {
+      _defineProperty(e, r$1, t[r$1]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function(r$1) {
+      Object.defineProperty(e, r$1, Object.getOwnPropertyDescriptor(t, r$1));
+    });
+  }
+  return e;
+}
+function sleep(ms, signal) {
+  return new Promise((resolve) => {
+    if (signal === null || signal === void 0 ? void 0 : signal.aborted) {
+      resolve();
+      return;
+    }
+    let id = setTimeout(() => {
+      signal === null || signal === void 0 || signal.removeEventListener("abort", onAbort), resolve();
+    }, ms);
+    function onAbort() {
+      clearTimeout(id), resolve();
+    }
+    signal === null || signal === void 0 || signal.addEventListener("abort", onAbort);
+  });
+}
+function shouldRetry(method, status, attemptCount, retryEnabled) {
+  if (!retryEnabled || attemptCount >= DEFAULT_MAX_RETRIES)
+    return !1;
+  if (!RETRYABLE_METHODS.includes(method))
+    return !1;
+  if (!RETRYABLE_STATUS_CODES.includes(status))
+    return !1;
+  return !0;
+}
+async function fetchWithRetry(fetchImpl, url, request, retryEnabled) {
+  let attemptCount = 0;
+  while (!0) {
+    let headers = _objectSpread2({}, request.headers);
+    if (attemptCount > 0)
+      headers["X-Retry-Count"] = String(attemptCount);
+    let res;
+    try {
+      res = await fetchImpl(url, {
+        method: request.method,
+        headers,
+        body: request.body,
+        signal: request.signal
+      });
+    } catch (fetchError) {
+      var _request$signal;
+      if ((fetchError === null || fetchError === void 0 ? void 0 : fetchError.name) === "AbortError" || (fetchError === null || fetchError === void 0 ? void 0 : fetchError.code) === "ABORT_ERR" || (fetchError === null || fetchError === void 0 ? void 0 : fetchError.name) === "TimeoutError" && ((_request$signal = request.signal) === null || _request$signal === void 0 ? void 0 : _request$signal.aborted))
+        throw fetchError;
+      if (!RETRYABLE_METHODS.includes(request.method))
+        throw fetchError;
+      if (retryEnabled && attemptCount < DEFAULT_MAX_RETRIES) {
+        let delay = getRetryDelay(attemptCount);
+        attemptCount++, await sleep(delay, request.signal);
+        continue;
+      }
+      throw fetchError;
+    }
+    if (shouldRetry(request.method, res.status, attemptCount, retryEnabled)) {
+      var _res$headers$get, _res$headers;
+      let retryAfterHeader = (_res$headers$get = (_res$headers = res.headers) === null || _res$headers === void 0 ? void 0 : _res$headers.get("Retry-After")) !== null && _res$headers$get !== void 0 ? _res$headers$get : null, delay = retryAfterHeader !== null ? Math.max(0, parseInt(retryAfterHeader, 10) || 0) * 1000 : getRetryDelay(attemptCount);
+      await res.text(), attemptCount++, await sleep(delay, request.signal);
+      continue;
+    }
+    return res;
+  }
+}
+var PostgrestBuilder = class {
+  constructor(builder) {
+    var _builder$shouldThrowO, _builder$isMaybeSingl, _builder$shouldStripN, _builder$urlLengthLim, _builder$retry;
+    if (this.shouldThrowOnError = !1, this.retryEnabled = !0, this.method = builder.method, this.url = builder.url, this.headers = new Headers(builder.headers), this.schema = builder.schema, this.body = builder.body, this.shouldThrowOnError = (_builder$shouldThrowO = builder.shouldThrowOnError) !== null && _builder$shouldThrowO !== void 0 ? _builder$shouldThrowO : !1, this.signal = builder.signal, this.isMaybeSingle = (_builder$isMaybeSingl = builder.isMaybeSingle) !== null && _builder$isMaybeSingl !== void 0 ? _builder$isMaybeSingl : !1, this.shouldStripNulls = (_builder$shouldStripN = builder.shouldStripNulls) !== null && _builder$shouldStripN !== void 0 ? _builder$shouldStripN : !1, this.urlLengthLimit = (_builder$urlLengthLim = builder.urlLengthLimit) !== null && _builder$urlLengthLim !== void 0 ? _builder$urlLengthLim : 8000, this.retryEnabled = (_builder$retry = builder.retry) !== null && _builder$retry !== void 0 ? _builder$retry : !0, builder.fetch)
+      this.fetch = builder.fetch;
+    else
+      this.fetch = fetch;
+  }
+  throwOnError() {
+    return this.shouldThrowOnError = !0, this;
+  }
+  stripNulls() {
+    if (this.headers.get("Accept") === "text/csv")
+      throw Error("stripNulls() cannot be used with csv()");
+    return this.shouldStripNulls = !0, this;
+  }
+  setHeader(name, value) {
+    return this.headers = new Headers(this.headers), this.headers.set(name, value), this;
+  }
+  retry(enabled) {
+    return this.retryEnabled = enabled, this;
+  }
+  then(onfulfilled, onrejected) {
+    var _this = this;
+    if (this.schema === void 0)
+      ;
+    else if (["GET", "HEAD"].includes(this.method))
+      this.headers.set("Accept-Profile", this.schema);
+    else
+      this.headers.set("Content-Profile", this.schema);
+    if (this.method !== "GET" && this.method !== "HEAD")
+      this.headers.set("Content-Type", "application/json");
+    if (this.shouldStripNulls) {
+      let currentAccept = this.headers.get("Accept");
+      if (currentAccept === "application/vnd.pgrst.object+json")
+        this.headers.set("Accept", "application/vnd.pgrst.object+json;nulls=stripped");
+      else if (!currentAccept || currentAccept === "application/json")
+        this.headers.set("Accept", "application/vnd.pgrst.array+json;nulls=stripped");
+    }
+    let _fetch = this.fetch, res = (async () => {
+      let headers = {};
+      _this.headers.forEach((value, key) => {
+        headers[key] = value;
+      });
+      let res$1 = await fetchWithRetry(_fetch, _this.url.toString(), {
+        method: _this.method,
+        headers,
+        body: JSON.stringify(_this.body, (_, value) => typeof value === "bigint" ? value.toString() : value),
+        signal: _this.signal
+      }, _this.retryEnabled);
+      return await _this.processResponse(res$1);
+    })();
+    if (!this.shouldThrowOnError)
+      res = res.catch((fetchError) => {
+        var _fetchError$name2;
+        let errorDetails = "", hint = "", code = "", cause = fetchError === null || fetchError === void 0 ? void 0 : fetchError.cause;
+        if (cause) {
+          var _cause$message, _cause$code, _fetchError$name, _cause$name;
+          let causeMessage = (_cause$message = cause === null || cause === void 0 ? void 0 : cause.message) !== null && _cause$message !== void 0 ? _cause$message : "", causeCode = (_cause$code = cause === null || cause === void 0 ? void 0 : cause.code) !== null && _cause$code !== void 0 ? _cause$code : "";
+          if (errorDetails = `${(_fetchError$name = fetchError === null || fetchError === void 0 ? void 0 : fetchError.name) !== null && _fetchError$name !== void 0 ? _fetchError$name : "FetchError"}: ${fetchError === null || fetchError === void 0 ? void 0 : fetchError.message}`, errorDetails += `
+
+Caused by: ${(_cause$name = cause === null || cause === void 0 ? void 0 : cause.name) !== null && _cause$name !== void 0 ? _cause$name : "Error"}: ${causeMessage}`, causeCode)
+            errorDetails += ` (${causeCode})`;
+          if (cause === null || cause === void 0 ? void 0 : cause.stack)
+            errorDetails += `
+${cause.stack}`;
+        } else {
+          var _fetchError$stack;
+          errorDetails = (_fetchError$stack = fetchError === null || fetchError === void 0 ? void 0 : fetchError.stack) !== null && _fetchError$stack !== void 0 ? _fetchError$stack : "";
+        }
+        let urlLength = this.url.toString().length;
+        if ((fetchError === null || fetchError === void 0 ? void 0 : fetchError.name) === "AbortError" || (fetchError === null || fetchError === void 0 ? void 0 : fetchError.code) === "ABORT_ERR") {
+          if (code = "", hint = "Request was aborted (timeout or manual cancellation)", urlLength > this.urlLengthLimit)
+            hint += `. Note: Your request URL is ${urlLength} characters, which may exceed server limits. If selecting many fields, consider using views. If filtering with large arrays (e.g., .in('id', [many IDs])), consider using an RPC function to pass values server-side.`;
+        } else if ((cause === null || cause === void 0 ? void 0 : cause.name) === "HeadersOverflowError" || (cause === null || cause === void 0 ? void 0 : cause.code) === "UND_ERR_HEADERS_OVERFLOW") {
+          if (code = "", hint = "HTTP headers exceeded server limits (typically 16KB)", urlLength > this.urlLengthLimit)
+            hint += `. Your request URL is ${urlLength} characters. If selecting many fields, consider using views. If filtering with large arrays (e.g., .in('id', [200+ IDs])), consider using an RPC function instead.`;
+        }
+        return {
+          success: !1,
+          error: {
+            message: `${(_fetchError$name2 = fetchError === null || fetchError === void 0 ? void 0 : fetchError.name) !== null && _fetchError$name2 !== void 0 ? _fetchError$name2 : "FetchError"}: ${fetchError === null || fetchError === void 0 ? void 0 : fetchError.message}`,
+            details: errorDetails,
+            hint,
+            code
+          },
+          data: null,
+          count: null,
+          status: 0,
+          statusText: ""
+        };
+      });
+    return res.then(onfulfilled, onrejected);
+  }
+  async processResponse(res) {
+    var _this2 = this;
+    let error = null, data = null, count = null, { status, statusText } = res;
+    if (res.ok) {
+      var _this$headers$get2, _res$headers$get;
+      if (_this2.method !== "HEAD") {
+        var _this$headers$get;
+        let body = await res.text();
+        if (body === "")
+          ;
+        else if (_this2.headers.get("Accept") === "text/csv")
+          data = body;
+        else if (_this2.headers.get("Accept") && ((_this$headers$get = _this2.headers.get("Accept")) === null || _this$headers$get === void 0 ? void 0 : _this$headers$get.includes("application/vnd.pgrst.plan+text")))
+          data = body;
+        else
+          try {
+            data = JSON.parse(body);
+          } catch (_unused) {
+            if (error = { message: body }, data = null, _this2.shouldThrowOnError)
+              throw new PostgrestError({
+                message: body,
+                details: "",
+                hint: "",
+                code: ""
+              });
+          }
+      }
+      let countHeader = (_this$headers$get2 = _this2.headers.get("Prefer")) === null || _this$headers$get2 === void 0 ? void 0 : _this$headers$get2.match(/count=(exact|planned|estimated)/), contentRange = (_res$headers$get = res.headers.get("content-range")) === null || _res$headers$get === void 0 ? void 0 : _res$headers$get.split("/");
+      if (countHeader && contentRange && contentRange.length > 1)
+        count = parseInt(contentRange[1]);
+      if (_this2.isMaybeSingle && Array.isArray(data))
+        if (data.length > 1) {
+          if (error = {
+            code: "PGRST116",
+            details: `Results contain ${data.length} rows, application/vnd.pgrst.object+json requires 1 row`,
+            hint: null,
+            message: "JSON object requested, multiple (or no) rows returned"
+          }, data = null, count = null, status = 406, statusText = "Not Acceptable", _this2.shouldThrowOnError) {
+            var _error$hint;
+            throw new PostgrestError(_objectSpread2(_objectSpread2({}, error), {}, { hint: (_error$hint = error.hint) !== null && _error$hint !== void 0 ? _error$hint : "" }));
+          }
+        } else if (data.length === 1)
+          data = data[0];
+        else
+          data = null;
+    } else {
+      let body = await res.text();
+      try {
+        if (error = JSON.parse(body), Array.isArray(error) && res.status === 404)
+          data = [], error = null, status = 200, statusText = "OK";
+      } catch (_unused2) {
+        if (res.status === 404 && body === "")
+          status = 204, statusText = "No Content";
+        else
+          error = { message: body };
+      }
+      if (error && _this2.shouldThrowOnError)
+        throw new PostgrestError(error);
+    }
+    return {
+      success: error === null,
+      error,
+      data,
+      count,
+      status,
+      statusText
+    };
+  }
+  returns() {
+    return this;
+  }
+  overrideTypes() {
+    return this;
+  }
+}, PostgrestTransformBuilder = class extends PostgrestBuilder {
+  throwOnError() {
+    return super.throwOnError();
+  }
+  select(columns) {
+    let quoted = !1, cleanedColumns = (columns !== null && columns !== void 0 ? columns : "*").split("").map((c) => {
+      if (/\s/.test(c) && !quoted)
+        return "";
+      if (c === '"')
+        quoted = !quoted;
+      return c;
+    }).join("");
+    return this.url.searchParams.set("select", cleanedColumns), this.headers.append("Prefer", "return=representation"), this;
+  }
+  order(column, { ascending = !0, nullsFirst, foreignTable, referencedTable = foreignTable } = {}) {
+    let key = referencedTable ? `${referencedTable}.order` : "order", existingOrder = this.url.searchParams.get(key);
+    return this.url.searchParams.set(key, `${existingOrder ? `${existingOrder},` : ""}${column}.${ascending ? "asc" : "desc"}${nullsFirst === void 0 ? "" : nullsFirst ? ".nullsfirst" : ".nullslast"}`), this;
+  }
+  limit(rows, { foreignTable, referencedTable = foreignTable } = {}) {
+    let key = typeof referencedTable > "u" ? "limit" : `${referencedTable}.limit`;
+    return this.url.searchParams.set(key, `${rows}`), this;
+  }
+  range(from, to, { foreignTable, referencedTable = foreignTable } = {}) {
+    let keyOffset = typeof referencedTable > "u" ? "offset" : `${referencedTable}.offset`, keyLimit = typeof referencedTable > "u" ? "limit" : `${referencedTable}.limit`;
+    return this.url.searchParams.set(keyOffset, `${from}`), this.url.searchParams.set(keyLimit, `${to - from + 1}`), this;
+  }
+  abortSignal(signal) {
+    return this.signal = signal, this;
+  }
+  single() {
+    return this.headers.set("Accept", "application/vnd.pgrst.object+json"), this;
+  }
+  maybeSingle() {
+    return this.isMaybeSingle = !0, this;
+  }
+  csv() {
+    return this.headers.set("Accept", "text/csv"), this;
+  }
+  geojson() {
+    return this.headers.set("Accept", "application/geo+json"), this;
+  }
+  explain({ analyze = !1, verbose = !1, settings = !1, buffers = !1, wal = !1, format = "text" } = {}) {
+    var _this$headers$get;
+    let options = [
+      analyze ? "analyze" : null,
+      verbose ? "verbose" : null,
+      settings ? "settings" : null,
+      buffers ? "buffers" : null,
+      wal ? "wal" : null
+    ].filter(Boolean).join("|"), forMediatype = (_this$headers$get = this.headers.get("Accept")) !== null && _this$headers$get !== void 0 ? _this$headers$get : "application/json";
+    if (this.headers.set("Accept", `application/vnd.pgrst.plan+${format}; for="${forMediatype}"; options=${options};`), format === "json")
+      return this;
+    else
+      return this;
+  }
+  rollback() {
+    return this.headers.append("Prefer", "tx=rollback"), this;
+  }
+  returns() {
+    return this;
+  }
+  maxAffected(rows) {
+    return this.headers.append("Prefer", "handling=strict"), this.headers.append("Prefer", `max-affected=${rows}`), this;
+  }
+}, PostgrestReservedCharsRegexp = /* @__PURE__ */ new RegExp("[,()]"), PostgrestFilterBuilder = class extends PostgrestTransformBuilder {
+  throwOnError() {
+    return super.throwOnError();
+  }
+  eq(column, value) {
+    return this.url.searchParams.append(column, `eq.${value}`), this;
+  }
+  neq(column, value) {
+    return this.url.searchParams.append(column, `neq.${value}`), this;
+  }
+  gt(column, value) {
+    return this.url.searchParams.append(column, `gt.${value}`), this;
+  }
+  gte(column, value) {
+    return this.url.searchParams.append(column, `gte.${value}`), this;
+  }
+  lt(column, value) {
+    return this.url.searchParams.append(column, `lt.${value}`), this;
+  }
+  lte(column, value) {
+    return this.url.searchParams.append(column, `lte.${value}`), this;
+  }
+  like(column, pattern) {
+    return this.url.searchParams.append(column, `like.${pattern}`), this;
+  }
+  likeAllOf(column, patterns) {
+    return this.url.searchParams.append(column, `like(all).{${patterns.join(",")}}`), this;
+  }
+  likeAnyOf(column, patterns) {
+    return this.url.searchParams.append(column, `like(any).{${patterns.join(",")}}`), this;
+  }
+  ilike(column, pattern) {
+    return this.url.searchParams.append(column, `ilike.${pattern}`), this;
+  }
+  ilikeAllOf(column, patterns) {
+    return this.url.searchParams.append(column, `ilike(all).{${patterns.join(",")}}`), this;
+  }
+  ilikeAnyOf(column, patterns) {
+    return this.url.searchParams.append(column, `ilike(any).{${patterns.join(",")}}`), this;
+  }
+  regexMatch(column, pattern) {
+    return this.url.searchParams.append(column, `match.${pattern}`), this;
+  }
+  regexIMatch(column, pattern) {
+    return this.url.searchParams.append(column, `imatch.${pattern}`), this;
+  }
+  is(column, value) {
+    return this.url.searchParams.append(column, `is.${value}`), this;
+  }
+  isDistinct(column, value) {
+    return this.url.searchParams.append(column, `isdistinct.${value}`), this;
+  }
+  in(column, values) {
+    let cleanedValues = Array.from(new Set(values)).map((s) => {
+      if (typeof s === "string" && PostgrestReservedCharsRegexp.test(s))
+        return `"${s}"`;
+      else
+        return `${s}`;
+    }).join(",");
+    return this.url.searchParams.append(column, `in.(${cleanedValues})`), this;
+  }
+  notIn(column, values) {
+    let cleanedValues = Array.from(new Set(values)).map((s) => {
+      if (typeof s === "string" && PostgrestReservedCharsRegexp.test(s))
+        return `"${s}"`;
+      else
+        return `${s}`;
+    }).join(",");
+    return this.url.searchParams.append(column, `not.in.(${cleanedValues})`), this;
+  }
+  contains(column, value) {
+    if (typeof value === "string")
+      this.url.searchParams.append(column, `cs.${value}`);
+    else if (Array.isArray(value))
+      this.url.searchParams.append(column, `cs.{${value.join(",")}}`);
+    else
+      this.url.searchParams.append(column, `cs.${JSON.stringify(value)}`);
+    return this;
+  }
+  containedBy(column, value) {
+    if (typeof value === "string")
+      this.url.searchParams.append(column, `cd.${value}`);
+    else if (Array.isArray(value))
+      this.url.searchParams.append(column, `cd.{${value.join(",")}}`);
+    else
+      this.url.searchParams.append(column, `cd.${JSON.stringify(value)}`);
+    return this;
+  }
+  rangeGt(column, range) {
+    return this.url.searchParams.append(column, `sr.${range}`), this;
+  }
+  rangeGte(column, range) {
+    return this.url.searchParams.append(column, `nxl.${range}`), this;
+  }
+  rangeLt(column, range) {
+    return this.url.searchParams.append(column, `sl.${range}`), this;
+  }
+  rangeLte(column, range) {
+    return this.url.searchParams.append(column, `nxr.${range}`), this;
+  }
+  rangeAdjacent(column, range) {
+    return this.url.searchParams.append(column, `adj.${range}`), this;
+  }
+  overlaps(column, value) {
+    if (typeof value === "string")
+      this.url.searchParams.append(column, `ov.${value}`);
+    else
+      this.url.searchParams.append(column, `ov.{${value.join(",")}}`);
+    return this;
+  }
+  textSearch(column, query, { config, type } = {}) {
+    let typePart = "";
+    if (type === "plain")
+      typePart = "pl";
+    else if (type === "phrase")
+      typePart = "ph";
+    else if (type === "websearch")
+      typePart = "w";
+    let configPart = config === void 0 ? "" : `(${config})`;
+    return this.url.searchParams.append(column, `${typePart}fts${configPart}.${query}`), this;
+  }
+  match(query) {
+    return Object.entries(query).filter(([_, value]) => value !== void 0).forEach(([column, value]) => {
+      this.url.searchParams.append(column, `eq.${value}`);
+    }), this;
+  }
+  not(column, operator, value) {
+    return this.url.searchParams.append(column, `not.${operator}.${value}`), this;
+  }
+  or(filters, { foreignTable, referencedTable = foreignTable } = {}) {
+    let key = referencedTable ? `${referencedTable}.or` : "or";
+    return this.url.searchParams.append(key, `(${filters})`), this;
+  }
+  filter(column, operator, value) {
+    return this.url.searchParams.append(column, `${operator}.${value}`), this;
+  }
+}, PostgrestQueryBuilder = class {
+  constructor(url, { headers = {}, schema, fetch: fetch$1, urlLengthLimit = 8000, retry }) {
+    this.url = url, this.headers = new Headers(headers), this.schema = schema, this.fetch = fetch$1, this.urlLengthLimit = urlLengthLimit, this.retry = retry;
+  }
+  cloneRequestState() {
+    return {
+      url: new URL(this.url.toString()),
+      headers: new Headers(this.headers)
+    };
+  }
+  select(columns, options) {
+    let { head = !1, count } = options !== null && options !== void 0 ? options : {}, method = head ? "HEAD" : "GET", quoted = !1, cleanedColumns = (columns !== null && columns !== void 0 ? columns : "*").split("").map((c) => {
+      if (/\s/.test(c) && !quoted)
+        return "";
+      if (c === '"')
+        quoted = !quoted;
+      return c;
+    }).join(""), { url, headers } = this.cloneRequestState();
+    if (url.searchParams.set("select", cleanedColumns), count)
+      headers.append("Prefer", `count=${count}`);
+    return new PostgrestFilterBuilder({
+      method,
+      url,
+      headers,
+      schema: this.schema,
+      fetch: this.fetch,
+      urlLengthLimit: this.urlLengthLimit,
+      retry: this.retry
+    });
+  }
+  insert(values, { count, defaultToNull = !0 } = {}) {
+    var _this$fetch;
+    let method = "POST", { url, headers } = this.cloneRequestState();
+    if (count)
+      headers.append("Prefer", `count=${count}`);
+    if (!defaultToNull)
+      headers.append("Prefer", "missing=default");
+    if (Array.isArray(values)) {
+      let columns = values.reduce((acc, x) => acc.concat(Object.keys(x)), []);
+      if (columns.length > 0) {
+        let uniqueColumns = [...new Set(columns)].map((column) => `"${column}"`);
+        url.searchParams.set("columns", uniqueColumns.join(","));
+      }
+    }
+    return new PostgrestFilterBuilder({
+      method: "POST",
+      url,
+      headers,
+      schema: this.schema,
+      body: values,
+      fetch: (_this$fetch = this.fetch) !== null && _this$fetch !== void 0 ? _this$fetch : fetch,
+      urlLengthLimit: this.urlLengthLimit,
+      retry: this.retry
+    });
+  }
+  upsert(values, { onConflict, ignoreDuplicates = !1, count, defaultToNull = !0 } = {}) {
+    var _this$fetch2;
+    let method = "POST", { url, headers } = this.cloneRequestState();
+    if (headers.append("Prefer", `resolution=${ignoreDuplicates ? "ignore" : "merge"}-duplicates`), onConflict !== void 0)
+      url.searchParams.set("on_conflict", onConflict);
+    if (count)
+      headers.append("Prefer", `count=${count}`);
+    if (!defaultToNull)
+      headers.append("Prefer", "missing=default");
+    if (Array.isArray(values)) {
+      let columns = values.reduce((acc, x) => acc.concat(Object.keys(x)), []);
+      if (columns.length > 0) {
+        let uniqueColumns = [...new Set(columns)].map((column) => `"${column}"`);
+        url.searchParams.set("columns", uniqueColumns.join(","));
+      }
+    }
+    return new PostgrestFilterBuilder({
+      method: "POST",
+      url,
+      headers,
+      schema: this.schema,
+      body: values,
+      fetch: (_this$fetch2 = this.fetch) !== null && _this$fetch2 !== void 0 ? _this$fetch2 : fetch,
+      urlLengthLimit: this.urlLengthLimit,
+      retry: this.retry
+    });
+  }
+  update(values, { count } = {}) {
+    var _this$fetch3;
+    let method = "PATCH", { url, headers } = this.cloneRequestState();
+    if (count)
+      headers.append("Prefer", `count=${count}`);
+    return new PostgrestFilterBuilder({
+      method: "PATCH",
+      url,
+      headers,
+      schema: this.schema,
+      body: values,
+      fetch: (_this$fetch3 = this.fetch) !== null && _this$fetch3 !== void 0 ? _this$fetch3 : fetch,
+      urlLengthLimit: this.urlLengthLimit,
+      retry: this.retry
+    });
+  }
+  delete({ count } = {}) {
+    var _this$fetch4;
+    let method = "DELETE", { url, headers } = this.cloneRequestState();
+    if (count)
+      headers.append("Prefer", `count=${count}`);
+    return new PostgrestFilterBuilder({
+      method: "DELETE",
+      url,
+      headers,
+      schema: this.schema,
+      fetch: (_this$fetch4 = this.fetch) !== null && _this$fetch4 !== void 0 ? _this$fetch4 : fetch,
+      urlLengthLimit: this.urlLengthLimit,
+      retry: this.retry
+    });
+  }
+};
+function toOpenApiError(body, statusText) {
+  try {
+    let parsed = JSON.parse(body);
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      var _parsed$message, _parsed$details, _parsed$hint, _parsed$code;
+      return new PostgrestError({
+        message: String((_parsed$message = parsed.message) !== null && _parsed$message !== void 0 ? _parsed$message : body),
+        details: (_parsed$details = parsed.details) !== null && _parsed$details !== void 0 ? _parsed$details : "",
+        hint: (_parsed$hint = parsed.hint) !== null && _parsed$hint !== void 0 ? _parsed$hint : "",
+        code: (_parsed$code = parsed.code) !== null && _parsed$code !== void 0 ? _parsed$code : ""
+      });
+    }
+  } catch (_unused) {}
+  return new PostgrestError({
+    message: body || statusText,
+    details: "",
+    hint: "",
+    code: ""
+  });
+}
+function toTransportFailure(cause, status, statusText) {
+  var _err$name;
+  let err = cause;
+  return {
+    success: !1,
+    error: new PostgrestError({
+      message: `${(_err$name = err === null || err === void 0 ? void 0 : err.name) !== null && _err$name !== void 0 ? _err$name : "FetchError"}: ${err === null || err === void 0 ? void 0 : err.message}`,
+      details: "",
+      hint: "",
+      code: ""
+    }),
+    data: null,
+    count: null,
+    status,
+    statusText
+  };
+}
+var PostgrestClient = class PostgrestClient {
+  constructor(url, { headers = {}, schema, fetch: fetch$1, timeout, urlLengthLimit = 8000, retry } = {}) {
+    this.url = url, this.headers = new Headers(headers), this.schemaName = schema, this.urlLengthLimit = urlLengthLimit;
+    let originalFetch = fetch$1 !== null && fetch$1 !== void 0 ? fetch$1 : globalThis.fetch;
+    if (timeout !== void 0 && timeout > 0)
+      this.fetch = (input, init) => {
+        let controller = new AbortController, timeoutId = setTimeout(() => controller.abort(), timeout), existingSignal = init === null || init === void 0 ? void 0 : init.signal;
+        if (existingSignal) {
+          if (existingSignal.aborted)
+            return clearTimeout(timeoutId), originalFetch(input, init);
+          let abortHandler = () => {
+            clearTimeout(timeoutId), controller.abort();
+          };
+          return existingSignal.addEventListener("abort", abortHandler, { once: !0 }), originalFetch(input, _objectSpread2(_objectSpread2({}, init), {}, { signal: controller.signal })).finally(() => {
+            clearTimeout(timeoutId), existingSignal.removeEventListener("abort", abortHandler);
+          });
+        }
+        return originalFetch(input, _objectSpread2(_objectSpread2({}, init), {}, { signal: controller.signal })).finally(() => clearTimeout(timeoutId));
+      };
+    else
+      this.fetch = originalFetch;
+    this.retry = retry;
+  }
+  from(relation) {
+    if (!relation || typeof relation !== "string" || relation.trim() === "")
+      throw Error("Invalid relation name: relation must be a non-empty string.");
+    return new PostgrestQueryBuilder(new URL(`${this.url}/${relation}`), {
+      headers: new Headers(this.headers),
+      schema: this.schemaName,
+      fetch: this.fetch,
+      urlLengthLimit: this.urlLengthLimit,
+      retry: this.retry
+    });
+  }
+  schema(schema) {
+    return new PostgrestClient(this.url, {
+      headers: this.headers,
+      schema,
+      fetch: this.fetch,
+      urlLengthLimit: this.urlLengthLimit,
+      retry: this.retry
+    });
+  }
+  async getOpenApiSpec() {
+    var _this = this, _this$fetch;
+    let headers = new Headers(_this.headers);
+    if (headers.set("Accept", "application/openapi+json"), _this.schemaName)
+      headers.set("Accept-Profile", _this.schemaName);
+    let requestHeaders = {};
+    headers.forEach((value, key) => {
+      requestHeaders[key] = value;
+    });
+    let fetchImpl = (_this$fetch = _this.fetch) !== null && _this$fetch !== void 0 ? _this$fetch : globalThis.fetch, res;
+    try {
+      var _this$retry;
+      res = await fetchWithRetry(fetchImpl, `${_this.url}/`, {
+        method: "GET",
+        headers: requestHeaders
+      }, (_this$retry = _this.retry) !== null && _this$retry !== void 0 ? _this$retry : !0);
+    } catch (fetchError) {
+      return toTransportFailure(fetchError, 0, "");
+    }
+    let body;
+    try {
+      body = await res.text();
+    } catch (readError) {
+      return toTransportFailure(readError, res.status, res.statusText);
+    }
+    if (res.ok)
+      try {
+        return {
+          success: !0,
+          error: null,
+          data: JSON.parse(body),
+          count: null,
+          status: res.status,
+          statusText: res.statusText
+        };
+      } catch (_unused2) {}
+    return {
+      success: !1,
+      error: toOpenApiError(body, res.statusText),
+      data: null,
+      count: null,
+      status: res.status,
+      statusText: res.statusText
+    };
+  }
+  rpc(fn, args = {}, { head = !1, get = !1, count } = {}) {
+    var _this$fetch2;
+    let method, url = new URL(`${this.url}/rpc/${fn}`), body, _isObject = (v) => v !== null && typeof v === "object" && (!Array.isArray(v) || v.some(_isObject)), _hasObjectArg = head && Object.values(args).some(_isObject);
+    if (_hasObjectArg)
+      method = "POST", body = args;
+    else if (head || get)
+      method = head ? "HEAD" : "GET", Object.entries(args).filter(([_, value]) => value !== void 0).map(([name, value]) => [name, Array.isArray(value) ? `{${value.join(",")}}` : `${value}`]).forEach(([name, value]) => {
+        url.searchParams.append(name, value);
+      });
+    else
+      method = "POST", body = args;
+    let headers = new Headers(this.headers);
+    if (_hasObjectArg)
+      headers.set("Prefer", count ? `count=${count},return=minimal` : "return=minimal");
+    else if (count)
+      headers.set("Prefer", `count=${count}`);
+    return new PostgrestFilterBuilder({
+      method,
+      url,
+      headers,
+      schema: this.schemaName,
+      body,
+      fetch: (_this$fetch2 = this.fetch) !== null && _this$fetch2 !== void 0 ? _this$fetch2 : fetch,
+      urlLengthLimit: this.urlLengthLimit,
+      retry: this.retry
+    });
+  }
+};
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+class WebSocketFactory {
+  constructor() {}
+  static detectEnvironment() {
+    var _a;
+    if (typeof WebSocket < "u")
+      return { type: "native", wsConstructor: WebSocket };
+    let gt = globalThis;
+    if (typeof globalThis < "u" && typeof gt.WebSocket < "u")
+      return { type: "native", wsConstructor: gt.WebSocket };
+    let gl = typeof global < "u" ? global : void 0;
+    if (gl && typeof gl.WebSocket < "u")
+      return { type: "native", wsConstructor: gl.WebSocket };
+    if (typeof globalThis < "u" && typeof gt.WebSocketPair < "u" && typeof globalThis.WebSocket > "u")
+      return {
+        type: "cloudflare",
+        error: "Cloudflare Workers detected. WebSocket clients are not supported in Cloudflare Workers.",
+        workaround: "Use Cloudflare Workers WebSocket API for server-side WebSocket handling, or deploy to a different runtime."
+      };
+    if (typeof globalThis < "u" && gt.EdgeRuntime || typeof navigator < "u" && ((_a = navigator.userAgent) === null || _a === void 0 ? void 0 : _a.includes("Vercel-Edge")))
+      return {
+        type: "unsupported",
+        error: "Edge runtime detected (Vercel Edge/Netlify Edge). WebSockets are not supported in edge functions.",
+        workaround: "Use serverless functions or a different deployment target for WebSocket functionality."
+      };
+    let _process = globalThis.process;
+    if (_process) {
+      let processVersions = _process.versions;
+      if (processVersions && processVersions.node)
+        return {
+          type: "unsupported",
+          error: "Node.js detected but native WebSocket not found.",
+          workaround: "Ensure you are running Node.js 22+ or provide a WebSocket implementation via the transport option."
+        };
+    }
+    return {
+      type: "unsupported",
+      error: "Unknown JavaScript runtime without WebSocket support.",
+      workaround: "Ensure you're running in a supported environment (browser, Node.js, Deno) or provide a custom WebSocket implementation."
+    };
+  }
+  static getWebSocketConstructor() {
+    let env = this.detectEnvironment();
+    if (env.wsConstructor)
+      return env.wsConstructor;
+    let errorMessage = env.error || "WebSocket not supported in this environment.";
+    if (env.workaround)
+      errorMessage += `
+
+Suggested solution: ${env.workaround}`;
+    throw Error(errorMessage);
+  }
+  static isWebSocketSupported() {
+    try {
+      return this.detectEnvironment().type === "native";
+    } catch (_a) {
+      return !1;
+    }
+  }
+}
+var websocket_factory_default = WebSocketFactory;
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/lib/version.js
+var version = "2.118.0";
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/lib/constants.js
+var DEFAULT_VERSION = `realtime-js/${version}`, VSN_1_0_0 = "1.0.0", VSN_2_0_0 = "2.0.0", DEFAULT_VSN = VSN_2_0_0;
+var DEFAULT_TIMEOUT = 1e4, DEFAULT_POSTGRES_CHANGES_WAIT_TIMEOUT = 15000, POSTGRES_CHANGES_WAIT_ERROR_GRACE = 1e4;
+var MAX_PUSH_BUFFER_SIZE = 100;
+var CHANNEL_STATES = {
+  closed: "closed",
+  errored: "errored",
+  joined: "joined",
+  joining: "joining",
+  leaving: "leaving"
+}, CHANNEL_EVENTS = {
+  close: "phx_close",
+  error: "phx_error",
+  join: "phx_join",
+  reply: "phx_reply",
+  leave: "phx_leave",
+  access_token: "access_token"
+};
+var CONNECTION_STATE = {
+  connecting: "connecting",
+  open: "open",
+  closing: "closing",
+  closed: "closed"
+};
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/lib/serializer.js
+class Serializer {
+  constructor(allowedMetadataKeys) {
+    this.HEADER_LENGTH = 1, this.USER_BROADCAST_PUSH_META_LENGTH = 6, this.KINDS = { userBroadcastPush: 3, userBroadcast: 4 }, this.BINARY_ENCODING = 0, this.JSON_ENCODING = 1, this.BROADCAST_EVENT = "broadcast", this.allowedMetadataKeys = [], this.allowedMetadataKeys = allowedMetadataKeys !== null && allowedMetadataKeys !== void 0 ? allowedMetadataKeys : [];
+  }
+  encode(msg, callback) {
+    if (msg.event === this.BROADCAST_EVENT && !(msg.payload instanceof ArrayBuffer) && typeof msg.payload.event === "string")
+      return callback(this._binaryEncodeUserBroadcastPush(msg));
+    let payload = [msg.join_ref, msg.ref, msg.topic, msg.event, msg.payload];
+    return callback(JSON.stringify(payload));
+  }
+  _binaryEncodeUserBroadcastPush(message) {
+    var _a;
+    if (this._isArrayBuffer((_a = message.payload) === null || _a === void 0 ? void 0 : _a.payload))
+      return this._encodeBinaryUserBroadcastPush(message);
+    else
+      return this._encodeJsonUserBroadcastPush(message);
+  }
+  _encodeBinaryUserBroadcastPush(message) {
+    var _a, _b;
+    let userPayload = (_b = (_a = message.payload) === null || _a === void 0 ? void 0 : _a.payload) !== null && _b !== void 0 ? _b : new ArrayBuffer(0);
+    return this._encodeUserBroadcastPush(message, this.BINARY_ENCODING, userPayload);
+  }
+  _encodeJsonUserBroadcastPush(message) {
+    var _a, _b;
+    let userPayload = (_b = (_a = message.payload) === null || _a === void 0 ? void 0 : _a.payload) !== null && _b !== void 0 ? _b : {}, encodedUserPayload = (/* @__PURE__ */ new TextEncoder()).encode(JSON.stringify(userPayload)).buffer;
+    return this._encodeUserBroadcastPush(message, this.JSON_ENCODING, encodedUserPayload);
+  }
+  _encodeUserBroadcastPush(message, encodingType, encodedPayload) {
+    var _a, _b;
+    let encoder = /* @__PURE__ */ new TextEncoder, topic = encoder.encode(message.topic), ref = encoder.encode((_a = message.ref) !== null && _a !== void 0 ? _a : ""), joinRef = encoder.encode((_b = message.join_ref) !== null && _b !== void 0 ? _b : ""), userEvent = encoder.encode(message.payload.event), rest = this.allowedMetadataKeys ? this._pick(message.payload, this.allowedMetadataKeys) : {}, metadata = encoder.encode(Object.keys(rest).length === 0 ? "" : JSON.stringify(rest));
+    if (joinRef.length > 255)
+      throw Error(`joinRef length ${joinRef.length} exceeds maximum of 255`);
+    if (ref.length > 255)
+      throw Error(`ref length ${ref.length} exceeds maximum of 255`);
+    if (topic.length > 255)
+      throw Error(`topic length ${topic.length} exceeds maximum of 255`);
+    if (userEvent.length > 255)
+      throw Error(`userEvent length ${userEvent.length} exceeds maximum of 255`);
+    if (metadata.length > 255)
+      throw Error(`metadata length ${metadata.length} exceeds maximum of 255`);
+    let metaLength = this.USER_BROADCAST_PUSH_META_LENGTH + joinRef.length + ref.length + topic.length + userEvent.length + metadata.length, header = new ArrayBuffer(this.HEADER_LENGTH + metaLength), view = new DataView(header), bytes = new Uint8Array(header), offset = 0;
+    view.setUint8(offset++, this.KINDS.userBroadcastPush), view.setUint8(offset++, joinRef.length), view.setUint8(offset++, ref.length), view.setUint8(offset++, topic.length), view.setUint8(offset++, userEvent.length), view.setUint8(offset++, metadata.length), view.setUint8(offset++, encodingType), bytes.set(joinRef, offset), offset += joinRef.length, bytes.set(ref, offset), offset += ref.length, bytes.set(topic, offset), offset += topic.length, bytes.set(userEvent, offset), offset += userEvent.length, bytes.set(metadata, offset), offset += metadata.length;
+    var combined = new Uint8Array(header.byteLength + encodedPayload.byteLength);
+    return combined.set(new Uint8Array(header), 0), combined.set(new Uint8Array(encodedPayload), header.byteLength), combined.buffer;
+  }
+  decode(rawPayload, callback) {
+    if (this._isArrayBuffer(rawPayload)) {
+      let result = this._binaryDecode(rawPayload);
+      return callback(result);
+    }
+    if (typeof rawPayload === "string") {
+      let jsonPayload = JSON.parse(rawPayload), [join_ref, ref, topic, event, payload] = jsonPayload;
+      return callback({ join_ref, ref, topic, event, payload });
+    }
+    return callback({});
+  }
+  _binaryDecode(buffer) {
+    let view = new DataView(buffer), kind = view.getUint8(0), decoder = /* @__PURE__ */ new TextDecoder;
+    switch (kind) {
+      case this.KINDS.userBroadcast:
+        return this._decodeUserBroadcast(buffer, view, decoder);
+    }
+  }
+  _decodeUserBroadcast(buffer, view, decoder) {
+    let topicSize = view.getUint8(1), userEventSize = view.getUint8(2), metadataSize = view.getUint8(3), payloadEncoding = view.getUint8(4), offset = this.HEADER_LENGTH + 4, topic = decoder.decode(buffer.slice(offset, offset + topicSize));
+    offset = offset + topicSize;
+    let userEvent = decoder.decode(buffer.slice(offset, offset + userEventSize));
+    offset = offset + userEventSize;
+    let metadata = decoder.decode(buffer.slice(offset, offset + metadataSize));
+    offset = offset + metadataSize;
+    let payload = buffer.slice(offset, buffer.byteLength), parsedPayload = payloadEncoding === this.JSON_ENCODING ? JSON.parse(decoder.decode(payload)) : payload, data = {
+      type: this.BROADCAST_EVENT,
+      event: userEvent,
+      payload: parsedPayload
+    };
+    if (metadataSize > 0)
+      data.meta = JSON.parse(metadata);
+    return { join_ref: null, ref: null, topic, event: this.BROADCAST_EVENT, payload: data };
+  }
+  _isArrayBuffer(buffer) {
+    var _a;
+    return buffer instanceof ArrayBuffer || ((_a = buffer === null || buffer === void 0 ? void 0 : buffer.constructor) === null || _a === void 0 ? void 0 : _a.name) === "ArrayBuffer";
+  }
+  _pick(obj, keys) {
+    if (!obj || typeof obj !== "object")
+      return {};
+    return Object.fromEntries(Object.entries(obj).filter(([key]) => keys.includes(key)));
+  }
+}
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/lib/transformers.js
+var PostgresTypes;
+(function(PostgresTypes) {
+  PostgresTypes.abstime = "abstime", PostgresTypes.bool = "bool", PostgresTypes.date = "date", PostgresTypes.daterange = "daterange", PostgresTypes.float4 = "float4", PostgresTypes.float8 = "float8", PostgresTypes.int2 = "int2", PostgresTypes.int4 = "int4", PostgresTypes.int4range = "int4range", PostgresTypes.int8 = "int8", PostgresTypes.int8range = "int8range", PostgresTypes.json = "json", PostgresTypes.jsonb = "jsonb", PostgresTypes.money = "money", PostgresTypes.numeric = "numeric", PostgresTypes.oid = "oid", PostgresTypes.reltime = "reltime", PostgresTypes.text = "text", PostgresTypes.time = "time", PostgresTypes.timestamp = "timestamp", PostgresTypes.timestamptz = "timestamptz", PostgresTypes.timetz = "timetz", PostgresTypes.tsrange = "tsrange", PostgresTypes.tstzrange = "tstzrange";
+})(PostgresTypes || (PostgresTypes = {}));
+var convertChangeData = (columns, record, options = {}) => {
+  var _a;
+  let skipTypes = (_a = options.skipTypes) !== null && _a !== void 0 ? _a : [];
+  if (!record)
+    return {};
+  return Object.keys(record).reduce((acc, rec_key) => (acc[rec_key] = convertColumn(rec_key, columns, record, skipTypes), acc), {});
+}, convertColumn = (columnName, columns, record, skipTypes) => {
+  let column = columns.find((x) => x.name === columnName), colType = column === null || column === void 0 ? void 0 : column.type, value = record[columnName];
+  if (colType && !skipTypes.includes(colType))
+    return convertCell(colType, value);
+  return noop(value);
+}, convertCell = (type, value) => {
+  if (type.charAt(0) === "_") {
+    let dataType = type.slice(1, type.length);
+    return toArray(value, dataType);
+  }
+  switch (type) {
+    case PostgresTypes.bool:
+      return toBoolean(value);
+    case PostgresTypes.float4:
+    case PostgresTypes.float8:
+    case PostgresTypes.int2:
+    case PostgresTypes.int4:
+    case PostgresTypes.int8:
+    case PostgresTypes.numeric:
+    case PostgresTypes.oid:
+      return toNumber(value);
+    case PostgresTypes.json:
+    case PostgresTypes.jsonb:
+      return toJson(value);
+    case PostgresTypes.timestamp:
+      return toTimestampString(value);
+    case PostgresTypes.abstime:
+    case PostgresTypes.date:
+    case PostgresTypes.daterange:
+    case PostgresTypes.int4range:
+    case PostgresTypes.int8range:
+    case PostgresTypes.money:
+    case PostgresTypes.reltime:
+    case PostgresTypes.text:
+    case PostgresTypes.time:
+    case PostgresTypes.timestamptz:
+    case PostgresTypes.timetz:
+    case PostgresTypes.tsrange:
+    case PostgresTypes.tstzrange:
+      return noop(value);
+    default:
+      return noop(value);
+  }
+}, noop = (value) => value, toBoolean = (value) => {
+  switch (value) {
+    case "t":
+      return !0;
+    case "f":
+      return !1;
+    default:
+      return value;
+  }
+}, toNumber = (value) => {
+  if (typeof value === "string") {
+    let parsedValue = parseFloat(value);
+    if (!Number.isNaN(parsedValue))
+      return parsedValue;
+  }
+  return value;
+}, toJson = (value) => {
+  if (typeof value === "string")
+    try {
+      return JSON.parse(value);
+    } catch (_a) {
+      return value;
+    }
+  return value;
+}, toArray = (value, type) => {
+  if (typeof value !== "string")
+    return value;
+  let lastIdx = value.length - 1, closeBrace = value[lastIdx];
+  if (value[0] === "{" && closeBrace === "}") {
+    let arr, valTrim = value.slice(1, lastIdx);
+    try {
+      arr = JSON.parse("[" + valTrim + "]");
+    } catch (_) {
+      arr = valTrim ? valTrim.split(",") : [];
+    }
+    return arr.map((val) => convertCell(type, val));
+  }
+  return value;
+}, toTimestampString = (value) => {
+  if (typeof value === "string")
+    return value.replace(" ", "T");
+  return value;
+}, httpEndpointURL = (socketUrl) => {
+  let wsUrl = new URL(socketUrl);
+  if (wsUrl.protocol = wsUrl.protocol.replace(/^ws/i, "http"), wsUrl.pathname = wsUrl.pathname.replace(/\/+$/, "").replace(/\/socket\/websocket$/i, "").replace(/\/socket$/i, "").replace(/\/websocket$/i, ""), wsUrl.pathname === "" || wsUrl.pathname === "/")
+    wsUrl.pathname = "/api/broadcast";
+  else
+    wsUrl.pathname = wsUrl.pathname + "/api/broadcast";
+  return wsUrl.href;
+};
+
+// ../persist/node_modules/@supabase/phoenix/priv/static/phoenix.mjs
+var closure = (value) => {
+  if (typeof value === "function")
+    return value;
+  else
+    return function() {
+      return value;
+    };
+}, globalSelf = typeof self < "u" ? self : null, phxWindow = typeof window < "u" ? window : null, global2 = globalSelf || phxWindow || globalThis, DEFAULT_VSN2 = "2.0.0", DEFAULT_TIMEOUT2 = 1e4, WS_CLOSE_NORMAL = 1000, MAX_LONGPOLL_BATCH_SIZE = 100, SOCKET_STATES = { connecting: 0, open: 1, closing: 2, closed: 3 }, CHANNEL_STATES2 = {
+  closed: "closed",
+  errored: "errored",
+  joined: "joined",
+  joining: "joining",
+  leaving: "leaving"
+}, CHANNEL_EVENTS2 = {
+  close: "phx_close",
+  error: "phx_error",
+  join: "phx_join",
+  reply: "phx_reply",
+  leave: "phx_leave"
+}, TRANSPORTS = {
+  longpoll: "longpoll",
+  websocket: "websocket"
+}, XHR_STATES = {
+  complete: 4
+}, AUTH_TOKEN_PREFIX = "base64url.bearer.phx.", Push = class {
+  constructor(channel, event, payload, timeout) {
+    this.channel = channel, this.event = event, this.payload = payload || function() {
+      return {};
+    }, this.receivedResp = null, this.timeout = timeout, this.timeoutTimer = null, this.recHooks = [], this.sent = !1, this.ref = void 0;
+  }
+  resend(timeout) {
+    this.timeout = timeout, this.reset(), this.send();
+  }
+  send() {
+    if (this.hasReceived("timeout"))
+      return;
+    this.startTimeout(), this.sent = !0, this.channel.socket.push({
+      topic: this.channel.topic,
+      event: this.event,
+      payload: this.payload(),
+      ref: this.ref,
+      join_ref: this.channel.joinRef()
+    });
+  }
+  receive(status, callback) {
+    if (this.hasReceived(status))
+      callback(this.receivedResp.response);
+    return this.recHooks.push({ status, callback }), this;
+  }
+  reset() {
+    this.cancelRefEvent(), this.ref = null, this.refEvent = null, this.receivedResp = null, this.sent = !1;
+  }
+  destroy() {
+    this.cancelRefEvent(), this.cancelTimeout();
+  }
+  matchReceive({ status, response, _ref }) {
+    this.recHooks.filter((h) => h.status === status).forEach((h) => h.callback(response));
+  }
+  cancelRefEvent() {
+    if (!this.refEvent)
+      return;
+    this.channel.off(this.refEvent);
+  }
+  cancelTimeout() {
+    clearTimeout(this.timeoutTimer), this.timeoutTimer = null;
+  }
+  startTimeout() {
+    if (this.timeoutTimer)
+      this.cancelTimeout();
+    this.ref = this.channel.socket.makeRef(), this.refEvent = this.channel.replyEventName(this.ref), this.channel.on(this.refEvent, (payload) => {
+      this.cancelRefEvent(), this.cancelTimeout(), this.receivedResp = payload, this.matchReceive(payload);
+    }), this.timeoutTimer = setTimeout(() => {
+      this.trigger("timeout", {});
+    }, this.timeout);
+  }
+  hasReceived(status) {
+    return this.receivedResp && this.receivedResp.status === status;
+  }
+  trigger(status, response) {
+    this.channel.trigger(this.refEvent, { status, response });
+  }
+}, Timer = class {
+  constructor(callback, timerCalc) {
+    this.callback = callback, this.timerCalc = timerCalc, this.timer = void 0, this.tries = 0;
+  }
+  reset() {
+    this.tries = 0, clearTimeout(this.timer);
+  }
+  scheduleTimeout() {
+    clearTimeout(this.timer), this.timer = setTimeout(() => {
+      this.tries = this.tries + 1, this.callback();
+    }, this.timerCalc(this.tries + 1));
+  }
+}, Channel = class {
+  constructor(topic, params, socket) {
+    this.state = CHANNEL_STATES2.closed, this.topic = topic, this.params = closure(params || {}), this.socket = socket, this.bindings = [], this.bindingRef = 0, this.timeout = this.socket.timeout, this.joinedOnce = !1, this.joinPush = new Push(this, CHANNEL_EVENTS2.join, this.params, this.timeout), this.pushBuffer = [], this.stateChangeRefs = [], this.rejoinTimer = new Timer(() => {
+      if (this.socket.isConnected())
+        this.rejoin();
+    }, this.socket.rejoinAfterMs), this.stateChangeRefs.push(this.socket.onError(() => this.rejoinTimer.reset())), this.stateChangeRefs.push(this.socket.onOpen(() => {
+      if (this.rejoinTimer.reset(), this.isErrored())
+        this.rejoin();
+    })), this.joinPush.receive("ok", () => {
+      this.state = CHANNEL_STATES2.joined, this.rejoinTimer.reset(), this.pushBuffer.forEach((pushEvent) => pushEvent.send()), this.pushBuffer = [];
+    }), this.joinPush.receive("error", (reason) => {
+      if (this.state = CHANNEL_STATES2.errored, this.socket.hasLogger())
+        this.socket.log("channel", `error ${this.topic}`, reason);
+      if (this.socket.isConnected())
+        this.rejoinTimer.scheduleTimeout();
+    }), this.onClose(() => {
+      if (this.rejoinTimer.reset(), this.socket.hasLogger())
+        this.socket.log("channel", `close ${this.topic}`);
+      this.state = CHANNEL_STATES2.closed, this.socket.remove(this);
+    }), this.onError((reason) => {
+      if (this.socket.hasLogger())
+        this.socket.log("channel", `error ${this.topic}`, reason);
+      if (this.isJoining())
+        this.joinPush.reset();
+      if (this.state = CHANNEL_STATES2.errored, this.socket.isConnected())
+        this.rejoinTimer.scheduleTimeout();
+    }), this.joinPush.receive("timeout", () => {
+      if (this.socket.hasLogger())
+        this.socket.log("channel", `timeout ${this.topic}`, this.joinPush.timeout);
+      if (new Push(this, CHANNEL_EVENTS2.leave, closure({}), this.timeout).send(), this.state = CHANNEL_STATES2.errored, this.joinPush.reset(), this.socket.isConnected())
+        this.rejoinTimer.scheduleTimeout();
+    }), this.on(CHANNEL_EVENTS2.reply, (payload, ref) => {
+      this.trigger(this.replyEventName(ref), payload);
+    });
+  }
+  join(timeout = this.timeout) {
+    if (this.joinedOnce)
+      throw Error("tried to join multiple times. 'join' can only be called a single time per channel instance");
+    else
+      return this.timeout = timeout, this.joinedOnce = !0, this.rejoin(), this.joinPush;
+  }
+  teardown() {
+    this.pushBuffer.forEach((push) => push.destroy()), this.pushBuffer = [], this.rejoinTimer.reset(), this.joinPush.destroy(), this.state = CHANNEL_STATES2.closed, this.bindings = [];
+  }
+  onClose(callback) {
+    this.on(CHANNEL_EVENTS2.close, callback);
+  }
+  onError(callback) {
+    return this.on(CHANNEL_EVENTS2.error, (reason) => callback(reason));
+  }
+  on(event, callback) {
+    let ref = this.bindingRef++;
+    return this.bindings.push({ event, ref, callback }), ref;
+  }
+  off(event, ref) {
+    this.bindings = this.bindings.filter((bind) => !(bind.event === event && (typeof ref > "u" || ref === bind.ref)));
+  }
+  canPush() {
+    return this.socket.isConnected() && this.isJoined();
+  }
+  push(event, payload, timeout = this.timeout) {
+    if (payload = payload || {}, !this.joinedOnce)
+      throw Error(`tried to push '${event}' to '${this.topic}' before joining. Use channel.join() before pushing events`);
+    let pushEvent = new Push(this, event, function() {
+      return payload;
+    }, timeout);
+    if (this.canPush())
+      pushEvent.send();
+    else
+      pushEvent.startTimeout(), this.pushBuffer.push(pushEvent);
+    return pushEvent;
+  }
+  leave(timeout = this.timeout) {
+    this.rejoinTimer.reset(), this.joinPush.cancelTimeout(), this.state = CHANNEL_STATES2.leaving;
+    let onClose = () => {
+      if (this.socket.hasLogger())
+        this.socket.log("channel", `leave ${this.topic}`);
+      this.trigger(CHANNEL_EVENTS2.close, "leave");
+    }, leavePush = new Push(this, CHANNEL_EVENTS2.leave, closure({}), timeout);
+    if (leavePush.receive("ok", () => onClose()).receive("timeout", () => onClose()), leavePush.send(), !this.canPush())
+      leavePush.trigger("ok", {});
+    return leavePush;
+  }
+  onMessage(_event, payload, _ref) {
+    return payload;
+  }
+  filterBindings(_binding, _payload, _ref) {
+    return !0;
+  }
+  isMember(topic, event, payload, joinRef) {
+    if (this.topic !== topic)
+      return !1;
+    if (joinRef && joinRef !== this.joinRef()) {
+      if (this.socket.hasLogger())
+        this.socket.log("channel", "dropping outdated message", { topic, event, payload, joinRef });
+      return !1;
+    } else
+      return !0;
+  }
+  joinRef() {
+    return this.joinPush.ref;
+  }
+  rejoin(timeout = this.timeout) {
+    if (this.isLeaving())
+      return;
+    this.socket.leaveOpenTopic(this.topic), this.state = CHANNEL_STATES2.joining, this.joinPush.resend(timeout);
+  }
+  trigger(event, payload, ref, joinRef) {
+    let handledPayload = this.onMessage(event, payload, ref, joinRef);
+    if (payload && !handledPayload)
+      throw Error("channel onMessage callbacks must return the payload, modified or unmodified");
+    let eventBindings = this.bindings.filter((bind) => bind.event === event && this.filterBindings(bind, payload, ref));
+    for (let i = 0;i < eventBindings.length; i++)
+      eventBindings[i].callback(handledPayload, ref, joinRef || this.joinRef());
+  }
+  replyEventName(ref) {
+    return `chan_reply_${ref}`;
+  }
+  isClosed() {
+    return this.state === CHANNEL_STATES2.closed;
+  }
+  isErrored() {
+    return this.state === CHANNEL_STATES2.errored;
+  }
+  isJoined() {
+    return this.state === CHANNEL_STATES2.joined;
+  }
+  isJoining() {
+    return this.state === CHANNEL_STATES2.joining;
+  }
+  isLeaving() {
+    return this.state === CHANNEL_STATES2.leaving;
+  }
+}, Ajax = class {
+  static request(method, endPoint, headers, body, timeout, ontimeout, callback) {
+    if (global2.XDomainRequest) {
+      let req = new global2.XDomainRequest;
+      return this.xdomainRequest(req, method, endPoint, body, timeout, ontimeout, callback);
+    } else if (global2.XMLHttpRequest) {
+      let req = new global2.XMLHttpRequest;
+      return this.xhrRequest(req, method, endPoint, headers, body, timeout, ontimeout, callback);
+    } else if (global2.fetch && global2.AbortController)
+      return this.fetchRequest(method, endPoint, headers, body, timeout, ontimeout, callback);
+    else
+      throw Error("No suitable XMLHttpRequest implementation found");
+  }
+  static fetchRequest(method, endPoint, headers, body, timeout, ontimeout, callback) {
+    let options = {
+      method,
+      headers,
+      body
+    }, controller = null;
+    if (timeout) {
+      controller = new AbortController;
+      let _timeoutId = setTimeout(() => controller.abort(), timeout);
+      options.signal = controller.signal;
+    }
+    return global2.fetch(endPoint, options).then((response) => response.text()).then((data) => this.parseJSON(data)).then((data) => callback && callback(data)).catch((err) => {
+      if (err.name === "AbortError" && ontimeout)
+        ontimeout();
+      else
+        callback && callback(null);
+    }), controller;
+  }
+  static xdomainRequest(req, method, endPoint, body, timeout, ontimeout, callback) {
+    if (req.timeout = timeout, req.open(method, endPoint), req.onload = () => {
+      let response = this.parseJSON(req.responseText);
+      callback && callback(response);
+    }, ontimeout)
+      req.ontimeout = ontimeout;
+    return req.onprogress = () => {}, req.send(body), req;
+  }
+  static xhrRequest(req, method, endPoint, headers, body, timeout, ontimeout, callback) {
+    req.open(method, endPoint, !0), req.timeout = timeout;
+    for (let [key, value] of Object.entries(headers))
+      req.setRequestHeader(key, value);
+    if (req.onerror = () => callback && callback(null), req.onreadystatechange = () => {
+      if (req.readyState === XHR_STATES.complete && callback) {
+        let response = this.parseJSON(req.responseText);
+        callback(response);
+      }
+    }, ontimeout)
+      req.ontimeout = ontimeout;
+    return req.send(body), req;
+  }
+  static parseJSON(resp) {
+    if (!resp || resp === "")
+      return null;
+    try {
+      return JSON.parse(resp);
+    } catch {
+      return console && console.log("failed to parse JSON response", resp), null;
+    }
+  }
+  static serialize(obj, parentKey) {
+    let queryStr = [];
+    for (var key in obj) {
+      if (!Object.prototype.hasOwnProperty.call(obj, key))
+        continue;
+      let paramKey = parentKey ? `${parentKey}[${key}]` : key, paramVal = obj[key];
+      if (typeof paramVal === "object")
+        queryStr.push(this.serialize(paramVal, paramKey));
+      else
+        queryStr.push(encodeURIComponent(paramKey) + "=" + encodeURIComponent(paramVal));
+    }
+    return queryStr.join("&");
+  }
+  static appendParams(url, params) {
+    if (Object.keys(params).length === 0)
+      return url;
+    let prefix = url.match(/\?/) ? "&" : "?";
+    return `${url}${prefix}${this.serialize(params)}`;
+  }
+}, arrayBufferToBase64 = (buffer) => {
+  let binary = "", bytes = new Uint8Array(buffer), len = bytes.byteLength;
+  for (let i = 0;i < len; i++)
+    binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}, LongPoll = class {
+  constructor(endPoint, protocols) {
+    if (protocols && protocols.length === 2 && protocols[1].startsWith(AUTH_TOKEN_PREFIX))
+      this.authToken = atob(protocols[1].slice(AUTH_TOKEN_PREFIX.length));
+    this.endPoint = null, this.token = null, this.skipHeartbeat = !0, this.reqs = /* @__PURE__ */ new Set, this.awaitingBatchAck = !1, this.currentBatch = null, this.currentBatchTimer = null, this.batchBuffer = [], this.onopen = function() {}, this.onerror = function() {}, this.onmessage = function() {}, this.onclose = function() {}, this.pollEndpoint = this.normalizeEndpoint(endPoint), this.readyState = SOCKET_STATES.connecting, setTimeout(() => this.poll(), 0);
+  }
+  normalizeEndpoint(endPoint) {
+    return endPoint.replace("ws://", "http://").replace("wss://", "https://").replace(new RegExp("(.*)/" + TRANSPORTS.websocket), "$1/" + TRANSPORTS.longpoll);
+  }
+  endpointURL() {
+    return Ajax.appendParams(this.pollEndpoint, { token: this.token });
+  }
+  closeAndRetry(code, reason, wasClean) {
+    this.close(code, reason, wasClean), this.readyState = SOCKET_STATES.connecting;
+  }
+  ontimeout() {
+    this.onerror("timeout"), this.closeAndRetry(1005, "timeout", !1);
+  }
+  isActive() {
+    return this.readyState === SOCKET_STATES.open || this.readyState === SOCKET_STATES.connecting;
+  }
+  poll() {
+    let headers = { Accept: "application/json" };
+    if (this.authToken)
+      headers["X-Phoenix-AuthToken"] = this.authToken;
+    this.ajax("GET", headers, null, () => this.ontimeout(), (resp) => {
+      if (resp) {
+        var { status, token, messages } = resp;
+        if (status === 410 && this.token !== null) {
+          this.onerror(410), this.closeAndRetry(3410, "session_gone", !1);
+          return;
+        }
+        this.token = token;
+      } else
+        status = 0;
+      switch (status) {
+        case 200:
+          messages.forEach((msg) => {
+            setTimeout(() => this.onmessage({ data: msg }), 0);
+          }), this.poll();
+          break;
+        case 204:
+          this.poll();
+          break;
+        case 410:
+          this.readyState = SOCKET_STATES.open, this.onopen({}), this.poll();
+          break;
+        case 403:
+          this.onerror(403), this.close(1008, "forbidden", !1);
+          break;
+        case 0:
+        case 500:
+          this.onerror(500), this.closeAndRetry(1011, "internal server error", 500);
+          break;
+        default:
+          throw Error(`unhandled poll status ${status}`);
+      }
+    });
+  }
+  send(body) {
+    if (typeof body !== "string")
+      body = arrayBufferToBase64(body);
+    if (this.currentBatch)
+      this.currentBatch.push(body);
+    else if (this.awaitingBatchAck)
+      this.batchBuffer.push(body);
+    else
+      this.currentBatch = [body], this.currentBatchTimer = setTimeout(() => {
+        this.batchSend(this.currentBatch), this.currentBatch = null;
+      }, 0);
+  }
+  batchSend(messages, offset = 0) {
+    this.awaitingBatchAck = !0;
+    let next = offset + MAX_LONGPOLL_BATCH_SIZE, batch = messages.slice(offset, next);
+    this.ajax("POST", { "Content-Type": "application/x-ndjson" }, batch.join(`
+`), () => this.onerror("timeout"), (resp) => {
+      if (!resp || resp.status !== 200)
+        this.awaitingBatchAck = !1, this.onerror(resp && resp.status), this.closeAndRetry(1011, "internal server error", !1);
+      else if (next < messages.length)
+        this.batchSend(messages, next);
+      else if (this.batchBuffer.length > 0)
+        this.batchSend(this.batchBuffer), this.batchBuffer = [];
+      else
+        this.awaitingBatchAck = !1;
+    });
+  }
+  close(code, reason, wasClean) {
+    for (let req of this.reqs)
+      req.abort();
+    this.readyState = SOCKET_STATES.closed;
+    let opts = Object.assign({ code: 1000, reason: void 0, wasClean: !0 }, { code, reason, wasClean });
+    if (this.batchBuffer = [], clearTimeout(this.currentBatchTimer), this.currentBatchTimer = null, typeof CloseEvent < "u")
+      this.onclose(new CloseEvent("close", opts));
+    else
+      this.onclose(opts);
+  }
+  ajax(method, headers, body, onCallerTimeout, callback) {
+    let req, ontimeout = () => {
+      this.reqs.delete(req), onCallerTimeout();
+    };
+    req = Ajax.request(method, this.endpointURL(), headers, body, this.timeout, ontimeout, (resp) => {
+      if (this.reqs.delete(req), this.isActive())
+        callback(resp);
+    }), this.reqs.add(req);
+  }
+}, Presence = class _Presence {
+  constructor(channel, opts = {}) {
+    let events = opts.events || { state: "presence_state", diff: "presence_diff" };
+    this.state = /* @__PURE__ */ Object.create(null), this.pendingDiffs = [], this.channel = channel, this.joinRef = null, this.caller = {
+      onJoin: function() {},
+      onLeave: function() {},
+      onSync: function() {}
+    }, this.channel.on(events.state, (newState) => {
+      let { onJoin, onLeave, onSync } = this.caller;
+      this.joinRef = this.channel.joinRef(), this.state = _Presence.syncState(this.state, newState, onJoin, onLeave), this.pendingDiffs.forEach((diff) => {
+        this.state = _Presence.syncDiff(this.state, diff, onJoin, onLeave);
+      }), this.pendingDiffs = [], onSync();
+    }), this.channel.on(events.diff, (diff) => {
+      let { onJoin, onLeave, onSync } = this.caller;
+      if (this.inPendingSyncState())
+        this.pendingDiffs.push(diff);
+      else
+        this.state = _Presence.syncDiff(this.state, diff, onJoin, onLeave), onSync();
+    });
+  }
+  onJoin(callback) {
+    this.caller.onJoin = callback;
+  }
+  onLeave(callback) {
+    this.caller.onLeave = callback;
+  }
+  onSync(callback) {
+    this.caller.onSync = callback;
+  }
+  list(by) {
+    return _Presence.list(this.state, by);
+  }
+  inPendingSyncState() {
+    return !this.joinRef || this.joinRef !== this.channel.joinRef();
+  }
+  static syncState(currentState, newState, onJoin, onLeave) {
+    let state = this.toNullProtoObj(this.clone(currentState));
+    newState = this.toNullProtoObj(newState);
+    let joins = /* @__PURE__ */ Object.create(null), leaves = /* @__PURE__ */ Object.create(null);
+    return this.map(state, (key, presence) => {
+      if (!newState[key])
+        leaves[key] = presence;
+    }), this.map(newState, (key, newPresence) => {
+      let currentPresence = state[key];
+      if (currentPresence) {
+        let newRefs = newPresence.metas.map((m) => m.phx_ref), curRefs = currentPresence.metas.map((m) => m.phx_ref), joinedMetas = newPresence.metas.filter((m) => curRefs.indexOf(m.phx_ref) < 0), leftMetas = currentPresence.metas.filter((m) => newRefs.indexOf(m.phx_ref) < 0);
+        if (joinedMetas.length > 0)
+          joins[key] = newPresence, joins[key].metas = joinedMetas;
+        if (leftMetas.length > 0)
+          leaves[key] = this.clone(currentPresence), leaves[key].metas = leftMetas;
+      } else
+        joins[key] = newPresence;
+    }), this.syncDiff(state, { joins, leaves }, onJoin, onLeave);
+  }
+  static syncDiff(state, diff, onJoin, onLeave) {
+    state = this.toNullProtoObj(state);
+    let { joins, leaves } = this.clone(diff);
+    if (!onJoin)
+      onJoin = function() {};
+    if (!onLeave)
+      onLeave = function() {};
+    return this.map(joins, (key, newPresence) => {
+      let currentPresence = state[key];
+      if (state[key] = this.clone(newPresence), currentPresence) {
+        let joinedRefs = state[key].metas.map((m) => m.phx_ref), curMetas = currentPresence.metas.filter((m) => joinedRefs.indexOf(m.phx_ref) < 0);
+        state[key].metas.unshift(...curMetas);
+      }
+      onJoin(key, currentPresence, newPresence);
+    }), this.map(leaves, (key, leftPresence) => {
+      let currentPresence = state[key];
+      if (!currentPresence)
+        return;
+      let refsToRemove = leftPresence.metas.map((m) => m.phx_ref);
+      if (currentPresence.metas = currentPresence.metas.filter((p) => refsToRemove.indexOf(p.phx_ref) < 0), onLeave(key, currentPresence, leftPresence), currentPresence.metas.length === 0)
+        delete state[key];
+    }), state;
+  }
+  static list(presences, chooser) {
+    if (!chooser)
+      chooser = function(key, pres) {
+        return pres;
+      };
+    return this.map(presences, (key, presence) => chooser(key, presence));
+  }
+  static map(obj, func) {
+    return Object.getOwnPropertyNames(obj).map((key) => func(key, obj[key]));
+  }
+  static toNullProtoObj(obj) {
+    if (Object.getPrototypeOf(obj) === null)
+      return obj;
+    let cleaned = /* @__PURE__ */ Object.create(null);
+    return Object.getOwnPropertyNames(obj).forEach((key) => {
+      cleaned[key] = obj[key];
+    }), cleaned;
+  }
+  static clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+}, serializer_default = {
+  HEADER_LENGTH: 1,
+  META_LENGTH: 4,
+  KINDS: { push: 0, reply: 1, broadcast: 2 },
+  encode(msg, callback) {
+    if (msg.payload.constructor === ArrayBuffer)
+      return callback(this.binaryEncode(msg));
+    else {
+      let payload = [msg.join_ref, msg.ref, msg.topic, msg.event, msg.payload];
+      return callback(JSON.stringify(payload));
+    }
+  },
+  decode(rawPayload, callback) {
+    if (rawPayload.constructor === ArrayBuffer)
+      return callback(this.binaryDecode(rawPayload));
+    else {
+      let [join_ref, ref, topic, event, payload] = JSON.parse(rawPayload);
+      return callback({ join_ref, ref, topic, event, payload });
+    }
+  },
+  binaryEncode(message) {
+    let { join_ref, ref, event, topic, payload } = message, encoder = /* @__PURE__ */ new TextEncoder, joinRefBytes = encoder.encode(join_ref), refBytes = encoder.encode(ref), topicBytes = encoder.encode(topic), eventBytes = encoder.encode(event);
+    this.assertFieldSize(joinRefBytes.byteLength, "join_ref"), this.assertFieldSize(refBytes.byteLength, "ref"), this.assertFieldSize(topicBytes.byteLength, "topic"), this.assertFieldSize(eventBytes.byteLength, "event");
+    let metaLength = this.META_LENGTH + joinRefBytes.byteLength + refBytes.byteLength + topicBytes.byteLength + eventBytes.byteLength, header = new ArrayBuffer(this.HEADER_LENGTH + metaLength), headerBytes = new Uint8Array(header), view = new DataView(header), offset = 0;
+    view.setUint8(offset++, this.KINDS.push), view.setUint8(offset++, joinRefBytes.byteLength), view.setUint8(offset++, refBytes.byteLength), view.setUint8(offset++, topicBytes.byteLength), view.setUint8(offset++, eventBytes.byteLength), headerBytes.set(joinRefBytes, offset), offset += joinRefBytes.byteLength, headerBytes.set(refBytes, offset), offset += refBytes.byteLength, headerBytes.set(topicBytes, offset), offset += topicBytes.byteLength, headerBytes.set(eventBytes, offset), offset += eventBytes.byteLength;
+    var combined = new Uint8Array(header.byteLength + payload.byteLength);
+    return combined.set(headerBytes, 0), combined.set(new Uint8Array(payload), header.byteLength), combined.buffer;
+  },
+  assertFieldSize(size, name) {
+    if (size > 255)
+      throw Error(`unable to convert ${name} to binary: must be less than or equal to 255 bytes, but is ${size} bytes`);
+  },
+  binaryDecode(buffer) {
+    let view = new DataView(buffer), kind = view.getUint8(0), decoder = /* @__PURE__ */ new TextDecoder;
+    switch (kind) {
+      case this.KINDS.push:
+        return this.decodePush(buffer, view, decoder);
+      case this.KINDS.reply:
+        return this.decodeReply(buffer, view, decoder);
+      case this.KINDS.broadcast:
+        return this.decodeBroadcast(buffer, view, decoder);
+    }
+  },
+  decodePush(buffer, view, decoder) {
+    let joinRefSize = view.getUint8(1), topicSize = view.getUint8(2), eventSize = view.getUint8(3), offset = this.HEADER_LENGTH + this.META_LENGTH - 1, joinRef = decoder.decode(buffer.slice(offset, offset + joinRefSize));
+    offset = offset + joinRefSize;
+    let topic = decoder.decode(buffer.slice(offset, offset + topicSize));
+    offset = offset + topicSize;
+    let event = decoder.decode(buffer.slice(offset, offset + eventSize));
+    offset = offset + eventSize;
+    let data = buffer.slice(offset, buffer.byteLength);
+    return { join_ref: joinRef, ref: null, topic, event, payload: data };
+  },
+  decodeReply(buffer, view, decoder) {
+    let joinRefSize = view.getUint8(1), refSize = view.getUint8(2), topicSize = view.getUint8(3), eventSize = view.getUint8(4), offset = this.HEADER_LENGTH + this.META_LENGTH, joinRef = decoder.decode(buffer.slice(offset, offset + joinRefSize));
+    offset = offset + joinRefSize;
+    let ref = decoder.decode(buffer.slice(offset, offset + refSize));
+    offset = offset + refSize;
+    let topic = decoder.decode(buffer.slice(offset, offset + topicSize));
+    offset = offset + topicSize;
+    let event = decoder.decode(buffer.slice(offset, offset + eventSize));
+    offset = offset + eventSize;
+    let data = buffer.slice(offset, buffer.byteLength), payload = { status: event, response: data };
+    return { join_ref: joinRef, ref, topic, event: CHANNEL_EVENTS2.reply, payload };
+  },
+  decodeBroadcast(buffer, view, decoder) {
+    let topicSize = view.getUint8(1), eventSize = view.getUint8(2), offset = this.HEADER_LENGTH + 2, topic = decoder.decode(buffer.slice(offset, offset + topicSize));
+    offset = offset + topicSize;
+    let event = decoder.decode(buffer.slice(offset, offset + eventSize));
+    offset = offset + eventSize;
+    let data = buffer.slice(offset, buffer.byteLength);
+    return { join_ref: null, ref: null, topic, event, payload: data };
+  }
+}, Socket = class {
+  constructor(endPoint, opts = {}) {
+    this.stateChangeCallbacks = { open: [], close: [], error: [], message: [] }, this.channels = [], this.sendBuffer = [], this.ref = 0, this.fallbackRef = null, this.timeout = opts.timeout || DEFAULT_TIMEOUT2, this.transport = opts.transport || global2.WebSocket || LongPoll, this.conn = void 0, this.primaryPassedHealthCheck = !1, this.longPollFallbackMs = opts.longPollFallbackMs, this.fallbackTimer = null;
+    let envSessionStorage = null;
+    try {
+      envSessionStorage = global2 && global2.sessionStorage;
+    } catch {}
+    if (this.sessionStore = opts.sessionStorage || envSessionStorage, this.establishedConnections = 0, this.defaultEncoder = serializer_default.encode.bind(serializer_default), this.defaultDecoder = serializer_default.decode.bind(serializer_default), this.closeWasClean = !0, this.disconnecting = !1, this.binaryType = opts.binaryType || "arraybuffer", this.connectClock = 1, this.pageHidden = !1, this.encode = void 0, this.decode = void 0, this.transport !== LongPoll)
+      this.encode = opts.encode || this.defaultEncoder, this.decode = opts.decode || this.defaultDecoder;
+    else
+      this.encode = this.defaultEncoder, this.decode = this.defaultDecoder;
+    let awaitingConnectionOnPageShow = null;
+    if (phxWindow && phxWindow.addEventListener)
+      phxWindow.addEventListener("pagehide", (_e) => {
+        if (this.conn)
+          this.disconnect(), awaitingConnectionOnPageShow = this.connectClock;
+      }), phxWindow.addEventListener("pageshow", (_e) => {
+        if (awaitingConnectionOnPageShow === this.connectClock)
+          awaitingConnectionOnPageShow = null, this.connect();
+      }), phxWindow.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden")
+          this.pageHidden = !0;
+        else if (this.pageHidden = !1, !this.isConnected() && !this.closeWasClean)
+          this.teardown(() => this.connect());
+      });
+    if (this.heartbeatIntervalMs = opts.heartbeatIntervalMs || 30000, this.autoSendHeartbeat = opts.autoSendHeartbeat ?? !0, this.heartbeatCallback = opts.heartbeatCallback ?? (() => {}), this.rejoinAfterMs = (tries) => {
+      if (opts.rejoinAfterMs)
+        return opts.rejoinAfterMs(tries);
+      else
+        return [1000, 2000, 5000][tries - 1] || 1e4;
+    }, this.reconnectAfterMs = (tries) => {
+      if (opts.reconnectAfterMs)
+        return opts.reconnectAfterMs(tries);
+      else
+        return [10, 50, 100, 150, 200, 250, 500, 1000, 2000][tries - 1] || 5000;
+    }, this.logger = opts.logger || null, !this.logger && opts.debug)
+      this.logger = (kind, msg, data) => {
+        console.log(`${kind}: ${msg}`, data);
+      };
+    this.longpollerTimeout = opts.longpollerTimeout || 20000, this.params = closure(opts.params || {}), this.endPoint = `${endPoint}/${TRANSPORTS.websocket}`, this.vsn = opts.vsn || DEFAULT_VSN2, this.heartbeatTimeoutTimer = null, this.heartbeatTimer = null, this.heartbeatSentAt = null, this.pendingHeartbeatRef = null, this.reconnectTimer = new Timer(() => {
+      if (this.pageHidden) {
+        this.log("Not reconnecting as page is hidden!"), this.teardown();
+        return;
+      }
+      this.teardown(async () => {
+        if (opts.beforeReconnect)
+          await opts.beforeReconnect();
+        this.connect();
+      });
+    }, this.reconnectAfterMs), this.authToken = opts.authToken && closure(opts.authToken);
+  }
+  getLongPollTransport() {
+    return LongPoll;
+  }
+  replaceTransport(newTransport) {
+    if (this.connectClock++, this.closeWasClean = !0, clearTimeout(this.fallbackTimer), this.reconnectTimer.reset(), this.conn)
+      this.conn.close(), this.conn = null;
+    this.transport = newTransport;
+  }
+  protocol() {
+    return location.protocol.match(/^https/) ? "wss" : "ws";
+  }
+  endPointURL() {
+    let uri = Ajax.appendParams(Ajax.appendParams(this.endPoint, this.params()), { vsn: this.vsn });
+    if (uri.charAt(0) !== "/")
+      return uri;
+    if (uri.charAt(1) === "/")
+      return `${this.protocol()}:${uri}`;
+    return `${this.protocol()}://${location.host}${uri}`;
+  }
+  disconnect(callback, code, reason) {
+    this.connectClock++, this.disconnecting = !0, this.closeWasClean = !0, clearTimeout(this.fallbackTimer), this.reconnectTimer.reset(), this.teardown(() => {
+      this.disconnecting = !1, callback && callback();
+    }, code, reason);
+  }
+  connect(params) {
+    if (params)
+      console && console.log("passing params to connect is deprecated. Instead pass :params to the Socket constructor"), this.params = closure(params);
+    if (this.conn && !this.disconnecting)
+      return;
+    if (this.longPollFallbackMs && this.transport !== LongPoll)
+      this.connectWithFallback(LongPoll, this.longPollFallbackMs);
+    else
+      this.transportConnect();
+  }
+  log(kind, msg, data) {
+    this.logger && this.logger(kind, msg, data);
+  }
+  hasLogger() {
+    return this.logger !== null;
+  }
+  onOpen(callback) {
+    let ref = this.makeRef();
+    return this.stateChangeCallbacks.open.push([ref, callback]), ref;
+  }
+  onClose(callback) {
+    let ref = this.makeRef();
+    return this.stateChangeCallbacks.close.push([ref, callback]), ref;
+  }
+  onError(callback) {
+    let ref = this.makeRef();
+    return this.stateChangeCallbacks.error.push([ref, callback]), ref;
+  }
+  onMessage(callback) {
+    let ref = this.makeRef();
+    return this.stateChangeCallbacks.message.push([ref, callback]), ref;
+  }
+  onHeartbeat(callback) {
+    this.heartbeatCallback = callback;
+  }
+  ping(callback) {
+    if (!this.isConnected())
+      return !1;
+    let ref = this.makeRef(), startTime = Date.now();
+    this.push({ topic: "phoenix", event: "heartbeat", payload: {}, ref });
+    let onMsgRef = this.onMessage((msg) => {
+      if (msg.ref === ref)
+        this.off([onMsgRef]), callback(Date.now() - startTime);
+    });
+    return !0;
+  }
+  transportName(transport) {
+    switch (transport) {
+      case LongPoll:
+        return "LongPoll";
+      default:
+        return transport.name;
+    }
+  }
+  transportConnect() {
+    this.connectClock++, this.closeWasClean = !1;
+    let protocols = void 0;
+    if (this.authToken)
+      protocols = ["phoenix", `${AUTH_TOKEN_PREFIX}${btoa(this.authToken()).replace(/=/g, "")}`];
+    this.conn = new this.transport(this.endPointURL(), protocols), this.conn.binaryType = this.binaryType, this.conn.timeout = this.longpollerTimeout, this.conn.onopen = () => this.onConnOpen(), this.conn.onerror = (error) => this.onConnError(error), this.conn.onmessage = (event) => this.onConnMessage(event), this.conn.onclose = (event) => this.onConnClose(event);
+  }
+  getSession(key) {
+    return this.sessionStore && this.sessionStore.getItem(key);
+  }
+  storeSession(key, val) {
+    this.sessionStore && this.sessionStore.setItem(key, val);
+  }
+  connectWithFallback(fallbackTransport, fallbackThreshold = 2500) {
+    clearTimeout(this.fallbackTimer);
+    let established = !1, primaryTransport = !0, openRef, errorRef, fallbackTransportName = this.transportName(fallbackTransport), fallback = (reason) => {
+      this.log("transport", `falling back to ${fallbackTransportName}...`, reason), this.off([openRef, errorRef]), primaryTransport = !1, this.replaceTransport(fallbackTransport), this.transportConnect();
+    };
+    if (this.getSession(`phx:fallback:${fallbackTransportName}`))
+      return fallback("memorized");
+    if (this.fallbackTimer = setTimeout(fallback, fallbackThreshold), errorRef = this.onError((reason) => {
+      if (this.log("transport", "error", reason), primaryTransport && !established)
+        clearTimeout(this.fallbackTimer), fallback(reason);
+    }), this.fallbackRef)
+      this.off([this.fallbackRef]);
+    this.fallbackRef = this.onOpen(() => {
+      if (established = !0, !primaryTransport) {
+        let fallbackTransportName2 = this.transportName(fallbackTransport);
+        if (!this.primaryPassedHealthCheck)
+          this.storeSession(`phx:fallback:${fallbackTransportName2}`, "true");
+        return this.log("transport", `established ${fallbackTransportName2} fallback`);
+      }
+      clearTimeout(this.fallbackTimer), this.fallbackTimer = setTimeout(fallback, fallbackThreshold), this.ping((rtt) => {
+        this.log("transport", "connected to primary after", rtt), this.primaryPassedHealthCheck = !0, clearTimeout(this.fallbackTimer);
+      });
+    }), this.transportConnect();
+  }
+  clearHeartbeats() {
+    clearTimeout(this.heartbeatTimer), clearTimeout(this.heartbeatTimeoutTimer);
+  }
+  onConnOpen() {
+    if (this.hasLogger())
+      this.log("transport", `connected to ${this.endPointURL()}`);
+    if (this.closeWasClean = !1, this.disconnecting = !1, this.establishedConnections++, this.flushSendBuffer(), this.reconnectTimer.reset(), this.autoSendHeartbeat)
+      this.resetHeartbeat();
+    this.triggerStateCallbacks("open");
+  }
+  heartbeatTimeout() {
+    if (this.pendingHeartbeatRef) {
+      if (this.pendingHeartbeatRef = null, this.heartbeatSentAt = null, this.hasLogger())
+        this.log("transport", "heartbeat timeout. Attempting to re-establish connection");
+      try {
+        this.heartbeatCallback("timeout");
+      } catch (e) {
+        this.log("error", "error in heartbeat callback", e);
+      }
+      this.triggerChanError(Error("heartbeat timeout")), this.closeWasClean = !1, this.teardown(() => this.reconnectTimer.scheduleTimeout(), WS_CLOSE_NORMAL, "heartbeat timeout");
+    }
+  }
+  resetHeartbeat() {
+    if (this.conn && this.conn.skipHeartbeat)
+      return;
+    this.pendingHeartbeatRef = null, this.clearHeartbeats(), this.heartbeatTimer = setTimeout(() => this.sendHeartbeat(), this.heartbeatIntervalMs);
+  }
+  teardown(callback, code, reason) {
+    if (!this.conn)
+      return callback && callback();
+    let connToClose = this.conn;
+    this.waitForBufferDone(connToClose, () => {
+      if (code)
+        connToClose.close(code, reason || "");
+      else
+        connToClose.close();
+      this.waitForSocketClosed(connToClose, () => {
+        if (this.conn === connToClose)
+          this.conn.onopen = function() {}, this.conn.onerror = function() {}, this.conn.onmessage = function() {}, this.conn.onclose = function() {}, this.conn = null;
+        callback && callback();
+      });
+    });
+  }
+  waitForBufferDone(conn, callback, tries = 1) {
+    if (tries === 5 || !conn.bufferedAmount) {
+      callback();
+      return;
+    }
+    setTimeout(() => {
+      this.waitForBufferDone(conn, callback, tries + 1);
+    }, 150 * tries);
+  }
+  waitForSocketClosed(conn, callback, tries = 1) {
+    if (tries === 5 || conn.readyState === SOCKET_STATES.closed) {
+      callback();
+      return;
+    }
+    setTimeout(() => {
+      this.waitForSocketClosed(conn, callback, tries + 1);
+    }, 150 * tries);
+  }
+  onConnClose(event) {
+    if (this.conn)
+      this.conn.onclose = () => {};
+    if (this.hasLogger())
+      this.log("transport", "close", event);
+    if (this.triggerChanError(event), this.clearHeartbeats(), !this.closeWasClean)
+      this.reconnectTimer.scheduleTimeout();
+    this.triggerStateCallbacks("close", event);
+  }
+  onConnError(error) {
+    if (this.hasLogger())
+      this.log("transport", "error", error);
+    let transportBefore = this.transport, establishedBefore = this.establishedConnections;
+    if (this.triggerStateCallbacks("error", error, transportBefore, establishedBefore), transportBefore === this.transport || establishedBefore > 0)
+      this.triggerChanError(error);
+  }
+  triggerChanError(reason) {
+    this.channels.forEach((channel) => {
+      if (!(channel.isErrored() || channel.isLeaving() || channel.isClosed()))
+        channel.trigger(CHANNEL_EVENTS2.error, reason);
+    });
+  }
+  connectionState() {
+    switch (this.conn && this.conn.readyState) {
+      case SOCKET_STATES.connecting:
+        return "connecting";
+      case SOCKET_STATES.open:
+        return "open";
+      case SOCKET_STATES.closing:
+        return "closing";
+      default:
+        return "closed";
+    }
+  }
+  isConnected() {
+    return this.connectionState() === "open";
+  }
+  remove(channel) {
+    this.off(channel.stateChangeRefs), this.channels = this.channels.filter((c) => c !== channel);
+  }
+  off(refs) {
+    for (let key in this.stateChangeCallbacks)
+      this.stateChangeCallbacks[key] = this.stateChangeCallbacks[key].filter(([ref]) => refs.indexOf(ref) === -1);
+  }
+  channel(topic, chanParams = {}) {
+    let chan = new Channel(topic, chanParams, this);
+    return this.channels.push(chan), chan;
+  }
+  push(data) {
+    if (this.hasLogger()) {
+      let { topic, event, payload, ref, join_ref } = data;
+      this.log("push", `${topic} ${event} (${join_ref}, ${ref})`, payload);
+    }
+    if (this.isConnected())
+      this.encode(data, (result) => this.conn.send(result));
+    else
+      this.sendBuffer.push(() => this.encode(data, (result) => this.conn.send(result)));
+  }
+  makeRef() {
+    let newRef = this.ref + 1;
+    if (newRef === this.ref)
+      this.ref = 0;
+    else
+      this.ref = newRef;
+    return this.ref.toString();
+  }
+  sendHeartbeat() {
+    if (!this.isConnected()) {
+      try {
+        this.heartbeatCallback("disconnected");
+      } catch (e) {
+        this.log("error", "error in heartbeat callback", e);
+      }
+      return;
+    }
+    if (this.pendingHeartbeatRef) {
+      this.heartbeatTimeout();
+      return;
+    }
+    this.pendingHeartbeatRef = this.makeRef(), this.heartbeatSentAt = Date.now(), this.push({ topic: "phoenix", event: "heartbeat", payload: {}, ref: this.pendingHeartbeatRef });
+    try {
+      this.heartbeatCallback("sent");
+    } catch (e) {
+      this.log("error", "error in heartbeat callback", e);
+    }
+    this.heartbeatTimeoutTimer = setTimeout(() => this.heartbeatTimeout(), this.heartbeatIntervalMs);
+  }
+  flushSendBuffer() {
+    if (this.isConnected() && this.sendBuffer.length > 0)
+      this.sendBuffer.forEach((callback) => callback()), this.sendBuffer = [];
+  }
+  onConnMessage(rawMessage) {
+    this.decode(rawMessage.data, (msg) => {
+      let { topic, event, payload, ref, join_ref } = msg;
+      if (ref && ref === this.pendingHeartbeatRef) {
+        let latency = this.heartbeatSentAt ? Date.now() - this.heartbeatSentAt : void 0;
+        this.clearHeartbeats();
+        try {
+          this.heartbeatCallback(payload.status === "ok" ? "ok" : "error", latency);
+        } catch (e) {
+          this.log("error", "error in heartbeat callback", e);
+        }
+        if (this.pendingHeartbeatRef = null, this.heartbeatSentAt = null, this.autoSendHeartbeat)
+          this.heartbeatTimer = setTimeout(() => this.sendHeartbeat(), this.heartbeatIntervalMs);
+      }
+      if (this.hasLogger())
+        this.log("receive", `${payload.status || ""} ${topic} ${event} ${ref && "(" + ref + ")" || ""}`.trim(), payload);
+      for (let i = 0;i < this.channels.length; i++) {
+        let channel = this.channels[i];
+        if (!channel.isMember(topic, event, payload, join_ref))
+          continue;
+        channel.trigger(event, payload, ref, join_ref);
+      }
+      this.triggerStateCallbacks("message", msg);
+    });
+  }
+  triggerStateCallbacks(event, ...args) {
+    try {
+      this.stateChangeCallbacks[event].forEach(([_, callback]) => {
+        try {
+          callback(...args);
+        } catch (e) {
+          this.log("error", `error in ${event} callback`, e);
+        }
+      });
+    } catch (e) {
+      this.log("error", `error triggering ${event} callbacks`, e);
+    }
+  }
+  leaveOpenTopic(topic) {
+    let dupChannel = this.channels.find((c) => c.topic === topic && (c.isJoined() || c.isJoining()));
+    if (dupChannel) {
+      if (this.hasLogger())
+        this.log("transport", `leaving duplicate topic "${topic}"`);
+      dupChannel.leave();
+    }
+  }
+};
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/phoenix/presenceAdapter.js
+class PresenceAdapter {
+  constructor(channel, opts) {
+    let phoenixOptions = phoenixPresenceOptions(opts);
+    this.presence = new Presence(channel.getChannel(), phoenixOptions), this.presence.onJoin((key, currentPresence, newPresence) => {
+      let onJoinPayload = PresenceAdapter.onJoinPayload(key, currentPresence, newPresence);
+      channel.getChannel().trigger("presence", onJoinPayload);
+    }), this.presence.onLeave((key, currentPresence, leftPresence) => {
+      let onLeavePayload = PresenceAdapter.onLeavePayload(key, currentPresence, leftPresence);
+      channel.getChannel().trigger("presence", onLeavePayload);
+    }), this.presence.onSync(() => {
+      channel.getChannel().trigger("presence", { event: "sync" });
+    });
+  }
+  get state() {
+    return PresenceAdapter.transformState(this.presence.state);
+  }
+  static transformState(state) {
+    return state = cloneState(state), Object.getOwnPropertyNames(state).reduce((newState, key) => {
+      let presences = state[key];
+      return newState[key] = transformState(presences), newState;
+    }, {});
+  }
+  static onJoinPayload(key, currentPresence, newPresence) {
+    let currentPresences = parseCurrentPresences(currentPresence), newPresences = transformState(newPresence);
+    return {
+      event: "join",
+      key,
+      currentPresences,
+      newPresences
+    };
+  }
+  static onLeavePayload(key, currentPresence, leftPresence) {
+    let currentPresences = parseCurrentPresences(currentPresence), leftPresences = transformState(leftPresence);
+    return {
+      event: "leave",
+      key,
+      currentPresences,
+      leftPresences
+    };
+  }
+}
+function transformState(presences) {
+  return presences.metas.map((presence) => {
+    let descriptors = Object.getOwnPropertyDescriptors(presence), transformedPresence = Object.defineProperties({}, descriptors);
+    return transformedPresence.presence_ref = transformedPresence.phx_ref, delete transformedPresence.phx_ref, delete transformedPresence.phx_ref_prev, transformedPresence;
+  });
+}
+function cloneState(state) {
+  return JSON.parse(JSON.stringify(state));
+}
+function phoenixPresenceOptions(opts) {
+  return (opts === null || opts === void 0 ? void 0 : opts.events) && { events: opts.events };
+}
+function parseCurrentPresences(currentPresences) {
+  return (currentPresences === null || currentPresences === void 0 ? void 0 : currentPresences.metas) ? transformState(currentPresences) : [];
+}
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/RealtimePresence.js
+var REALTIME_PRESENCE_LISTEN_EVENTS;
+(function(REALTIME_PRESENCE_LISTEN_EVENTS) {
+  REALTIME_PRESENCE_LISTEN_EVENTS.SYNC = "sync", REALTIME_PRESENCE_LISTEN_EVENTS.JOIN = "join", REALTIME_PRESENCE_LISTEN_EVENTS.LEAVE = "leave";
+})(REALTIME_PRESENCE_LISTEN_EVENTS || (REALTIME_PRESENCE_LISTEN_EVENTS = {}));
+
+class RealtimePresence {
+  get state() {
+    return this.presenceAdapter.state;
+  }
+  constructor(channel, opts) {
+    this.channel = channel, this.presenceAdapter = new PresenceAdapter(this.channel.channelAdapter, opts);
+  }
+}
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/lib/normalizeChannelError.js
+function normalizeChannelError(reason) {
+  if (reason instanceof Error)
+    return reason;
+  if (typeof reason === "string")
+    return Error(reason);
+  if (reason && typeof reason === "object") {
+    let obj = reason;
+    if (typeof obj.code === "number") {
+      let detail = typeof obj.reason === "string" && obj.reason ? ` (${obj.reason})` : "";
+      return Error(`socket closed: ${obj.code}${detail}`, { cause: reason });
+    }
+    return Error("channel error: transport failure", { cause: reason });
+  }
+  return Error("channel error: connection lost");
+}
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/phoenix/channelAdapter.js
+class ChannelAdapter {
+  constructor(socket, topic, params) {
+    let phoenixParams = phoenixChannelParams(params);
+    this.channel = socket.getSocket().channel(topic, phoenixParams), this.socket = socket;
+  }
+  get state() {
+    return this.channel.state;
+  }
+  set state(state) {
+    this.channel.state = state;
+  }
+  get joinedOnce() {
+    return this.channel.joinedOnce;
+  }
+  get joinPush() {
+    return this.channel.joinPush;
+  }
+  get rejoinTimer() {
+    return this.channel.rejoinTimer;
+  }
+  on(event, callback) {
+    return this.channel.on(event, callback);
+  }
+  off(event, refNumber) {
+    this.channel.off(event, refNumber);
+  }
+  subscribe(timeout) {
+    return this.channel.join(timeout);
+  }
+  unsubscribe(timeout) {
+    return this.channel.leave(timeout);
+  }
+  teardown() {
+    this.channel.teardown();
+  }
+  onClose(callback) {
+    this.channel.onClose(callback);
+  }
+  onError(callback) {
+    return this.channel.onError(callback);
+  }
+  push(event, payload, timeout) {
+    let push;
+    try {
+      push = this.channel.push(event, payload, timeout);
+    } catch (error) {
+      throw Error(`tried to push '${event}' to '${this.channel.topic}' before joining. Use channel.subscribe() before pushing events`);
+    }
+    if (this.channel.pushBuffer.length > MAX_PUSH_BUFFER_SIZE) {
+      let removedPush = this.channel.pushBuffer.shift();
+      removedPush.cancelTimeout(), this.socket.log("channel", `discarded push due to buffer overflow: ${removedPush.event}`, removedPush.payload());
+    }
+    return push;
+  }
+  updateJoinPayload(payload) {
+    let oldPayload = this.channel.joinPush.payload();
+    this.channel.joinPush.payload = () => Object.assign(Object.assign({}, oldPayload), payload);
+  }
+  canPush() {
+    return this.socket.isConnected() && this.state === CHANNEL_STATES.joined;
+  }
+  isJoined() {
+    return this.state === CHANNEL_STATES.joined;
+  }
+  isJoining() {
+    return this.state === CHANNEL_STATES.joining;
+  }
+  isClosed() {
+    return this.state === CHANNEL_STATES.closed;
+  }
+  isLeaving() {
+    return this.state === CHANNEL_STATES.leaving;
+  }
+  updateFilterBindings(filterBindings) {
+    this.channel.filterBindings = filterBindings;
+  }
+  updatePayloadTransform(callback) {
+    this.channel.onMessage = callback;
+  }
+  getChannel() {
+    return this.channel;
+  }
+}
+function phoenixChannelParams(options) {
+  return {
+    config: Object.assign({
+      broadcast: { ack: !1, self: !1 },
+      presence: { key: "", enabled: !1 },
+      private: !1
+    }, options.config)
+  };
+}
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/RealtimePostgresFilterBuilder.js
+var PostgrestReservedCharsRegexp2 = /[,()"\\]/, needsQuoting = (value) => PostgrestReservedCharsRegexp2.test(value) || value !== value.trim(), quote = (value) => `"${value.replace(/\\/g, "\\\\").replace(/"/g, "\\\"")}"`, serializeScalar = (value) => {
+  let serialized = value === null ? "null" : String(value);
+  return needsQuoting(serialized) ? quote(serialized) : serialized;
+}, serializeIsValue = (value) => value === null ? "null" : String(value), serialize = (operator, value) => {
+  if (operator === "in") {
+    let values = Array.isArray(value) ? value : [value];
+    if (values.length === 0)
+      throw Error("Realtime `in` filter requires at least one value.");
+    return `in.(${Array.from(new Set(values)).map((v) => serializeScalar(v)).join(",")})`;
+  }
+  if (operator === "is")
+    return `is.${serializeIsValue(value)}`;
+  return `${operator}.${serializeScalar(value)}`;
+};
+
+class RealtimePostgresFilterBuilder {
+  constructor() {
+    this.filters = [];
+  }
+  add(column, operator, value, negate = !1) {
+    let prefix = negate ? "not." : "";
+    return this.filters.push(`${column}=${prefix}${serialize(operator, value)}`), this;
+  }
+  eq(column, value) {
+    return this.add(column, "eq", value);
+  }
+  neq(column, value) {
+    return this.add(column, "neq", value);
+  }
+  gt(column, value) {
+    return this.add(column, "gt", value);
+  }
+  gte(column, value) {
+    return this.add(column, "gte", value);
+  }
+  lt(column, value) {
+    return this.add(column, "lt", value);
+  }
+  lte(column, value) {
+    return this.add(column, "lte", value);
+  }
+  in(column, values) {
+    return this.add(column, "in", values);
+  }
+  like(column, pattern) {
+    return this.add(column, "like", pattern);
+  }
+  ilike(column, pattern) {
+    return this.add(column, "ilike", pattern);
+  }
+  match(column, pattern) {
+    return this.add(column, "match", pattern);
+  }
+  imatch(column, pattern) {
+    return this.add(column, "imatch", pattern);
+  }
+  is(column, value) {
+    return this.add(column, "is", value);
+  }
+  isDistinct(column, value) {
+    return this.add(column, "isdistinct", value);
+  }
+  not(column, operator, value) {
+    return this.add(column, operator, value, !0);
+  }
+  build() {
+    return this.filters.join(",");
+  }
+  toString() {
+    return this.build();
+  }
+}
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/RealtimeChannel.js
+var REALTIME_POSTGRES_CHANGES_LISTEN_EVENT;
+(function(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT) {
+  REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL = "*", REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT = "INSERT", REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE = "UPDATE", REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE = "DELETE";
+})(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT || (REALTIME_POSTGRES_CHANGES_LISTEN_EVENT = {}));
+var REALTIME_LISTEN_TYPES;
+(function(REALTIME_LISTEN_TYPES) {
+  REALTIME_LISTEN_TYPES.BROADCAST = "broadcast", REALTIME_LISTEN_TYPES.PRESENCE = "presence", REALTIME_LISTEN_TYPES.POSTGRES_CHANGES = "postgres_changes", REALTIME_LISTEN_TYPES.SYSTEM = "system";
+})(REALTIME_LISTEN_TYPES || (REALTIME_LISTEN_TYPES = {}));
+var REALTIME_SUBSCRIBE_STATES;
+(function(REALTIME_SUBSCRIBE_STATES) {
+  REALTIME_SUBSCRIBE_STATES.SUBSCRIBED = "SUBSCRIBED", REALTIME_SUBSCRIBE_STATES.TIMED_OUT = "TIMED_OUT", REALTIME_SUBSCRIBE_STATES.CLOSED = "CLOSED", REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR = "CHANNEL_ERROR";
+})(REALTIME_SUBSCRIBE_STATES || (REALTIME_SUBSCRIBE_STATES = {}));
+class RealtimeChannel {
+  get state() {
+    return this.channelAdapter.state;
+  }
+  set state(state) {
+    this.channelAdapter.state = state;
+  }
+  get joinedOnce() {
+    return this.channelAdapter.joinedOnce;
+  }
+  get timeout() {
+    return this.socket.timeout;
+  }
+  get joinPush() {
+    return this.channelAdapter.joinPush;
+  }
+  get rejoinTimer() {
+    return this.channelAdapter.rejoinTimer;
+  }
+  constructor(topic, params = { config: {} }, socket) {
+    var _a, _b;
+    if (this.topic = topic, this.params = params, this.socket = socket, this.bindings = {}, this.subTopic = topic.replace(/^realtime:/i, ""), this.params.config = Object.assign({
+      broadcast: { ack: !1, self: !1 },
+      presence: { key: "", enabled: !1 },
+      private: !1
+    }, params.config), this.channelAdapter = new ChannelAdapter(this.socket.socketAdapter, topic, this.params), this.presence = new RealtimePresence(this), this._onClose(() => {
+      this.socket._remove(this);
+    }), this._updateFilterTransform(), this.broadcastEndpointURL = httpEndpointURL(this.socket.socketAdapter.endPointURL()), this.private = this.params.config.private || !1, !this.private && ((_b = (_a = this.params.config) === null || _a === void 0 ? void 0 : _a.broadcast) === null || _b === void 0 ? void 0 : _b.replay))
+      throw Error(`tried to use replay on public channel '${this.topic}'. It must be a private channel.`);
+  }
+  subscribe(callback, timeout = this.timeout) {
+    var _a, _b, _c, _d;
+    if (!this.socket.isConnected())
+      this.socket.connect();
+    if (this.channelAdapter.isClosed()) {
+      let { config: { broadcast, presence, private: isPrivate, postgres_changes_options } } = this.params, postgres_changes = (_b = (_a = this.bindings.postgres_changes) === null || _a === void 0 ? void 0 : _a.map((r) => r.filter)) !== null && _b !== void 0 ? _b : [], presence_enabled = !!this.bindings[REALTIME_LISTEN_TYPES.PRESENCE] && this.bindings[REALTIME_LISTEN_TYPES.PRESENCE].length > 0 || ((_c = this.params.config.presence) === null || _c === void 0 ? void 0 : _c.enabled) === !0, accessTokenPayload = {}, config = Object.assign({ broadcast, presence: Object.assign(Object.assign({}, presence), { enabled: presence_enabled }), postgres_changes, private: isPrivate }, postgres_changes_options ? { postgres_changes_options } : {});
+      if (this.socket.accessTokenValue)
+        accessTokenPayload.access_token = this.socket.accessTokenValue;
+      this._onError((reason) => {
+        callback === null || callback === void 0 || callback(REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR, normalizeChannelError(reason));
+      }), this._onClose(() => callback === null || callback === void 0 ? void 0 : callback(REALTIME_SUBSCRIBE_STATES.CLOSED)), this.updateJoinPayload(Object.assign({ config }, accessTokenPayload)), this._updateFilterMessage();
+      let joinTimeout = (postgres_changes_options === null || postgres_changes_options === void 0 ? void 0 : postgres_changes_options.wait) && postgres_changes.length > 0 ? Math.max(timeout, ((_d = postgres_changes_options.timeout) !== null && _d !== void 0 ? _d : DEFAULT_POSTGRES_CHANGES_WAIT_TIMEOUT) + POSTGRES_CHANGES_WAIT_ERROR_GRACE) : timeout;
+      this.channelAdapter.subscribe(joinTimeout).receive("ok", async ({ postgres_changes }) => {
+        if (!this.socket._isManualToken())
+          this.socket.setAuth();
+        if (postgres_changes === void 0) {
+          callback === null || callback === void 0 || callback(REALTIME_SUBSCRIBE_STATES.SUBSCRIBED);
+          return;
+        }
+        this._updatePostgresBindings(postgres_changes, callback);
+      }).receive("error", (error) => {
+        this.state = CHANNEL_STATES.errored;
+        let message = Object.values(error).join(", ") || "error";
+        callback === null || callback === void 0 || callback(REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR, Error(message, { cause: error }));
+      }).receive("timeout", () => {
+        callback === null || callback === void 0 || callback(REALTIME_SUBSCRIBE_STATES.TIMED_OUT);
+      });
+    }
+    return this;
+  }
+  _updatePostgresBindings(postgres_changes, callback) {
+    var _a;
+    let clientPostgresBindings = this.bindings.postgres_changes, bindingsLen = (_a = clientPostgresBindings === null || clientPostgresBindings === void 0 ? void 0 : clientPostgresBindings.length) !== null && _a !== void 0 ? _a : 0, newPostgresBindings = [];
+    for (let i = 0;i < bindingsLen; i++) {
+      let clientPostgresBinding = clientPostgresBindings[i], { filter: { event, schema, table, filter } } = clientPostgresBinding, serverPostgresFilter = postgres_changes && postgres_changes[i];
+      if (serverPostgresFilter && serverPostgresFilter.event === event && RealtimeChannel.isFilterValueEqual(serverPostgresFilter.schema, schema) && RealtimeChannel.isFilterValueEqual(serverPostgresFilter.table, table) && RealtimeChannel.isFilterValueEqual(serverPostgresFilter.filter, filter))
+        newPostgresBindings.push(Object.assign(Object.assign({}, clientPostgresBinding), { id: serverPostgresFilter.id }));
+      else {
+        this.unsubscribe(), this.state = CHANNEL_STATES.errored, callback === null || callback === void 0 || callback(REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR, Error("mismatch between server and client bindings for postgres changes"));
+        return;
+      }
+    }
+    if (this.bindings.postgres_changes = newPostgresBindings, this.state != CHANNEL_STATES.errored && callback)
+      callback(REALTIME_SUBSCRIBE_STATES.SUBSCRIBED);
+  }
+  presenceState() {
+    return this.presence.state;
+  }
+  async track(payload, opts = {}) {
+    return await this.send({
+      type: "presence",
+      event: "track",
+      payload
+    }, opts);
+  }
+  async untrack(opts = {}) {
+    return await this.send({
+      type: "presence",
+      event: "untrack"
+    }, opts);
+  }
+  on(type, filter, callback) {
+    let stateCheck = this.channelAdapter.isJoined() || this.channelAdapter.isJoining(), typeCheck = type === REALTIME_LISTEN_TYPES.PRESENCE || type === REALTIME_LISTEN_TYPES.POSTGRES_CHANGES;
+    if (stateCheck && typeCheck)
+      throw this.socket.log("channel", `cannot add \`${type}\` callbacks for ${this.topic} after \`subscribe()\`.`), Error(`cannot add \`${type}\` callbacks for ${this.topic} after \`subscribe()\`.`);
+    return this._on(type, filter, callback);
+  }
+  async httpSend(event, payload, opts = {}) {
+    var _a;
+    if (payload === void 0 || payload === null)
+      return Promise.reject(Error("Payload is required for httpSend()"));
+    let isBinary = payload instanceof ArrayBuffer || ArrayBuffer.isView(payload), headers = {
+      apikey: this.socket.apiKey ? this.socket.apiKey : "",
+      "Content-Type": isBinary ? "application/octet-stream" : "application/json"
+    };
+    if (this.socket.accessTokenValue)
+      headers.Authorization = `Bearer ${this.socket.accessTokenValue}`;
+    let url = new URL(this.broadcastEndpointURL);
+    if (url.pathname += `/${encodeURIComponent(this.subTopic)}/events/${encodeURIComponent(event)}`, this.private)
+      url.searchParams.set("private", "true");
+    let options = {
+      method: "POST",
+      headers,
+      body: isBinary ? payload : JSON.stringify(payload)
+    }, response = await this._fetchWithTimeout(url.toString(), options, (_a = opts.timeout) !== null && _a !== void 0 ? _a : this.timeout);
+    if (response.status === 202)
+      return { success: !0 };
+    if (response.status === 404)
+      return Promise.reject(Error("httpSend() requires Realtime server v2.97.0 or newer; the endpoint returned 404. Update your Supabase CLI to a recent version, or upgrade the Realtime server in your self-hosted setup. See https://github.com/supabase/supabase-js/blob/master/packages/core/realtime-js/migrations/httpsend-server-version.md"));
+    let errorMessage = response.statusText;
+    try {
+      let errorBody = await response.json();
+      errorMessage = errorBody.error || errorBody.message || errorMessage;
+    } catch (_b) {}
+    return Promise.reject(Error(errorMessage));
+  }
+  async send(args, opts = {}) {
+    var _a, _b;
+    if (!this.channelAdapter.canPush() && args.type === "broadcast") {
+      let fallbackWarning = "Realtime send() is automatically falling back to REST API. This behavior will be deprecated in the future. Please use httpSend() explicitly for REST delivery.";
+      if (this.socket.hasLogger())
+        this.socket.log("channel", fallbackWarning);
+      else
+        console.warn(fallbackWarning);
+      let { event, payload: endpoint_payload } = args, headers = {
+        apikey: this.socket.apiKey ? this.socket.apiKey : "",
+        "Content-Type": "application/json"
+      };
+      if (this.socket.accessTokenValue)
+        headers.Authorization = `Bearer ${this.socket.accessTokenValue}`;
+      let options = {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          messages: [
+            {
+              topic: this.subTopic,
+              event,
+              payload: endpoint_payload,
+              private: this.private
+            }
+          ]
+        })
+      };
+      try {
+        let response = await this._fetchWithTimeout(this.broadcastEndpointURL, options, (_a = opts.timeout) !== null && _a !== void 0 ? _a : this.timeout);
+        return await ((_b = response.body) === null || _b === void 0 ? void 0 : _b.cancel()), response.ok ? "ok" : "error";
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError")
+          return "timed out";
+        else
+          return "error";
+      }
+    } else
+      return new Promise((resolve) => {
+        var _a, _b, _c;
+        let push = this.channelAdapter.push(args.type, args, opts.timeout || this.timeout);
+        if (args.type === "broadcast" && !((_c = (_b = (_a = this.params) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.broadcast) === null || _c === void 0 ? void 0 : _c.ack))
+          resolve("ok");
+        push.receive("ok", () => resolve("ok")), push.receive("error", () => resolve("error")), push.receive("timeout", () => resolve("timed out"));
+      });
+  }
+  updateJoinPayload(payload) {
+    this.channelAdapter.updateJoinPayload(payload);
+  }
+  async unsubscribe(timeout = this.timeout) {
+    return new Promise((resolve) => {
+      this.channelAdapter.unsubscribe(timeout).receive("ok", () => resolve("ok")).receive("timeout", () => resolve("timed out")).receive("error", () => resolve("error"));
+    });
+  }
+  teardown() {
+    this.channelAdapter.teardown();
+  }
+  async _fetchWithTimeout(url, options, timeout) {
+    let controller = new AbortController, id = setTimeout(() => controller.abort(), timeout), response = await this.socket.fetch(url, Object.assign(Object.assign({}, options), { signal: controller.signal }));
+    return clearTimeout(id), response;
+  }
+  _on(type, filter, callback) {
+    var _a;
+    let typeLower = type.toLocaleLowerCase(), filterValue = filter === null || filter === void 0 ? void 0 : filter.filter;
+    if (filterValue instanceof RealtimePostgresFilterBuilder || typeof filterValue === "object" && filterValue !== null && typeof filterValue.build === "function")
+      filter = Object.assign(Object.assign({}, filter), { filter: filterValue.build() });
+    if (typeLower === REALTIME_LISTEN_TYPES.POSTGRES_CHANGES) {
+      if ((_a = this.bindings[typeLower]) === null || _a === void 0 ? void 0 : _a.find((bind) => RealtimeChannel.isSamePostgresFilter(bind.filter, filter)))
+        return this.socket.log("error", `duplicate \`postgres_changes\` binding for ${this.topic} ignored`, filter), this;
+    }
+    let ref = this.channelAdapter.on(type, callback), binding = {
+      type: typeLower,
+      filter,
+      callback,
+      ref
+    };
+    if (this.bindings[typeLower])
+      this.bindings[typeLower].push(binding);
+    else
+      this.bindings[typeLower] = [binding];
+    return this._updateFilterMessage(), this;
+  }
+  _onClose(callback) {
+    this.channelAdapter.onClose(callback);
+  }
+  _onError(callback) {
+    this.channelAdapter.onError(callback);
+  }
+  _updateFilterMessage() {
+    this.channelAdapter.updateFilterBindings((binding, payload, ref) => {
+      var _a, _b, _c, _d, _e, _f, _g;
+      let typeLower = binding.event.toLocaleLowerCase();
+      if (this._notThisChannelEvent(typeLower, ref))
+        return !1;
+      let bind = (_a = this.bindings[typeLower]) === null || _a === void 0 ? void 0 : _a.find((bind) => bind.ref === binding.ref);
+      if (!bind)
+        return !0;
+      if (["broadcast", "presence", "postgres_changes"].includes(typeLower))
+        if ("id" in bind) {
+          let bindId = bind.id, bindEvent = (_b = bind.filter) === null || _b === void 0 ? void 0 : _b.event;
+          return bindId && ((_c = payload.ids) === null || _c === void 0 ? void 0 : _c.includes(bindId)) && (bindEvent === "*" || (bindEvent === null || bindEvent === void 0 ? void 0 : bindEvent.toLocaleLowerCase()) === ((_d = payload.data) === null || _d === void 0 ? void 0 : _d.type.toLocaleLowerCase()));
+        } else {
+          let bindEvent = (_f = (_e = bind === null || bind === void 0 ? void 0 : bind.filter) === null || _e === void 0 ? void 0 : _e.event) === null || _f === void 0 ? void 0 : _f.toLocaleLowerCase();
+          return bindEvent === "*" || bindEvent === ((_g = payload === null || payload === void 0 ? void 0 : payload.event) === null || _g === void 0 ? void 0 : _g.toLocaleLowerCase());
+        }
+      else
+        return bind.type.toLocaleLowerCase() === typeLower;
+    });
+  }
+  _notThisChannelEvent(event, ref) {
+    let { close, error, leave, join } = CHANNEL_EVENTS;
+    return ref && [close, error, leave, join].includes(event) && ref !== this.joinPush.ref;
+  }
+  _updateFilterTransform() {
+    this.channelAdapter.updatePayloadTransform((event, payload, ref) => {
+      if (typeof payload === "object" && "ids" in payload) {
+        let postgresChanges = payload.data, { schema, table, commit_timestamp, type, errors } = postgresChanges;
+        return Object.assign(Object.assign({}, {
+          schema,
+          table,
+          commit_timestamp,
+          eventType: type,
+          new: {},
+          old: {},
+          errors
+        }), this._getPayloadRecords(postgresChanges));
+      }
+      return payload;
+    });
+  }
+  copyBindings(other) {
+    if (this.joinedOnce)
+      throw Error("cannot copy bindings into joined channel");
+    for (let kind in other.bindings)
+      for (let binding of other.bindings[kind])
+        this._on(binding.type, binding.filter, binding.callback);
+  }
+  static isFilterValueEqual(serverValue, clientValue) {
+    return (serverValue !== null && serverValue !== void 0 ? serverValue : void 0) === (clientValue !== null && clientValue !== void 0 ? clientValue : void 0);
+  }
+  static isSamePostgresFilter(a, b) {
+    var _a, _b, _c, _d;
+    let selectA = (_b = (_a = a === null || a === void 0 ? void 0 : a.select) === null || _a === void 0 ? void 0 : _a.join()) !== null && _b !== void 0 ? _b : void 0, selectB = (_d = (_c = b === null || b === void 0 ? void 0 : b.select) === null || _c === void 0 ? void 0 : _c.join()) !== null && _d !== void 0 ? _d : void 0;
+    return (a === null || a === void 0 ? void 0 : a.event) === (b === null || b === void 0 ? void 0 : b.event) && RealtimeChannel.isFilterValueEqual(a === null || a === void 0 ? void 0 : a.schema, b === null || b === void 0 ? void 0 : b.schema) && RealtimeChannel.isFilterValueEqual(a === null || a === void 0 ? void 0 : a.table, b === null || b === void 0 ? void 0 : b.table) && RealtimeChannel.isFilterValueEqual(a === null || a === void 0 ? void 0 : a.filter, b === null || b === void 0 ? void 0 : b.filter) && selectA === selectB;
+  }
+  _getPayloadRecords(payload) {
+    let records = {
+      new: {},
+      old: {}
+    };
+    if (payload.type === "INSERT" || payload.type === "UPDATE")
+      records.new = convertChangeData(payload.columns, payload.record);
+    if (payload.type === "UPDATE" || payload.type === "DELETE")
+      records.old = convertChangeData(payload.columns, payload.old_record);
+    return records;
+  }
+}
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/phoenix/socketAdapter.js
+class SocketAdapter {
+  constructor(endPoint, options) {
+    this.socket = new Socket(endPoint, options);
+  }
+  get timeout() {
+    return this.socket.timeout;
+  }
+  get endPoint() {
+    return this.socket.endPoint;
+  }
+  get transport() {
+    return this.socket.transport;
+  }
+  get heartbeatIntervalMs() {
+    return this.socket.heartbeatIntervalMs;
+  }
+  get heartbeatCallback() {
+    return this.socket.heartbeatCallback;
+  }
+  set heartbeatCallback(callback) {
+    this.socket.heartbeatCallback = callback;
+  }
+  get heartbeatTimer() {
+    return this.socket.heartbeatTimer;
+  }
+  get pendingHeartbeatRef() {
+    return this.socket.pendingHeartbeatRef;
+  }
+  get reconnectTimer() {
+    return this.socket.reconnectTimer;
+  }
+  get vsn() {
+    return this.socket.vsn;
+  }
+  get encode() {
+    return this.socket.encode;
+  }
+  get decode() {
+    return this.socket.decode;
+  }
+  get reconnectAfterMs() {
+    return this.socket.reconnectAfterMs;
+  }
+  get sendBuffer() {
+    return this.socket.sendBuffer;
+  }
+  get stateChangeCallbacks() {
+    return this.socket.stateChangeCallbacks;
+  }
+  connect() {
+    this.socket.connect();
+  }
+  disconnect(callback, code, reason, timeout = 1e4) {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve("timeout"), timeout), this.socket.disconnect(() => {
+        callback(), resolve("ok");
+      }, code, reason);
+    });
+  }
+  push(data) {
+    this.socket.push(data);
+  }
+  log(kind, msg, data) {
+    this.socket.log(kind, msg, data);
+  }
+  hasLogger() {
+    return this.socket.hasLogger();
+  }
+  makeRef() {
+    return this.socket.makeRef();
+  }
+  onOpen(callback) {
+    this.socket.onOpen(callback);
+  }
+  onClose(callback) {
+    this.socket.onClose(callback);
+  }
+  onError(callback) {
+    this.socket.onError(callback);
+  }
+  onMessage(callback) {
+    this.socket.onMessage(callback);
+  }
+  isConnected() {
+    return this.socket.isConnected();
+  }
+  isConnecting() {
+    return this.socket.connectionState() == CONNECTION_STATE.connecting;
+  }
+  isDisconnecting() {
+    return this.socket.connectionState() == CONNECTION_STATE.closing;
+  }
+  connectionState() {
+    return this.socket.connectionState();
+  }
+  endPointURL() {
+    return this.socket.endPointURL();
+  }
+  sendHeartbeat() {
+    this.socket.sendHeartbeat();
+  }
+  getSocket() {
+    return this.socket;
+  }
+}
+
+// ../persist/node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js
+var CONNECTION_TIMEOUTS = {
+  HEARTBEAT_INTERVAL: 25000,
+  RECONNECT_DELAY: 10,
+  HEARTBEAT_TIMEOUT_FALLBACK: 100
+}, RECONNECT_INTERVALS = [1000, 2000, 5000, 1e4], DEFAULT_RECONNECT_FALLBACK = 1e4;
+function createMemorySessionStorage() {
+  let store = /* @__PURE__ */ new Map;
+  return {
+    get length() {
+      return store.size;
+    },
+    clear() {
+      store.clear();
+    },
+    getItem(key) {
+      return store.has(key) ? store.get(key) : null;
+    },
+    key(index) {
+      var _a;
+      return (_a = Array.from(store.keys())[index]) !== null && _a !== void 0 ? _a : null;
+    },
+    removeItem(key) {
+      store.delete(key);
+    },
+    setItem(key, value) {
+      store.set(key, String(value));
+    }
+  };
+}
+function resolveSessionStorage() {
+  try {
+    if (typeof globalThis < "u" && globalThis.sessionStorage)
+      return globalThis.sessionStorage;
+  } catch (_a) {}
+  return createMemorySessionStorage();
+}
+var WORKER_SCRIPT = `
   addEventListener("message", (e) => {
     if (e.data.event === "start") {
       setInterval(() => postMessage({ event: "keepAlive" }), e.data.interval);
     }
-  });`;class De{get endPoint(){return this.socketAdapter.endPoint}get timeout(){return this.socketAdapter.timeout}get transport(){return this.socketAdapter.transport}get heartbeatCallback(){return this.socketAdapter.heartbeatCallback}get heartbeatIntervalMs(){return this.socketAdapter.heartbeatIntervalMs}get heartbeatTimer(){if(this.worker)return this._workerHeartbeatTimer;return this.socketAdapter.heartbeatTimer}get pendingHeartbeatRef(){if(this.worker)return this._pendingWorkerHeartbeatRef;return this.socketAdapter.pendingHeartbeatRef}get reconnectTimer(){return this.socketAdapter.reconnectTimer}get vsn(){return this.socketAdapter.vsn}get encode(){return this.socketAdapter.encode}get decode(){return this.socketAdapter.decode}get reconnectAfterMs(){return this.socketAdapter.reconnectAfterMs}get sendBuffer(){return this.socketAdapter.sendBuffer}get stateChangeCallbacks(){return this.socketAdapter.stateChangeCallbacks}constructor(e,t){var r;if(this.channels=[],this.accessTokenValue=null,this.accessToken=null,this.apiKey=null,this.httpEndpoint="",this.headers={},this.params={},this.ref=0,this.serializer=new it,this._manuallySetToken=!1,this._authPromise=null,this._authGeneration=0,this._workerHeartbeatTimer=void 0,this._pendingWorkerHeartbeatRef=null,this._pendingDisconnectTimer=null,this._disconnectOnEmptyChannelsAfterMs=0,this._resolveFetch=(n)=>{if(n)return(...i)=>n(...i);return(...i)=>fetch(...i)},!((r=t===null||t===void 0?void 0:t.params)===null||r===void 0?void 0:r.apikey))throw Error("API key is required to connect to Realtime");this.apiKey=t.params.apikey;let s=this._initializeOptions(t);this.socketAdapter=new dt(e,s),this.httpEndpoint=ot(e),this.fetch=this._resolveFetch(t===null||t===void 0?void 0:t.fetch)}connect(){if(this.isConnecting()||this.isDisconnecting()||this.isConnected())return;if(this.accessToken&&!this._authPromise)this._setAuthSafely("connect");this._setupConnectionHandlers();try{this.socketAdapter.connect()}catch(e){let t=e.message;throw Error(`WebSocket not available: ${t}`)}this._handleNodeJsRaceCondition()}endpointURL(){return this.socketAdapter.endPointURL()}async disconnect(e,t){if(this._cancelPendingDisconnect(),this.isDisconnecting())return"ok";return await this.socketAdapter.disconnect(()=>{clearInterval(this._workerHeartbeatTimer),this._terminateWorker()},e,t)}getChannels(){return this.channels}async removeChannel(e){let t=await e.unsubscribe();if(t==="ok")e.teardown();return t}async removeAllChannels(){let e=this.channels.map(async(r)=>{let s=await r.unsubscribe();return r.teardown(),s}),t=await Promise.all(e);return await this.disconnect(),t}log(e,t,r){this.socketAdapter.log(e,t,r)}hasLogger(){return this.socketAdapter.hasLogger()}connectionState(){return this.socketAdapter.connectionState()||Le.closed}isConnected(){return this.socketAdapter.isConnected()}isConnecting(){return this.socketAdapter.isConnecting()}isDisconnecting(){return this.socketAdapter.isDisconnecting()}channel(e,t={config:{}}){let r=`realtime:${e}`,s=this.getChannels().find((n)=>n.topic===r);if(!s){let n=new B(`realtime:${e}`,t,this);return this._cancelPendingDisconnect(),this.channels.push(n),n}else return s}push(e){this.socketAdapter.push(e)}async setAuth(e=null){let t=++this._authGeneration,r=this._performAuth(e,t);if(t===this._authGeneration)this._authPromise=r;try{await r}finally{if(this._authPromise===r)this._authPromise=null}}_isManualToken(){return this._manuallySetToken}async sendHeartbeat(){this.socketAdapter.sendHeartbeat()}onHeartbeat(e){this.socketAdapter.heartbeatCallback=this._wrapHeartbeatCallback(e)}_makeRef(){return this.socketAdapter.makeRef()}_remove(e){if(this.channels=this.channels.filter((t)=>t.topic!==e.topic),this.channels.length===0)this.log("transport","no channels remaining, scheduling disconnect"),this._schedulePendingDisconnect()}_schedulePendingDisconnect(){if(this._cancelPendingDisconnect(),this._disconnectOnEmptyChannelsAfterMs===0){this.log("transport","disconnecting immediately - no channels"),this.disconnect();return}this._pendingDisconnectTimer=setTimeout(()=>{if(this._pendingDisconnectTimer=null,this.channels.length===0)this.log("transport","deferred disconnect fired - no channels, disconnecting"),this.disconnect()},this._disconnectOnEmptyChannelsAfterMs),this.log("transport",`deferred disconnect scheduled in ${this._disconnectOnEmptyChannelsAfterMs}ms`)}_cancelPendingDisconnect(){if(this._pendingDisconnectTimer!==null)this.log("transport","pending disconnect cancelled - channel activity detected"),clearTimeout(this._pendingDisconnectTimer),this._pendingDisconnectTimer=null}async _performAuth(e,t){let r,s=!1;if(e)r=e,s=!0;else if(this.accessToken)try{r=await this.accessToken()}catch(n){this.log("error","Error fetching access token from callback",n),r=this.accessTokenValue}else r=this.accessTokenValue;if(t!==this._authGeneration)return;if(this.accessToken)this._manuallySetToken=!1;else if(s)this._manuallySetToken=!0;if(this.accessTokenValue!=r)this.accessTokenValue=r,this.channels.forEach((n)=>{let i={access_token:r,version:jr};if(n.updateJoinPayload(i),n.joinedOnce&&n.channelAdapter.isJoined())n.channelAdapter.push(nt.access_token,{access_token:r})})}async _waitForAuthIfNeeded(){if(this._authPromise)await this._authPromise}_setAuthSafely(e="general"){if(!this._isManualToken())this.setAuth().catch((t)=>{this.log("error",`Error setting auth in ${e}`,t)})}_setupConnectionHandlers(){this.socketAdapter.onOpen(()=>{if((this._authPromise||(this.accessToken&&!this.accessTokenValue?this.setAuth():Promise.resolve())).catch((t)=>{this.log("error","error waiting for auth on connect",t)}),this.worker&&!this.workerRef)this._startWorkerHeartbeat()}),this.socketAdapter.onClose(()=>{if(this.worker&&this.workerRef)this._terminateWorker()}),this.socketAdapter.onMessage((e)=>{if(e.ref&&e.ref===this._pendingWorkerHeartbeatRef)this._pendingWorkerHeartbeatRef=null})}_handleNodeJsRaceCondition(){if(this.socketAdapter.isConnected())this.socketAdapter.getSocket().onConnOpen()}_wrapHeartbeatCallback(e){return(t,r)=>{if(t==="disconnected")return;if(t=="sent")this._setAuthSafely();if(e)e(t,r)}}_startWorkerHeartbeat(){if(this.workerUrl)this.log("worker",`starting worker for from ${this.workerUrl}`);else this.log("worker","starting default worker");let e=this._workerObjectUrl(this.workerUrl);this.workerRef=new Worker(e),this.workerRef.onerror=(t)=>{this.log("worker","worker error",t.message),this._terminateWorker(),this.disconnect()},this.workerRef.onmessage=(t)=>{if(t.data.event==="keepAlive")this.sendHeartbeat()},this.workerRef.postMessage({event:"start",interval:this.heartbeatIntervalMs})}_terminateWorker(){if(this.workerRef)this.log("worker","terminating worker"),this.workerRef.terminate(),this.workerRef=void 0}_workerObjectUrl(e){let t;if(e)t=e;else{let r=new Blob([Mn],{type:"application/javascript"});t=URL.createObjectURL(r)}return t}_initializeOptions(e){var t,r,s,n,i,o,a,l,c,u,h,d;this.worker=(t=e===null||e===void 0?void 0:e.worker)!==null&&t!==void 0?t:!1,this.accessToken=(r=e===null||e===void 0?void 0:e.accessToken)!==null&&r!==void 0?r:null;let f={};f.timeout=(s=e===null||e===void 0?void 0:e.timeout)!==null&&s!==void 0?s:Ur,f.heartbeatIntervalMs=(n=e===null||e===void 0?void 0:e.heartbeatIntervalMs)!==null&&n!==void 0?n:Gr.HEARTBEAT_INTERVAL,this._disconnectOnEmptyChannelsAfterMs=(i=e===null||e===void 0?void 0:e.disconnectOnEmptyChannelsAfterMs)!==null&&i!==void 0?i:2*((o=e===null||e===void 0?void 0:e.heartbeatIntervalMs)!==null&&o!==void 0?o:Gr.HEARTBEAT_INTERVAL),f.transport=(a=e===null||e===void 0?void 0:e.transport)!==null&&a!==void 0?a:Nt.getWebSocketConstructor(),f.params=e===null||e===void 0?void 0:e.params,f.logger=e===null||e===void 0?void 0:e.logger,f.heartbeatCallback=this._wrapHeartbeatCallback(e===null||e===void 0?void 0:e.heartbeatCallback),f.sessionStorage=(l=e===null||e===void 0?void 0:e.sessionStorage)!==null&&l!==void 0?l:Fn(),f.reconnectAfterMs=(c=e===null||e===void 0?void 0:e.reconnectAfterMs)!==null&&c!==void 0?c:(w)=>$n[w-1]||Dn;let g,p,v=(u=e===null||e===void 0?void 0:e.vsn)!==null&&u!==void 0?u:Lr;switch(v){case Nr:g=(w,y)=>y(JSON.stringify(w)),p=(w,y)=>y(JSON.parse(w));break;case Lt:g=this.serializer.encode.bind(this.serializer),p=this.serializer.decode.bind(this.serializer);break;default:throw Error(`Unsupported serializer version: ${f.vsn}`)}if(f.vsn=v,f.encode=(h=e===null||e===void 0?void 0:e.encode)!==null&&h!==void 0?h:g,f.decode=(d=e===null||e===void 0?void 0:e.decode)!==null&&d!==void 0?d:p,f.beforeReconnect=this._reconnectAuth.bind(this),(e===null||e===void 0?void 0:e.logLevel)||(e===null||e===void 0?void 0:e.log_level))this.logLevel=e.logLevel||e.log_level,f.params=Object.assign(Object.assign({},f.params),{log_level:this.logLevel});if(this.worker){if(typeof window<"u"&&!window.Worker)throw Error("Web Worker is not supported");this.workerUrl=e===null||e===void 0?void 0:e.workerUrl,f.autoSendHeartbeat=!this.worker}return f}async _reconnectAuth(){if(await this._waitForAuthIfNeeded(),!this.isConnected())this.connect()}}var Be=class extends Error{constructor(e,t){super(e);this.name="IcebergError",this.status=t.status,this.icebergType=t.icebergType,this.icebergCode=t.icebergCode,this.details=t.details,this.isCommitStateUnknown=t.icebergType==="CommitStateUnknownException"||[500,502,504].includes(t.status)&&t.icebergType?.includes("CommitState")===!0}isNotFound(){return this.status===404}isConflict(){return this.status===409}isAuthenticationTimeout(){return this.status===419}};function qn(e,t,r){let s=new URL(t,e);if(r){for(let[n,i]of Object.entries(r))if(i!==void 0)s.searchParams.set(n,i)}return s.toString()}async function Hn(e){if(!e||e.type==="none")return{};if(e.type==="bearer")return{Authorization:`Bearer ${e.token}`};if(e.type==="header")return{[e.name]:e.value};if(e.type==="custom")return await e.getHeaders();return{}}function Kn(e){let t=e.fetchImpl??globalThis.fetch;return{async request({method:r,path:s,query:n,body:i,headers:o}){let a=qn(e.baseUrl,s,n),l=await Hn(e.auth),c=await t(a,{method:r,headers:{...i?{"Content-Type":"application/json"}:{},...l,...o},body:i?JSON.stringify(i):void 0}),u=await c.text(),h=(c.headers.get("content-type")||"").includes("application/json"),d=h&&u?JSON.parse(u):u;if(!c.ok){let f=h?d:void 0,g=f?.error;throw new Be(g?.message??`Request failed with status ${c.status}`,{status:c.status,icebergType:g?.type,icebergCode:g?.code,details:f})}return{status:c.status,headers:c.headers,data:d}}}}function ft(e){return e.join("\x1F")}var Wn=class{constructor(e,t=""){this.client=e,this.prefix=t}async listNamespaces(e){let t=e?{parent:ft(e.namespace)}:void 0;return(await this.client.request({method:"GET",path:`${this.prefix}/namespaces`,query:t})).data.namespaces.map((s)=>({namespace:s}))}async createNamespace(e,t){let r={namespace:e.namespace,properties:t?.properties};return(await this.client.request({method:"POST",path:`${this.prefix}/namespaces`,body:r})).data}async dropNamespace(e){await this.client.request({method:"DELETE",path:`${this.prefix}/namespaces/${ft(e.namespace)}`})}async loadNamespaceMetadata(e){return{properties:(await this.client.request({method:"GET",path:`${this.prefix}/namespaces/${ft(e.namespace)}`})).data.properties}}async namespaceExists(e){try{return await this.client.request({method:"HEAD",path:`${this.prefix}/namespaces/${ft(e.namespace)}`}),!0}catch(t){if(t instanceof Be&&t.status===404)return!1;throw t}}async createNamespaceIfNotExists(e,t){try{return await this.createNamespace(e,t)}catch(r){if(r instanceof Be&&r.status===409)return;throw r}}};function ve(e){return e.join("\x1F")}var Vn=class{constructor(e,t="",r){this.client=e,this.prefix=t,this.accessDelegation=r}async listTables(e){return(await this.client.request({method:"GET",path:`${this.prefix}/namespaces/${ve(e.namespace)}/tables`})).data.identifiers}async createTable(e,t){let r={};if(this.accessDelegation)r["X-Iceberg-Access-Delegation"]=this.accessDelegation;return(await this.client.request({method:"POST",path:`${this.prefix}/namespaces/${ve(e.namespace)}/tables`,body:t,headers:r})).data.metadata}async updateTable(e,t){let r=await this.client.request({method:"POST",path:`${this.prefix}/namespaces/${ve(e.namespace)}/tables/${e.name}`,body:t});return{"metadata-location":r.data["metadata-location"],metadata:r.data.metadata}}async dropTable(e,t){await this.client.request({method:"DELETE",path:`${this.prefix}/namespaces/${ve(e.namespace)}/tables/${e.name}`,query:{purgeRequested:String(t?.purge??!1)}})}async loadTable(e){let t={};if(this.accessDelegation)t["X-Iceberg-Access-Delegation"]=this.accessDelegation;return(await this.client.request({method:"GET",path:`${this.prefix}/namespaces/${ve(e.namespace)}/tables/${e.name}`,headers:t})).data.metadata}async tableExists(e){let t={};if(this.accessDelegation)t["X-Iceberg-Access-Delegation"]=this.accessDelegation;try{return await this.client.request({method:"HEAD",path:`${this.prefix}/namespaces/${ve(e.namespace)}/tables/${e.name}`,headers:t}),!0}catch(r){if(r instanceof Be&&r.status===404)return!1;throw r}}async createTableIfNotExists(e,t){try{return await this.createTable(e,t)}catch(r){if(r instanceof Be&&r.status===409)return await this.loadTable({namespace:e.namespace,name:t.name});throw r}}},zr=class{constructor(e){let t="v1";if(e.catalogName)t+=`/${e.catalogName}`;let r=e.baseUrl.endsWith("/")?e.baseUrl:`${e.baseUrl}/`;this.client=Kn({baseUrl:r,auth:e.auth,fetchImpl:e.fetch}),this.accessDelegation=e.accessDelegation?.join(","),this.namespaceOps=new Wn(this.client,t),this.tableOps=new Vn(this.client,t,this.accessDelegation)}async listNamespaces(e){return this.namespaceOps.listNamespaces(e)}async createNamespace(e,t){return this.namespaceOps.createNamespace(e,t)}async dropNamespace(e){await this.namespaceOps.dropNamespace(e)}async loadNamespaceMetadata(e){return this.namespaceOps.loadNamespaceMetadata(e)}async listTables(e){return this.tableOps.listTables(e)}async createTable(e,t){return this.tableOps.createTable(e,t)}async updateTable(e,t){return this.tableOps.updateTable(e,t)}async dropTable(e,t){await this.tableOps.dropTable(e,t)}async loadTable(e){return this.tableOps.loadTable(e)}async namespaceExists(e){return this.namespaceOps.namespaceExists(e)}async tableExists(e){return this.tableOps.tableExists(e)}async createNamespaceIfNotExists(e,t){return this.namespaceOps.createNamespaceIfNotExists(e,t)}async createTableIfNotExists(e,t){return this.tableOps.createTableIfNotExists(e,t)}};function Me(e){return Me=typeof Symbol=="function"&&typeof Symbol.iterator=="symbol"?function(t){return typeof t}:function(t){return t&&typeof Symbol=="function"&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Me(e)}function Gn(e,t){if(Me(e)!="object"||!e)return e;var r=e[Symbol.toPrimitive];if(r!==void 0){var s=r.call(e,t||"default");if(Me(s)!="object")return s;throw TypeError("@@toPrimitive must return a primitive value.")}return(t==="string"?String:Number)(e)}function zn(e){var t=Gn(e,"string");return Me(t)=="symbol"?t:t+""}function Jn(e,t,r){return(t=zn(t))in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function Jr(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var s=Object.getOwnPropertySymbols(e);t&&(s=s.filter(function(n){return Object.getOwnPropertyDescriptor(e,n).enumerable})),r.push.apply(r,s)}return r}function S(e){for(var t=1;t<arguments.length;t++){var r=arguments[t]!=null?arguments[t]:{};t%2?Jr(Object(r),!0).forEach(function(s){Jn(e,s,r[s])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(r)):Jr(Object(r)).forEach(function(s){Object.defineProperty(e,s,Object.getOwnPropertyDescriptor(r,s))})}return e}var mt=class extends Error{constructor(e,t="storage",r,s){super(e);this.__isStorageError=!0,this.namespace=t,this.name=t==="vectors"?"StorageVectorsError":"StorageError",this.status=r,this.statusCode=s}toJSON(){return{name:this.name,message:this.message,status:this.status,statusCode:this.statusCode}}};function vt(e){return typeof e==="object"&&e!==null&&"__isStorageError"in e}var pt=class extends mt{constructor(e,t,r,s="storage",n){super(e,s,t,r);this.name=s==="vectors"?"StorageVectorsApiError":"StorageApiError",this.status=t,this.statusCode=r,this.code=n}toJSON(){return S(S({},super.toJSON()),{},{code:this.code})}},Qr=class extends mt{constructor(e,t,r="storage"){super(e,r);this.name=r==="vectors"?"StorageVectorsUnknownError":"StorageUnknownError",this.originalError=t}};function gt(e,t,r){let s=S({},e),n=t.toLowerCase();for(let i of Object.keys(s))if(i.toLowerCase()===n)delete s[i];return s[n]=r,s}function Yn(e){let t={};for(let[r,s]of Object.entries(e))t[r.toLowerCase()]=s;return t}var Xn=(e)=>{if(e)return(...t)=>e(...t);return(...t)=>fetch(...t)},Qn=(e)=>{if(typeof e!=="object"||e===null)return!1;let t=Object.getPrototypeOf(e);return(t===null||t===Object.prototype||Object.getPrototypeOf(t)===null)&&!(Symbol.toStringTag in e)&&!(Symbol.iterator in e)},Ht=(e)=>{if(Array.isArray(e))return e.map((r)=>Ht(r));else if(typeof e==="function"||e!==Object(e))return e;let t={};return Object.entries(e).forEach(([r,s])=>{let n=r.replace(/([-_][a-z])/gi,(i)=>i.toUpperCase().replace(/[-_]/g,""));t[n]=Ht(s)}),t},Zn=(e)=>{if(!e||typeof e!=="string")return!1;if(e.length===0||e.length>100)return!1;if(e.trim()!==e)return!1;if(e.includes("/")||e.includes("\\"))return!1;return/^[\w!.\*'() &$@=;:+,?-]+$/.test(e)},Kt=(e)=>e.split("/").map(encodeURIComponent).join("/"),Yr=(e)=>{if(typeof e==="object"&&e!==null){let t=e;if(typeof t.msg==="string")return t.msg;if(typeof t.message==="string")return t.message;if(typeof t.error_description==="string")return t.error_description;if(typeof t.error==="string")return t.error;if(typeof t.error==="object"&&t.error!==null){let r=t.error;if(typeof r.message==="string")return r.message}}return JSON.stringify(e)},ei=async(e,t,r,s)=>{if(e!==null&&typeof e==="object"&&"json"in e&&typeof e.json==="function"){let n=e,i=parseInt(String(n.status),10);if(!Number.isFinite(i))i=500;n.json().then((o)=>{let a=(o===null||o===void 0?void 0:o.statusCode)||(o===null||o===void 0?void 0:o.code)||i+"";t(new pt(Yr(o),i,a,s,o===null||o===void 0?void 0:o.code))}).catch(()=>{let o=i+"";t(new pt(n.statusText||`HTTP ${i} error`,i,o,s))})}else t(new Qr(Yr(e),e,s))},ti=(e,t,r,s)=>{let n={method:e,headers:(t===null||t===void 0?void 0:t.headers)||{}};if(e==="GET"||e==="HEAD"||!s)return S(S({},n),r);if(Qn(s)){var i;let o=(t===null||t===void 0?void 0:t.headers)||{},a;for(let[l,c]of Object.entries(o))if(l.toLowerCase()==="content-type")a=c;n.headers=gt(o,"Content-Type",(i=a)!==null&&i!==void 0?i:"application/json"),n.body=JSON.stringify(s)}else n.body=s;if(t===null||t===void 0?void 0:t.duplex)n.duplex=t.duplex;return S(S({},n),r)};async function Fe(e,t,r,s,n,i,o){return new Promise((a,l)=>{e(r,ti(t,s,n,i)).then((c)=>{if(!c.ok)throw c;if(s===null||s===void 0?void 0:s.noResolveJson)return c;if(o==="vectors"){let u=c.headers.get("content-type");if(c.headers.get("content-length")==="0"||c.status===204)return{};if(!u||!u.includes("application/json"))return{}}return c.json()}).then((c)=>a(c)).catch((c)=>ei(c,l,s,o))})}function Zr(e="storage"){return{get:async(t,r,s,n)=>Fe(t,"GET",r,s,n,void 0,e),post:async(t,r,s,n,i)=>Fe(t,"POST",r,n,i,s,e),put:async(t,r,s,n,i)=>Fe(t,"PUT",r,n,i,s,e),head:async(t,r,s,n)=>Fe(t,"HEAD",r,S(S({},s),{},{noResolveJson:!0}),n,void 0,e),remove:async(t,r,s,n,i)=>Fe(t,"DELETE",r,n,i,s,e)}}var ri=Zr("storage"),{get:we,post:M,put:yt,head:si,remove:_e}=ri,L=Zr("vectors"),be=class{constructor(e,t={},r,s="storage"){this.shouldThrowOnError=!1,this.url=e,this.headers=Yn(t),this.fetch=Xn(r),this.namespace=s}throwOnError(){return this.shouldThrowOnError=!0,this}setHeader(e,t){return this.headers=gt(this.headers,e,t),this}async handleOperation(e){var t=this;try{return{data:await e(),error:null}}catch(r){if(t.shouldThrowOnError)throw r;if(vt(r))return{data:null,error:r};throw r}}},es;es=Symbol.toStringTag;var ni=class{constructor(e,t){this.downloadFn=e,this.shouldThrowOnError=t,this[es]="StreamDownloadBuilder",this.promise=null}then(e,t){return this.getPromise().then(e,t)}catch(e){return this.getPromise().catch(e)}finally(e){return this.getPromise().finally(e)}getPromise(){if(!this.promise)this.promise=this.execute();return this.promise}async execute(){var e=this;try{return{data:(await e.downloadFn()).body,error:null}}catch(t){if(e.shouldThrowOnError)throw t;if(vt(t))return{data:null,error:t};throw t}}},ts;ts=Symbol.toStringTag;var ii=class{constructor(e,t){this.downloadFn=e,this.shouldThrowOnError=t,this[ts]="BlobDownloadBuilder",this.promise=null}asStream(){return new ni(this.downloadFn,this.shouldThrowOnError)}then(e,t){return this.getPromise().then(e,t)}catch(e){return this.getPromise().catch(e)}finally(e){return this.getPromise().finally(e)}getPromise(){if(!this.promise)this.promise=this.execute();return this.promise}async execute(){var e=this;try{return{data:await(await e.downloadFn()).blob(),error:null}}catch(t){if(e.shouldThrowOnError)throw t;if(vt(t))return{data:null,error:t};throw t}}},qt={limit:100,offset:0,sortBy:{column:"name",order:"asc"}},Xr={cacheControl:"3600",contentType:"text/plain;charset=UTF-8",upsert:!1},oi=class extends be{constructor(e,t={},r,s){super(e,t,s,"storage");this.bucketId=r}async uploadOrUpdate(e,t,r,s){var n=this;return n.handleOperation(async()=>{let i,o=S(S({},Xr),s),a=S(S({},n.headers),e==="POST"&&{"x-upsert":String(o.upsert)}),l=o.metadata;if(typeof Blob<"u"&&r instanceof Blob||typeof FormData<"u"&&r instanceof FormData)i=n.prepareUploadFormData(r,o);else{if(i=r,a["cache-control"]=`max-age=${o.cacheControl}`,a["content-type"]=o.contentType,o.contentEncoding)a["content-encoding"]=o.contentEncoding;if(l)a["x-metadata"]=n.toBase64(n.encodeMetadata(l));if((typeof ReadableStream<"u"&&i instanceof ReadableStream||i&&typeof i==="object"&&("pipe"in i)&&typeof i.pipe==="function")&&!o.duplex)o.duplex="half"}if(s===null||s===void 0?void 0:s.headers)for(let[d,f]of Object.entries(s.headers))a=gt(a,d,f);let c=n._removeEmptyFolders(t),u=n._getFinalPath(c),h=await(e=="PUT"?yt:M)(n.fetch,`${n.url}/object/${u}`,i,S({headers:a},(o===null||o===void 0?void 0:o.duplex)?{duplex:o.duplex}:{}));return{path:c,id:h.Id,fullPath:h.Key}})}async upload(e,t,r){return this.uploadOrUpdate("POST",e,t,r)}async uploadToSignedUrl(e,t,r,s){var n=this;let i=n._removeEmptyFolders(e),o=n._getFinalPath(i),a=new URL(n.url+`/object/upload/sign/${o}`);return a.searchParams.set("token",t),n.handleOperation(async()=>{let l,c=S(S({},Xr),s),u=S(S({},n.headers),{"x-upsert":String(c.upsert)}),h=c.metadata;if(typeof Blob<"u"&&r instanceof Blob||typeof FormData<"u"&&r instanceof FormData)l=n.prepareUploadFormData(r,c);else{if(l=r,u["cache-control"]=`max-age=${c.cacheControl}`,u["content-type"]=c.contentType,c.contentEncoding)u["content-encoding"]=c.contentEncoding;if(h)u["x-metadata"]=n.toBase64(n.encodeMetadata(h));if((typeof ReadableStream<"u"&&l instanceof ReadableStream||l&&typeof l==="object"&&("pipe"in l)&&typeof l.pipe==="function")&&!c.duplex)c.duplex="half"}if(s===null||s===void 0?void 0:s.headers)for(let[d,f]of Object.entries(s.headers))u=gt(u,d,f);return{path:i,fullPath:(await yt(n.fetch,a.toString(),l,S({headers:u},(c===null||c===void 0?void 0:c.duplex)?{duplex:c.duplex}:{}))).Key}})}async createSignedUploadUrl(e,t){var r=this;return r.handleOperation(async()=>{let s=r._getFinalPath(e),n=S({},r.headers);if(t===null||t===void 0?void 0:t.upsert)n["x-upsert"]="true";let i=await M(r.fetch,`${r.url}/object/upload/sign/${s}`,{},{headers:n}),o=new URL(r.url+i.url),a=o.searchParams.get("token");if(!a)throw new mt("No token returned by API");return{signedUrl:o.toString(),path:e,token:a}})}async update(e,t,r){return this.uploadOrUpdate("PUT",e,t,r)}async move(e,t,r){var s=this;return s.handleOperation(async()=>await M(s.fetch,`${s.url}/object/move`,{bucketId:s.bucketId,sourceKey:e,destinationKey:t,destinationBucket:r===null||r===void 0?void 0:r.destinationBucket,sourceVersionId:r===null||r===void 0?void 0:r.sourceVersionId},{headers:s.headers}))}async copy(e,t,r){var s=this;return s.handleOperation(async()=>{let n=r;return{path:(await M(s.fetch,`${s.url}/object/copy`,{bucketId:s.bucketId,sourceKey:e,destinationKey:t,destinationBucket:r===null||r===void 0?void 0:r.destinationBucket,sourceVersionId:r===null||r===void 0?void 0:r.sourceVersionId,copyMetadata:typeof(n===null||n===void 0?void 0:n.copyMetadata)==="boolean"?n.copyMetadata:void 0,metadata:(n===null||n===void 0?void 0:n.copyMetadata)===!1?n.metadata:void 0},{headers:s.headers})).Key}})}async createSignedUrl(e,t,r){var s=this;return s.handleOperation(async()=>{let n=s._getFinalPath(e),i=typeof(r===null||r===void 0?void 0:r.transform)==="object"&&r.transform!==null&&Object.keys(r.transform).length>0,o=await M(s.fetch,`${s.url}/object/sign/${n}`,S(S({expiresIn:t},i?{transform:r.transform}:{}),(r===null||r===void 0?void 0:r.versionId)!=null?{versionId:r.versionId}:{}),{headers:s.headers}),a=new URLSearchParams;if(r===null||r===void 0?void 0:r.download)a.set("download",r.download===!0?"":r.download);if((r===null||r===void 0?void 0:r.cacheNonce)!=null)a.set("cacheNonce",String(r.cacheNonce));let l=a.toString();return{signedUrl:encodeURI(`${s.url}${o.signedURL}${l?`&${l}`:""}`)}})}async createSignedUrls(e,t,r){var s=this;return s.handleOperation(async()=>{let n=await M(s.fetch,`${s.url}/object/sign/${s.bucketId}`,{expiresIn:t,paths:e},{headers:s.headers}),i=new URLSearchParams;if(r===null||r===void 0?void 0:r.download)i.set("download",r.download===!0?"":r.download);if((r===null||r===void 0?void 0:r.cacheNonce)!=null)i.set("cacheNonce",String(r.cacheNonce));let o=i.toString();return n.map((a)=>S(S({},a),{},{signedUrl:a.signedURL?encodeURI(`${s.url}${a.signedURL}${o?`&${o}`:""}`):null}))})}download(e,t,r){let s=typeof(t===null||t===void 0?void 0:t.transform)==="object"&&t.transform!==null&&Object.keys(t.transform).length>0?"render/image/authenticated":"object",n=new URLSearchParams;if(t===null||t===void 0?void 0:t.transform)this.applyTransformOptsToQuery(n,t.transform);if((t===null||t===void 0?void 0:t.cacheNonce)!=null)n.set("cacheNonce",String(t.cacheNonce));if((t===null||t===void 0?void 0:t.versionId)!=null)n.set("versionId",String(t.versionId));let i=n.toString(),o=this._getFinalPath(e);return new ii(()=>we(this.fetch,`${this.url}/${s}/${o}${i?`?${i}`:""}`,{headers:this.headers,noResolveJson:!0},r),this.shouldThrowOnError)}async info(e,t){var r=this;let s=r._getFinalPath(e),n=new URLSearchParams;if((t===null||t===void 0?void 0:t.versionId)!=null)n.set("versionId",String(t.versionId));let i=n.toString();return r.handleOperation(async()=>Ht(await we(r.fetch,`${r.url}/object/info/${s}${i?`?${i}`:""}`,{headers:r.headers})))}async exists(e){var t=this;let r=t._getFinalPath(e);try{return await si(t.fetch,`${t.url}/object/${r}`,{headers:t.headers}),{data:!0,error:null}}catch(n){if(t.shouldThrowOnError)throw n;if(vt(n)){var s;let i=n instanceof pt?n.status:n instanceof Qr?(s=n.originalError)===null||s===void 0?void 0:s.status:void 0;if(i!==void 0&&[400,404].includes(i))return{data:!1,error:n}}throw n}}getPublicUrl(e,t){let r=this._getFinalPath(e),s=new URLSearchParams;if(t===null||t===void 0?void 0:t.download)s.set("download",t.download===!0?"":t.download);if(t===null||t===void 0?void 0:t.transform)this.applyTransformOptsToQuery(s,t.transform);if((t===null||t===void 0?void 0:t.cacheNonce)!=null)s.set("cacheNonce",String(t.cacheNonce));if((t===null||t===void 0?void 0:t.versionId)!=null)s.set("versionId",String(t.versionId));let n=s.toString(),i=typeof(t===null||t===void 0?void 0:t.transform)==="object"&&t.transform!==null&&Object.keys(t.transform).length>0?"render/image":"object";return{data:{publicUrl:encodeURI(`${this.url}/${i}/public/${r}`)+(n?`?${n}`:"")}}}async remove(e){var t=this;return t.handleOperation(async()=>await _e(t.fetch,`${t.url}/object/${t.bucketId}`,{prefixes:e},{headers:t.headers}))}async purgeCache(e,t,r){var s=this;return s.handleOperation(async()=>{let n=Kt(s._getFinalPath(e)),i=new URLSearchParams;if(t===null||t===void 0?void 0:t.transformations)i.set("transformations","true");let o=i.toString();return await _e(s.fetch,`${s.url}/cdn/${n}${o?`?${o}`:""}`,{},{headers:s.headers},r)})}async list(e,t,r){var s=this;return s.handleOperation(async()=>{let n=(t===null||t===void 0?void 0:t.sortBy)?S(S({},qt.sortBy),t.sortBy):qt.sortBy,i=S(S(S({},qt),t),{},{sortBy:n,prefix:e||""});return await M(s.fetch,`${s.url}/object/list/${s.bucketId}`,i,{headers:s.headers},r)})}async listV2(e,t){var r=this;return r.handleOperation(async()=>{let s=S({},e);return await M(r.fetch,`${r.url}/object/list-v2/${r.bucketId}`,s,{headers:r.headers},t)})}prepareUploadFormData(e,t){let r=new FormData,s=[];if(e instanceof FormData)e.forEach((n,i)=>{if(typeof n==="string")r.append(i,n);else s.push([i,n])});else s.push(["",e]);if(!r.has("cacheControl"))r.append("cacheControl",t.cacheControl);if(t.metadata&&!r.has("metadata"))r.append("metadata",this.encodeMetadata(t.metadata));if(t.contentEncoding&&!r.has("contentEncoding"))r.append("contentEncoding",t.contentEncoding);for(let[n,i]of s)r.append(n,i);return r}encodeMetadata(e){return JSON.stringify(e)}toBase64(e){if(typeof Buffer<"u")return Buffer.from(e).toString("base64");return btoa(e)}_getFinalPath(e){return`${this.bucketId}/${e.replace(/^\/+/,"")}`}_removeEmptyFolders(e){return e.replace(/^\/|\/$/g,"").replace(/\/+/g,"/")}applyTransformOptsToQuery(e,t){if(t.width)e.set("width",t.width.toString());if(t.height)e.set("height",t.height.toString());if(t.resize)e.set("resize",t.resize);if(t.format)e.set("format",t.format);if(t.quality)e.set("quality",t.quality.toString());return e}},ai="2.118.0",qe={"X-Client-Info":`storage-js/${ai}`},li=class extends be{constructor(e,t={},r,s){let n=new URL(e);if(s===null||s===void 0?void 0:s.useNewHostname){if(/supabase\.(co|in|red)$/.test(n.hostname)&&!n.hostname.includes("storage.supabase."))n.hostname=n.hostname.replace("supabase.","storage.supabase.")}let i=n.href.replace(/\/$/,""),o=S(S({},qe),t);super(i,o,r,"storage")}async listBuckets(e){var t=this;return t.handleOperation(async()=>{let r=t.listBucketOptionsToQueryString(e);return await we(t.fetch,`${t.url}/bucket${r}`,{headers:t.headers})})}async getBucket(e){var t=this;return t.handleOperation(async()=>await we(t.fetch,`${t.url}/bucket/${e}`,{headers:t.headers}))}async createBucket(e,t={public:!1}){var r=this;return r.handleOperation(async()=>await M(r.fetch,`${r.url}/bucket`,{id:e,name:e,type:t.type,public:t.public,file_size_limit:t.fileSizeLimit,allowed_mime_types:t.allowedMimeTypes,versioning_status:t.versioningStatus},{headers:r.headers}))}async updateBucket(e,t){var r=this;return r.handleOperation(async()=>await yt(r.fetch,`${r.url}/bucket/${e}`,{id:e,name:e,public:t.public,file_size_limit:t.fileSizeLimit,allowed_mime_types:t.allowedMimeTypes,versioning_status:t.versioningStatus},{headers:r.headers}))}async emptyBucket(e){var t=this;return t.handleOperation(async()=>await M(t.fetch,`${t.url}/bucket/${e}/empty`,{},{headers:t.headers}))}async deleteBucket(e){var t=this;return t.handleOperation(async()=>await _e(t.fetch,`${t.url}/bucket/${e}`,{},{headers:t.headers}))}async getBucketLifecycle(e){var t=this;return t.handleOperation(async()=>await we(t.fetch,t.bucketLifecycleUrl(e),{headers:t.headers}))}async updateBucketLifecycle(e,t){var r=this;return r.handleOperation(async()=>await yt(r.fetch,r.bucketLifecycleUrl(e),t,{headers:r.headers}))}async deleteBucketLifecycle(e){var t=this;return t.handleOperation(async()=>await _e(t.fetch,t.bucketLifecycleUrl(e),{},{headers:t.headers}))}async purgeBucketCache(e,t,r){var s=this;return s.handleOperation(async()=>{let n=new URLSearchParams;if(t===null||t===void 0?void 0:t.transformations)n.set("transformations","true");let i=n.toString();return await _e(s.fetch,`${s.url}/cdn/${Kt(e)}${i?`?${i}`:""}`,{},{headers:s.headers},r)})}bucketLifecycleUrl(e){return`${this.url}/bucket/${Kt(e)}/lifecycle`}listBucketOptionsToQueryString(e){let t={};if(e){if("limit"in e)t.limit=String(e.limit);if("offset"in e)t.offset=String(e.offset);if(e.search)t.search=e.search;if(e.sortColumn)t.sortColumn=e.sortColumn;if(e.sortOrder)t.sortOrder=e.sortOrder}return Object.keys(t).length>0?"?"+new URLSearchParams(t).toString():""}},ci=class extends be{constructor(e,t={},r){let s=e.replace(/\/$/,""),n=S(S({},qe),t);super(s,n,r,"storage")}async createBucket(e){var t=this;return t.handleOperation(async()=>await M(t.fetch,`${t.url}/bucket`,{name:e},{headers:t.headers}))}async listBuckets(e){var t=this;return t.handleOperation(async()=>{let r=new URLSearchParams;if((e===null||e===void 0?void 0:e.limit)!==void 0)r.set("limit",e.limit.toString());if((e===null||e===void 0?void 0:e.offset)!==void 0)r.set("offset",e.offset.toString());if(e===null||e===void 0?void 0:e.sortColumn)r.set("sortColumn",e.sortColumn);if(e===null||e===void 0?void 0:e.sortOrder)r.set("sortOrder",e.sortOrder);if(e===null||e===void 0?void 0:e.search)r.set("search",e.search);let s=r.toString(),n=s?`${t.url}/bucket?${s}`:`${t.url}/bucket`;return await we(t.fetch,n,{headers:t.headers})})}async deleteBucket(e){var t=this;return t.handleOperation(async()=>await _e(t.fetch,`${t.url}/bucket/${e}`,{},{headers:t.headers}))}from(e){var t=this;if(!Zn(e))throw new mt("Invalid bucket name: File, folder, and bucket names must follow AWS object key naming guidelines and should avoid the use of any other characters.");let r=new zr({baseUrl:this.url,catalogName:e,auth:{type:"custom",getHeaders:async()=>t.headers},fetch:this.fetch}),s=this.shouldThrowOnError;return new Proxy(r,{get(n,i){let o=n[i];if(typeof o!=="function")return o;return async(...a)=>{try{return{data:await o.apply(n,a),error:null}}catch(l){if(s)throw l;return{data:null,error:l}}}}})}},ui=class extends be{constructor(e,t={},r){let s=e.replace(/\/$/,""),n=S(S({},qe),{},{"Content-Type":"application/json"},t);super(s,n,r,"vectors")}async createIndex(e){var t=this;return t.handleOperation(async()=>await L.post(t.fetch,`${t.url}/CreateIndex`,e,{headers:t.headers})||{})}async getIndex(e,t){var r=this;return r.handleOperation(async()=>await L.post(r.fetch,`${r.url}/GetIndex`,{vectorBucketName:e,indexName:t},{headers:r.headers}))}async listIndexes(e){var t=this;return t.handleOperation(async()=>await L.post(t.fetch,`${t.url}/ListIndexes`,e,{headers:t.headers}))}async deleteIndex(e,t){var r=this;return r.handleOperation(async()=>await L.post(r.fetch,`${r.url}/DeleteIndex`,{vectorBucketName:e,indexName:t},{headers:r.headers})||{})}},hi=class extends be{constructor(e,t={},r){let s=e.replace(/\/$/,""),n=S(S({},qe),{},{"Content-Type":"application/json"},t);super(s,n,r,"vectors")}async putVectors(e){var t=this;if(e.vectors.length<1||e.vectors.length>500)throw Error("Vector batch size must be between 1 and 500 items");return t.handleOperation(async()=>await L.post(t.fetch,`${t.url}/PutVectors`,e,{headers:t.headers})||{})}async getVectors(e){var t=this;return t.handleOperation(async()=>await L.post(t.fetch,`${t.url}/GetVectors`,e,{headers:t.headers}))}async listVectors(e){var t=this;if(e.segmentCount!==void 0){if(e.segmentCount<1||e.segmentCount>16)throw Error("segmentCount must be between 1 and 16");if(e.segmentIndex!==void 0){if(e.segmentIndex<0||e.segmentIndex>=e.segmentCount)throw Error(`segmentIndex must be between 0 and ${e.segmentCount-1}`)}}return t.handleOperation(async()=>await L.post(t.fetch,`${t.url}/ListVectors`,e,{headers:t.headers}))}async queryVectors(e){var t=this;return t.handleOperation(async()=>await L.post(t.fetch,`${t.url}/QueryVectors`,e,{headers:t.headers}))}async deleteVectors(e){var t=this;if(e.keys.length<1||e.keys.length>500)throw Error("Keys batch size must be between 1 and 500 items");return t.handleOperation(async()=>await L.post(t.fetch,`${t.url}/DeleteVectors`,e,{headers:t.headers})||{})}},di=class extends be{constructor(e,t={},r){let s=e.replace(/\/$/,""),n=S(S({},qe),{},{"Content-Type":"application/json"},t);super(s,n,r,"vectors")}async createBucket(e){var t=this;return t.handleOperation(async()=>await L.post(t.fetch,`${t.url}/CreateVectorBucket`,{vectorBucketName:e},{headers:t.headers})||{})}async getBucket(e){var t=this;return t.handleOperation(async()=>await L.post(t.fetch,`${t.url}/GetVectorBucket`,{vectorBucketName:e},{headers:t.headers}))}async listBuckets(e={}){var t=this;return t.handleOperation(async()=>await L.post(t.fetch,`${t.url}/ListVectorBuckets`,e,{headers:t.headers}))}async deleteBucket(e){var t=this;return t.handleOperation(async()=>await L.post(t.fetch,`${t.url}/DeleteVectorBucket`,{vectorBucketName:e},{headers:t.headers})||{})}},fi=class extends di{constructor(e,t={}){super(e,t.headers||{},t.fetch)}from(e){return new pi(this.url,this.headers,e,this.fetch)}async createBucket(e){var t=()=>super.createBucket,r=this;return t().call(r,e)}async getBucket(e){var t=()=>super.getBucket,r=this;return t().call(r,e)}async listBuckets(e={}){var t=()=>super.listBuckets,r=this;return t().call(r,e)}async deleteBucket(e){var t=()=>super.deleteBucket,r=this;return t().call(r,e)}},pi=class extends ui{constructor(e,t,r,s){super(e,t,s);this.vectorBucketName=r}async createIndex(e){var t=()=>super.createIndex,r=this;return t().call(r,S(S({},e),{},{vectorBucketName:r.vectorBucketName}))}async listIndexes(e={}){var t=()=>super.listIndexes,r=this;return t().call(r,S(S({},e),{},{vectorBucketName:r.vectorBucketName}))}async getIndex(e){var t=()=>super.getIndex,r=this;return t().call(r,r.vectorBucketName,e)}async deleteIndex(e){var t=()=>super.deleteIndex,r=this;return t().call(r,r.vectorBucketName,e)}index(e){return new gi(this.url,this.headers,this.vectorBucketName,e,this.fetch)}},gi=class extends hi{constructor(e,t,r,s,n){super(e,t,n);this.vectorBucketName=r,this.indexName=s}async putVectors(e){var t=()=>super.putVectors,r=this;return t().call(r,S(S({},e),{},{vectorBucketName:r.vectorBucketName,indexName:r.indexName}))}async getVectors(e){var t=()=>super.getVectors,r=this;return t().call(r,S(S({},e),{},{vectorBucketName:r.vectorBucketName,indexName:r.indexName}))}async listVectors(e={}){var t=()=>super.listVectors,r=this;return t().call(r,S(S({},e),{},{vectorBucketName:r.vectorBucketName,indexName:r.indexName}))}async queryVectors(e){var t=()=>super.queryVectors,r=this;return t().call(r,S(S({},e),{},{vectorBucketName:r.vectorBucketName,indexName:r.indexName}))}async deleteVectors(e){var t=()=>super.deleteVectors,r=this;return t().call(r,S(S({},e),{},{vectorBucketName:r.vectorBucketName,indexName:r.indexName}))}},rs=class extends li{constructor(e,t={},r,s){super(e,t,r,s)}from(e){return new oi(this.url,this.headers,e,this.fetch)}get vectors(){return new fi(this.url+"/vector",{headers:this.headers,fetch:this.fetch})}get analytics(){return new ci(this.url+"/iceberg",this.headers,this.fetch)}};var wt="2.118.0";var G=30000,Se=3,_t=Se*G,ss=2*G,ns="http://localhost:9999",is="supabase.auth.token";var os={"X-Client-Info":`gotrue-js/${wt}`};var He="X-Supabase-Api-Version",Wt={"2024-01-01":{timestamp:Date.parse("2024-01-01T00:00:00.0Z"),name:"2024-01-01"}},as=/^([a-z0-9_-]{4})*($|[a-z0-9_-]{3}$|[a-z0-9_-]{2}$)$/i,Q="sb_flow_id",ls=5,cs=600000;class le extends Error{constructor(e,t,r){super(e);this.__isAuthError=!0,this.name="AuthError",this.status=t,this.code=r}toJSON(){return{name:this.name,message:this.message,status:this.status,code:this.code}}}function m(e){return typeof e==="object"&&e!==null&&"__isAuthError"in e}class Vt extends le{constructor(e,t,r){super(e,t,r);this.name="AuthApiError",this.status=t,this.code=r}}function Gt(e){return m(e)&&e.name==="AuthApiError"}class I extends le{constructor(e,t){super(e);this.name="AuthUnknownError",this.originalError=t}}class q extends le{constructor(e,t,r,s){super(e,r,s);this.name=t,this.status=r}}class x extends q{constructor(){super("Auth session missing!","AuthSessionMissingError",400,void 0)}}function Ke(e){return m(e)&&e.name==="AuthSessionMissingError"}class re extends q{constructor(){super("Auth session or user missing","AuthInvalidTokenResponseError",500,void 0)}}class Ee extends q{constructor(e){super(e,"AuthInvalidCredentialsError",400,void 0)}}class ke extends q{constructor(e,t=null){super(e,"AuthImplicitGrantRedirectError",500,void 0);this.details=null,this.details=t}toJSON(){return Object.assign(Object.assign({},super.toJSON()),{details:this.details})}}function us(e){return m(e)&&e.name==="AuthImplicitGrantRedirectError"}class bt extends q{constructor(e,t=null){super(e,"AuthPKCEGrantCodeExchangeError",500,void 0);this.details=null,this.details=t}toJSON(){return Object.assign(Object.assign({},super.toJSON()),{details:this.details})}}class zt extends q{constructor(){super("PKCE code verifier not found in storage. This can happen if the auth flow was initiated in a different browser or device, or if the storage was cleared. For SSR frameworks (Next.js, SvelteKit, etc.), use @supabase/ssr on both the server and client to store the code verifier in cookies.","AuthPKCECodeVerifierMissingError",400,"pkce_code_verifier_not_found")}}class Te extends q{constructor(e,t){super(e,"AuthRetryableFetchError",t,void 0)}}function We(e){return m(e)&&e.name==="AuthRetryableFetchError"}class St extends q{constructor(e="Refresh result discarded: session state changed mid-flight (e.g., concurrent signOut)"){super(e,"AuthRefreshDiscardedError",409,void 0)}}function Jt(e){return m(e)&&e.name==="AuthRefreshDiscardedError"}class Et extends q{constructor(e,t,r){super(e,"AuthWeakPasswordError",t,"weak_password");this.reasons=r}toJSON(){return Object.assign(Object.assign({},super.toJSON()),{reasons:this.reasons})}}class ce extends q{constructor(e){super(e,"AuthInvalidJwtError",400,"invalid_jwt")}}var kt="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".split(""),hs=` 	
-\r=`.split(""),yi=(()=>{let e=Array(128);for(let t=0;t<e.length;t+=1)e[t]=-1;for(let t=0;t<hs.length;t+=1)e[hs[t].charCodeAt(0)]=-2;for(let t=0;t<kt.length;t+=1)e[kt[t].charCodeAt(0)]=t;return e})();function ds(e,t,r){if(e!==null){t.queue=t.queue<<8|e,t.queuedBits+=8;while(t.queuedBits>=6){let s=t.queue>>t.queuedBits-6&63;r(kt[s]),t.queuedBits-=6}}else if(t.queuedBits>0){t.queue=t.queue<<6-t.queuedBits,t.queuedBits=6;while(t.queuedBits>=6){let s=t.queue>>t.queuedBits-6&63;r(kt[s]),t.queuedBits-=6}}}function fs(e,t,r){let s=yi[e];if(s>-1){t.queue=t.queue<<6|s,t.queuedBits+=6;while(t.queuedBits>=8)r(t.queue>>t.queuedBits-8&255),t.queuedBits-=8}else if(s===-2)return;else throw Error(`Invalid Base64-URL character "${String.fromCharCode(e)}"`)}function Yt(e){let t=[],r=(o)=>{t.push(String.fromCodePoint(o))},s={utf8seq:0,codepoint:0},n={queue:0,queuedBits:0},i=(o)=>{wi(o,s,r)};for(let o=0;o<e.length;o+=1)fs(e.charCodeAt(o),n,i);return t.join("")}function mi(e,t){if(e<=127){t(e);return}else if(e<=2047){t(192|e>>6),t(128|e&63);return}else if(e<=65535){t(224|e>>12),t(128|e>>6&63),t(128|e&63);return}else if(e<=1114111){t(240|e>>18),t(128|e>>12&63),t(128|e>>6&63),t(128|e&63);return}throw Error(`Unrecognized Unicode codepoint: ${e.toString(16)}`)}function vi(e,t){for(let r=0;r<e.length;r+=1){let s=e.charCodeAt(r);if(s>55295&&s<=56319){let n=(s-55296)*1024&65535;s=(e.charCodeAt(r+1)-56320&65535|n)+65536,r+=1}mi(s,t)}}function wi(e,t,r){if(t.utf8seq===0){if(e<=127){r(e);return}for(let s=1;s<6;s+=1)if((e>>7-s&1)===0){t.utf8seq=s;break}if(t.utf8seq===2)t.codepoint=e&31;else if(t.utf8seq===3)t.codepoint=e&15;else if(t.utf8seq===4)t.codepoint=e&7;else throw Error("Invalid UTF-8 sequence");t.utf8seq-=1}else if(t.utf8seq>0){if(e<=127)throw Error("Invalid UTF-8 sequence");if(t.codepoint=t.codepoint<<6|e&63,t.utf8seq-=1,t.utf8seq===0)r(t.codepoint)}}function se(e){let t=[],r={queue:0,queuedBits:0},s=(n)=>{t.push(n)};for(let n=0;n<e.length;n+=1)fs(e.charCodeAt(n),r,s);return new Uint8Array(t)}function ps(e){let t=[];return vi(e,(r)=>t.push(r)),new Uint8Array(t)}function Z(e){let t=[],r={queue:0,queuedBits:0},s=(n)=>{t.push(n)};return e.forEach((n)=>ds(n,r,s)),ds(null,r,s),t.join("")}function Tt(e){return Math.round(Date.now()/1000)+e}function gs(){return Symbol("auth-callback")}var P=()=>typeof window<"u"&&typeof document<"u",ue={tested:!1,writable:!1},Rt=()=>{if(!P())return!1;try{if(typeof globalThis.localStorage!=="object")return!1}catch(t){return!1}if(ue.tested)return ue.writable;let e=`lswt-${Math.random()}${Math.random()}`;try{globalThis.localStorage.setItem(e,e),globalThis.localStorage.removeItem(e),ue.tested=!0,ue.writable=!0}catch(t){ue.tested=!0,ue.writable=!1}return ue.writable};function Xt(e){let t={},r=new URL(e);if(r.hash&&r.hash[0]==="#")try{new URLSearchParams(r.hash.substring(1)).forEach((n,i)=>{t[i]=n})}catch(s){}return r.searchParams.forEach((s,n)=>{t[n]=s}),t}var At=(e)=>{if(e)return(...t)=>e(...t);return(...t)=>fetch(...t)},ys=(e)=>typeof e==="object"&&e!==null&&("status"in e)&&("ok"in e)&&("json"in e)&&typeof e.json==="function",z=async(e,t,r)=>{await e.setItem(t,JSON.stringify(r))},C=async(e,t)=>{let r=await e.getItem(t);if(!r)return null;try{return JSON.parse(r)}catch(s){return null}},j=async(e,t)=>{await e.removeItem(t)};class Ge{constructor(){this.promise=new Ge.promiseConstructor((e,t)=>{this.resolve=e,this.reject=t})}}Ge.promiseConstructor=Promise;function ze(e){let t=e.split(".");if(t.length!==3)throw new ce("Invalid JWT structure");for(let s=0;s<t.length;s++)if(!as.test(t[s]))throw new ce("JWT not in base64url format");return{header:JSON.parse(Yt(t[0])),payload:JSON.parse(Yt(t[1])),signature:se(t[2]),raw:{header:t[0],payload:t[1]}}}async function ms(e){return await new Promise((t)=>{setTimeout(()=>t(null),e)})}function vs(e,t){return new Promise((s,n)=>{(async()=>{for(let i=0;i<1/0;i++)try{let o=await e(i);if(!t(i,null,o)){s(o);return}}catch(o){if(!t(i,o)){n(o);return}}})()})}function ws(e){return("0"+e.toString(16)).substr(-2)}function _i(){let t=new Uint32Array(56);if(typeof crypto>"u"){let n="";for(let i=0;i<56;i++)n+="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~".charAt(Math.floor(Math.random()*66));return n}return crypto.getRandomValues(t),Array.from(t,ws).join("")}async function bi(e){let r=new TextEncoder().encode(e),s=await crypto.subtle.digest("SHA-256",r),n=new Uint8Array(s);return Array.from(n).map((i)=>String.fromCharCode(i)).join("")}async function Si(e){if(!(typeof crypto<"u"&&typeof crypto.subtle<"u"&&typeof TextEncoder<"u"))return console.warn("WebCrypto API is not supported. Code challenge method will default to use plain instead of sha256."),e;let r=await bi(e);return btoa(r).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}var Ei=/^[a-zA-Z0-9_-]{8,64}$/;function Je(e){return typeof e==="string"&&Ei.test(e)?e:null}function ki(){if(typeof crypto<"u"&&typeof crypto.getRandomValues==="function"){let t=new Uint8Array(16);return crypto.getRandomValues(t),Array.from(t,ws).join("")}let e="";for(let t=0;t<32;t++)e+=Math.floor(Math.random()*16).toString(16);return e}var he=(e,t)=>`${e}-flow-${t}-code-verifier`,Ve=(e)=>`${e}-flows-code-verifier`;async function Qt(e,t){let r=await C(e,Ve(t));return Array.isArray(r)?r.filter((s)=>Je(s)!==null):[]}async function Ti(e,t,r,s,n){await z(e,he(t,r),s);let i=(await Qt(e,t)).filter((o)=>o!==r);i.push(r);while(i.length>ls){let o=i.shift();await j(e,he(t,o)),n===null||n===void 0||n(o)}await z(e,Ve(t),i),await z(e,`${t}-code-verifier`,s)}async function _s(e,t,r){if(r){let n=await C(e,he(t,r));return{verifier:typeof n==="string"?n:null,flowId:r}}let s=await C(e,`${t}-code-verifier`);return{verifier:typeof s==="string"?s:null,flowId:null}}async function F(e,t,r){let s=`${t}-code-verifier`;if(!r){await j(e,s);return}let n=he(t,r),i=await C(e,n);await j(e,n);let o=await Qt(e,t),a=o.filter((l)=>l!==r);if(a.length!==o.length)if(a.length>0)await z(e,Ve(t),a);else await j(e,Ve(t));if(i!=null&&i===await C(e,s))await j(e,s)}async function bs(e,t){let r=await Qt(e,t);for(let s of r)await j(e,he(t,s));await j(e,Ve(t)),await j(e,`${t}-code-verifier`)}function Ss(e,t){let r=e.indexOf("#"),s=r===-1?e:e.slice(0,r),n=r===-1?"":e.slice(r),i=s.indexOf("?");if(i!==-1){let a=s.slice(0,i),l=s.slice(i+1).split("&").filter((c)=>c!==""&&c!==Q&&!c.startsWith(`${Q}=`));s=l.length>0?`${a}?${l.join("&")}`:a}let o=s.includes("?")?"&":"?";return`${s}${o}${Q}=${encodeURIComponent(t)}${n}`}async function Es(e,t,r=!1,s){let n=_i(),i=n;if(r)i+="/recovery";let o=ki();await Ti(e,t,o,i,s);let a=await Si(n);return[a,n===a?"plain":"s256",o]}var Ri=/^2[0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/i;function ks(e){let t=e.headers.get(He);if(!t)return null;if(!t.match(Ri))return null;try{return new Date(`${t}T00:00:00.0Z`)}catch(r){return null}}function Ts(e){if(!e)throw Error("Missing exp claim");let t=Math.floor(Date.now()/1000);if(e<=t)throw Error("JWT has expired")}function Rs(e){switch(e){case"RS256":return{name:"RSASSA-PKCS1-v1_5",hash:{name:"SHA-256"}};case"ES256":return{name:"ECDSA",namedCurve:"P-256",hash:{name:"SHA-256"}};default:throw Error("Invalid alg claim")}}var Ai=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;function J(e){if(!Ai.test(e))throw Error("@supabase/auth-js: Expected parameter to be UUID but is not")}function Re(e){if(!e.recoveryCodes)throw Error("@supabase/auth-js: the MFA recovery codes API is experimental and disabled by default. Enable it by passing `auth: { experimental: { recoveryCodes: true } }` to createClient (or to the GoTrueClient constructor).")}function Ot(){return new Proxy({},{get:(t,r)=>{if(r==="__isUserNotAvailableProxy")return!0;if(typeof r==="symbol"){let s=r.toString();if(s==="Symbol(Symbol.toPrimitive)"||s==="Symbol(Symbol.toStringTag)"||s==="Symbol(util.inspect.custom)")return}throw Error(`@supabase/auth-js: client was created with userStorage option and there was no user stored in the user storage. Accessing the "${r}" property of the session object is not supported. Please use getUser() instead.`)},set:(t,r)=>{throw Error(`@supabase/auth-js: client was created with userStorage option and there was no user stored in the user storage. Setting the "${r}" property of the session object is not supported. Please use getUser() to fetch a user object you can manipulate.`)},deleteProperty:(t,r)=>{throw Error(`@supabase/auth-js: client was created with userStorage option and there was no user stored in the user storage. Deleting the "${r}" property of the session object is not supported. Please use getUser() to fetch a user object you can manipulate.`)}})}function As(e,t){return new Proxy(e,{get:(r,s,n)=>{if(s==="__isInsecureUserWarningProxy")return!0;if(typeof s==="symbol"){let i=s.toString();if(i==="Symbol(Symbol.toPrimitive)"||i==="Symbol(Symbol.toStringTag)"||i==="Symbol(util.inspect.custom)"||i==="Symbol(nodejs.util.inspect.custom)")return Reflect.get(r,s,n)}if(!t.value&&typeof s==="string")console.warn("Using the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server."),t.value=!0;return Reflect.get(r,s,n)}})}function Zt(e){return JSON.parse(JSON.stringify(e))}var de=(e)=>{if(typeof e==="object"&&e!==null){let t=e;if(typeof t.msg==="string")return t.msg;if(typeof t.message==="string")return t.message;if(typeof t.error_description==="string")return t.error_description;if(typeof t.error==="string")return t.error}return JSON.stringify(e)},Os=[500,501,502,503,504,520,521,522,523,524,525,526,527,528,529,530];async function xs(e){var t;if(!ys(e))throw new Te(de(e),0);let r;try{r=await e.json()}catch(i){if(Os.includes(e.status))throw new Te(e.statusText||`HTTP ${e.status}`,e.status);throw new I(de(i),i)}if(Os.includes(e.status))throw new Te(de(r),e.status);let s=void 0,n=ks(e);if(n&&n.getTime()>=Wt["2024-01-01"].timestamp&&typeof r==="object"&&r&&typeof r.code==="string")s=r.code;else if(typeof r==="object"&&r&&typeof r.error_code==="string")s=r.error_code;if(!s){if(typeof r==="object"&&r&&typeof r.weak_password==="object"&&r.weak_password&&Array.isArray(r.weak_password.reasons)&&r.weak_password.reasons.length&&r.weak_password.reasons.reduce((i,o)=>i&&typeof o==="string",!0))throw new Et(de(r),e.status,r.weak_password.reasons)}else if(s==="weak_password")throw new Et(de(r),e.status,((t=r.weak_password)===null||t===void 0?void 0:t.reasons)||[]);else if(s==="session_not_found")throw new x;throw new Vt(de(r),e.status||500,s)}var Oi=(e,t,r,s)=>{let n={method:e,headers:(t===null||t===void 0?void 0:t.headers)||{}};if(e==="GET")return n;return n.headers=Object.assign({"Content-Type":"application/json;charset=UTF-8"},t===null||t===void 0?void 0:t.headers),n.body=JSON.stringify(s),Object.assign(Object.assign({},n),r)};async function _(e,t,r,s){var n;let i=Object.assign({},s===null||s===void 0?void 0:s.headers);if(!i[He])i[He]=Wt["2024-01-01"].name;if(s===null||s===void 0?void 0:s.jwt)i.Authorization=`Bearer ${s.jwt}`;let o=(n=s===null||s===void 0?void 0:s.query)!==null&&n!==void 0?n:{};if(s===null||s===void 0?void 0:s.redirectTo)o.redirect_to=s.redirectTo;let a=Object.keys(o).length?"?"+new URLSearchParams(o).toString():"",l=await xi(e,t,r+a,{headers:i,noResolveJson:s===null||s===void 0?void 0:s.noResolveJson},{},s===null||s===void 0?void 0:s.body);return(s===null||s===void 0?void 0:s.xform)?s===null||s===void 0?void 0:s.xform(l):{data:Object.assign({},l),error:null}}async function xi(e,t,r,s,n,i){let o=Oi(t,s,n,i),a;try{a=await e(r,Object.assign({},o))}catch(l){throw new Te(de(l),0)}if(!a.ok)await xs(a);if(s===null||s===void 0?void 0:s.noResolveJson)return a;try{return await a.json()}catch(l){await xs(l)}}function U(e){var t;let r=null;if(Pi(e)){if(r=Object.assign({},e),!e.expires_at)r.expires_at=Tt(e.expires_in)}let s=(t=e.user)!==null&&t!==void 0?t:typeof(e===null||e===void 0?void 0:e.id)==="string"?e:null;return{data:{session:r,user:s},error:null}}function er(e){let t=U(e);if(!t.error&&e.weak_password&&typeof e.weak_password==="object"&&Array.isArray(e.weak_password.reasons)&&e.weak_password.reasons.length&&e.weak_password.message&&typeof e.weak_password.message==="string"&&e.weak_password.reasons.reduce((r,s)=>r&&typeof s==="string",!0))t.data.weak_password=e.weak_password;return t}function Y(e){var t;return{data:{user:(t=e.user)!==null&&t!==void 0?t:e},error:null}}function Ps(e){return{data:e,error:null}}function Cs(e){let{action_link:t,email_otp:r,hashed_token:s,redirect_to:n,verification_type:i}=e,o=ne(e,["action_link","email_otp","hashed_token","redirect_to","verification_type"]),a={action_link:t,email_otp:r,hashed_token:s,redirect_to:n,verification_type:i},l=Object.assign({},o);return{data:{properties:a,user:l},error:null}}function tr(e){return e}function Pi(e){return!!e.access_token&&!!e.refresh_token&&!!e.expires_in}var xt=["global","local","others"];class Ae{constructor({url:e="",headers:t={},fetch:r,experimental:s}){this.url=e,this.headers=t,this.fetch=At(r),this.experimental=s!==null&&s!==void 0?s:{},this.mfa={listFactors:this._listFactors.bind(this),deleteFactor:this._deleteFactor.bind(this)},this.oauth={listClients:this._listOAuthClients.bind(this),createClient:this._createOAuthClient.bind(this),getClient:this._getOAuthClient.bind(this),updateClient:this._updateOAuthClient.bind(this),deleteClient:this._deleteOAuthClient.bind(this),regenerateClientSecret:this._regenerateOAuthClientSecret.bind(this)},this.customProviders={listProviders:this._listCustomProviders.bind(this),createProvider:this._createCustomProvider.bind(this),getProvider:this._getCustomProvider.bind(this),updateProvider:this._updateCustomProvider.bind(this),deleteProvider:this._deleteCustomProvider.bind(this)},this.passkey={listPasskeys:this._adminListPasskeys.bind(this),deletePasskey:this._adminDeletePasskey.bind(this)}}async signOut(e,t=xt[0]){if(xt.indexOf(t)<0)throw Error(`@supabase/auth-js: Parameter scope must be one of ${xt.join(", ")}`);try{return await _(this.fetch,"POST",`${this.url}/logout?scope=${t}`,{headers:this.headers,jwt:e,noResolveJson:!0}),{data:null,error:null}}catch(r){if(m(r))return{data:null,error:r};throw r}}async inviteUserByEmail(e,t={}){try{return await _(this.fetch,"POST",`${this.url}/invite`,{body:{email:e,data:t.data},headers:this.headers,redirectTo:t.redirectTo,xform:Y})}catch(r){if(m(r))return{data:{user:null},error:r};throw r}}async generateLink(e){try{let{options:t}=e,r=ne(e,["options"]),s=Object.assign(Object.assign({},r),t);if("newEmail"in r)s.new_email=r===null||r===void 0?void 0:r.newEmail,delete s.newEmail;return await _(this.fetch,"POST",`${this.url}/admin/generate_link`,{body:s,headers:this.headers,xform:Cs,redirectTo:t===null||t===void 0?void 0:t.redirectTo})}catch(t){if(m(t))return{data:{properties:null,user:null},error:t};throw t}}async createUser(e){try{return await _(this.fetch,"POST",`${this.url}/admin/users`,{body:e,headers:this.headers,xform:Y})}catch(t){if(m(t))return{data:{user:null},error:t};throw t}}async listUsers(e){var t,r,s,n,i,o,a;try{let l={nextPage:null,lastPage:0,total:0},c=await _(this.fetch,"GET",`${this.url}/admin/users`,{headers:this.headers,noResolveJson:!0,query:{page:(r=(t=e===null||e===void 0?void 0:e.page)===null||t===void 0?void 0:t.toString())!==null&&r!==void 0?r:"",per_page:(n=(s=e===null||e===void 0?void 0:e.perPage)===null||s===void 0?void 0:s.toString())!==null&&n!==void 0?n:""},xform:tr});if(c.error)throw c.error;let u=await c.json(),h=(i=c.headers.get("x-total-count"))!==null&&i!==void 0?i:0,d=(a=(o=c.headers.get("link"))===null||o===void 0?void 0:o.split(","))!==null&&a!==void 0?a:[];if(d.length>0)d.forEach((f)=>{let g=parseInt(f.split(";")[0].split("=")[1].substring(0,1)),p=JSON.parse(f.split(";")[1].split("=")[1]);l[`${p}Page`]=g}),l.total=parseInt(h);return{data:Object.assign(Object.assign({},u),l),error:null}}catch(l){if(m(l))return{data:{users:[]},error:l};throw l}}async getUserById(e){J(e);try{return await _(this.fetch,"GET",`${this.url}/admin/users/${e}`,{headers:this.headers,xform:Y})}catch(t){if(m(t))return{data:{user:null},error:t};throw t}}async updateUserById(e,t){J(e);try{return await _(this.fetch,"PUT",`${this.url}/admin/users/${e}`,{body:t,headers:this.headers,xform:Y})}catch(r){if(m(r))return{data:{user:null},error:r};throw r}}async deleteUser(e,t=!1){J(e);try{return await _(this.fetch,"DELETE",`${this.url}/admin/users/${e}`,{headers:this.headers,body:{should_soft_delete:t},xform:Y})}catch(r){if(m(r))return{data:{user:null},error:r};throw r}}async _listFactors(e){J(e.userId);try{let{data:t,error:r}=await _(this.fetch,"GET",`${this.url}/admin/users/${e.userId}/factors`,{headers:this.headers,xform:(s)=>({data:{factors:s},error:null})});return{data:t,error:r}}catch(t){if(m(t))return{data:null,error:t};throw t}}async _deleteFactor(e){J(e.userId),J(e.id);try{return{data:await _(this.fetch,"DELETE",`${this.url}/admin/users/${e.userId}/factors/${e.id}`,{headers:this.headers}),error:null}}catch(t){if(m(t))return{data:null,error:t};throw t}}async _listOAuthClients(e){var t,r,s,n,i,o,a;try{let l={nextPage:null,lastPage:0,total:0},c=await _(this.fetch,"GET",`${this.url}/admin/oauth/clients`,{headers:this.headers,noResolveJson:!0,query:{page:(r=(t=e===null||e===void 0?void 0:e.page)===null||t===void 0?void 0:t.toString())!==null&&r!==void 0?r:"",per_page:(n=(s=e===null||e===void 0?void 0:e.perPage)===null||s===void 0?void 0:s.toString())!==null&&n!==void 0?n:""},xform:tr});if(c.error)throw c.error;let u=await c.json(),h=(i=c.headers.get("x-total-count"))!==null&&i!==void 0?i:0,d=(a=(o=c.headers.get("link"))===null||o===void 0?void 0:o.split(","))!==null&&a!==void 0?a:[];if(d.length>0)d.forEach((f)=>{let g=parseInt(f.split(";")[0].split("=")[1].substring(0,1)),p=JSON.parse(f.split(";")[1].split("=")[1]);l[`${p}Page`]=g}),l.total=parseInt(h);return{data:Object.assign(Object.assign({},u),l),error:null}}catch(l){if(m(l))return{data:{clients:[]},error:l};throw l}}async _createOAuthClient(e){try{return await _(this.fetch,"POST",`${this.url}/admin/oauth/clients`,{body:e,headers:this.headers,xform:(t)=>({data:t,error:null})})}catch(t){if(m(t))return{data:null,error:t};throw t}}async _getOAuthClient(e){try{return await _(this.fetch,"GET",`${this.url}/admin/oauth/clients/${e}`,{headers:this.headers,xform:(t)=>({data:t,error:null})})}catch(t){if(m(t))return{data:null,error:t};throw t}}async _updateOAuthClient(e,t){try{return await _(this.fetch,"PUT",`${this.url}/admin/oauth/clients/${e}`,{body:t,headers:this.headers,xform:(r)=>({data:r,error:null})})}catch(r){if(m(r))return{data:null,error:r};throw r}}async _deleteOAuthClient(e){try{return await _(this.fetch,"DELETE",`${this.url}/admin/oauth/clients/${e}`,{headers:this.headers,noResolveJson:!0}),{data:null,error:null}}catch(t){if(m(t))return{data:null,error:t};throw t}}async _regenerateOAuthClientSecret(e){try{return await _(this.fetch,"POST",`${this.url}/admin/oauth/clients/${e}/regenerate_secret`,{headers:this.headers,xform:(t)=>({data:t,error:null})})}catch(t){if(m(t))return{data:null,error:t};throw t}}async _listCustomProviders(e){try{let t={};if(e===null||e===void 0?void 0:e.type)t.type=e.type;return await _(this.fetch,"GET",`${this.url}/admin/custom-providers`,{headers:this.headers,query:t,xform:(r)=>{var s;return{data:{providers:(s=r===null||r===void 0?void 0:r.providers)!==null&&s!==void 0?s:[]},error:null}}})}catch(t){if(m(t))return{data:{providers:[]},error:t};throw t}}async _createCustomProvider(e){try{return await _(this.fetch,"POST",`${this.url}/admin/custom-providers`,{body:e,headers:this.headers,xform:(t)=>({data:t,error:null})})}catch(t){if(m(t))return{data:null,error:t};throw t}}async _getCustomProvider(e){try{return await _(this.fetch,"GET",`${this.url}/admin/custom-providers/${e}`,{headers:this.headers,xform:(t)=>({data:t,error:null})})}catch(t){if(m(t))return{data:null,error:t};throw t}}async _updateCustomProvider(e,t){try{return await _(this.fetch,"PUT",`${this.url}/admin/custom-providers/${e}`,{body:t,headers:this.headers,xform:(r)=>({data:r,error:null})})}catch(r){if(m(r))return{data:null,error:r};throw r}}async _deleteCustomProvider(e){try{return await _(this.fetch,"DELETE",`${this.url}/admin/custom-providers/${e}`,{headers:this.headers,noResolveJson:!0}),{data:null,error:null}}catch(t){if(m(t))return{data:null,error:t};throw t}}async _adminListPasskeys(e){J(e.userId);try{return await _(this.fetch,"GET",`${this.url}/admin/users/${e.userId}/passkeys`,{headers:this.headers,xform:(t)=>({data:t,error:null})})}catch(t){if(m(t))return{data:null,error:t};throw t}}async _adminDeletePasskey(e){J(e.userId),J(e.passkeyId);try{return await _(this.fetch,"DELETE",`${this.url}/admin/users/${e.userId}/passkeys/${e.passkeyId}`,{headers:this.headers,noResolveJson:!0}),{data:null,error:null}}catch(t){if(m(t))return{data:null,error:t};throw t}}}function rr(e={}){return{getItem:(t)=>e[t]||null,setItem:(t,r)=>{e[t]=r},removeItem:(t)=>{delete e[t]}}}var Ci={debug:!!(globalThis&&Rt()&&globalThis.localStorage&&globalThis.localStorage.getItem("supabase.gotrue-js.locks.debug")==="true")};class sr extends Error{constructor(e){super(e);this.isAcquireTimeout=!0}}function Is(){if(typeof globalThis==="object")return;try{Object.defineProperty(Object.prototype,"__magic__",{get:function(){return this},configurable:!0}),__magic__.globalThis=__magic__,delete Object.prototype.__magic__}catch(e){if(typeof self<"u")self.globalThis=self}}function nr(e){if(!/^0x[a-fA-F0-9]{40}$/.test(e))throw Error(`@supabase/auth-js: Address "${e}" is invalid.`);return e.toLowerCase()}function js(e){return parseInt(e,16)}function Ns(e){let t=new TextEncoder().encode(e);return"0x"+Array.from(t,(s)=>s.toString(16).padStart(2,"0")).join("")}function Ls(e){var t;let{chainId:r,domain:s,expirationTime:n,issuedAt:i=new Date,nonce:o,notBefore:a,requestId:l,resources:c,scheme:u,uri:h,version:d}=e;{if(!Number.isInteger(r))throw Error(`@supabase/auth-js: Invalid SIWE message field "chainId". Chain ID must be a EIP-155 chain ID. Provided value: ${r}`);if(!s)throw Error('@supabase/auth-js: Invalid SIWE message field "domain". Domain must be provided.');if(o&&o.length<8)throw Error(`@supabase/auth-js: Invalid SIWE message field "nonce". Nonce must be at least 8 characters. Provided value: ${o}`);if(!h)throw Error('@supabase/auth-js: Invalid SIWE message field "uri". URI must be provided.');if(d!=="1")throw Error(`@supabase/auth-js: Invalid SIWE message field "version". Version must be '1'. Provided value: ${d}`);if((t=e.statement)===null||t===void 0?void 0:t.includes(`
-`))throw Error(`@supabase/auth-js: Invalid SIWE message field "statement". Statement must not include '\\n'. Provided value: ${e.statement}`)}let f=nr(e.address),g=u?`${u}://${s}`:s,p=e.statement?`${e.statement}
-`:"",v=`${g} wants you to sign in with your Ethereum account:
-${f}
+  });`;
 
-${p}`,w=`URI: ${h}
-Version: ${d}
-Chain ID: ${r}${o?`
-Nonce: ${o}`:""}
-Issued At: ${i.toISOString()}`;if(n)w+=`
-Expiration Time: ${n.toISOString()}`;if(a)w+=`
-Not Before: ${a.toISOString()}`;if(l)w+=`
-Request ID: ${l}`;if(c){let y=`
-Resources:`;for(let b of c){if(!b||typeof b!=="string")throw Error(`@supabase/auth-js: Invalid SIWE message field "resources". Every resource must be a valid string. Provided value: ${b}`);y+=`
-- ${b}`}w+=y}return`${v}
-${w}`}class A extends Error{constructor({message:e,code:t,cause:r,name:s}){var n;super(e,{cause:r});this.__isWebAuthnError=!0,this.name=(n=s!==null&&s!==void 0?s:r instanceof Error?r.name:void 0)!==null&&n!==void 0?n:"Unknown Error",this.code=t}toJSON(){return{name:this.name,message:this.message,code:this.code}}}class Oe extends A{constructor(e,t){super({code:"ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY",cause:t,message:e});this.name="WebAuthnUnknownError",this.originalError=t}}function Us({error:e,options:t}){var r,s,n;let{publicKey:i}=t;if(!i)throw Error("options was missing required publicKey property");if(e.name==="AbortError"){if(t.signal instanceof AbortSignal)return new A({message:"Registration ceremony was sent an abort signal",code:"ERROR_CEREMONY_ABORTED",cause:e})}else if(e.name==="ConstraintError"){if(((r=i.authenticatorSelection)===null||r===void 0?void 0:r.requireResidentKey)===!0)return new A({message:"Discoverable credentials were required but no available authenticator supported it",code:"ERROR_AUTHENTICATOR_MISSING_DISCOVERABLE_CREDENTIAL_SUPPORT",cause:e});else if(t.mediation==="conditional"&&((s=i.authenticatorSelection)===null||s===void 0?void 0:s.userVerification)==="required")return new A({message:"User verification was required during automatic registration but it could not be performed",code:"ERROR_AUTO_REGISTER_USER_VERIFICATION_FAILURE",cause:e});else if(((n=i.authenticatorSelection)===null||n===void 0?void 0:n.userVerification)==="required")return new A({message:"User verification was required but no available authenticator supported it",code:"ERROR_AUTHENTICATOR_MISSING_USER_VERIFICATION_SUPPORT",cause:e})}else if(e.name==="InvalidStateError")return new A({message:"The authenticator was previously registered",code:"ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED",cause:e});else if(e.name==="NotAllowedError")return new A({message:e.message,code:"ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY",cause:e});else if(e.name==="NotSupportedError"){if(i.pubKeyCredParams.filter((a)=>a.type==="public-key").length===0)return new A({message:'No entry in pubKeyCredParams was of type "public-key"',code:"ERROR_MALFORMED_PUBKEYCREDPARAMS",cause:e});return new A({message:"No available authenticator supported any of the specified pubKeyCredParams algorithms",code:"ERROR_AUTHENTICATOR_NO_SUPPORTED_PUBKEYCREDPARAMS_ALG",cause:e})}else if(e.name==="SecurityError"){let o=window.location.hostname;if(!ir(o))return new A({message:`${window.location.hostname} is an invalid domain`,code:"ERROR_INVALID_DOMAIN",cause:e});else if(i.rp.id!==o)return new A({message:`The RP ID "${i.rp.id}" is invalid for this domain`,code:"ERROR_INVALID_RP_ID",cause:e})}else if(e.name==="TypeError"){if(i.user.id.byteLength<1||i.user.id.byteLength>64)return new A({message:"User ID was not between 1 and 64 characters",code:"ERROR_INVALID_USER_ID_LENGTH",cause:e})}else if(e.name==="UnknownError")return new A({message:"The authenticator was unable to process the specified options, or could not create a new credential",code:"ERROR_AUTHENTICATOR_GENERAL_ERROR",cause:e});return new A({message:"a Non-Webauthn related error has occurred",code:"ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY",cause:e})}function $s({error:e,options:t}){let{publicKey:r}=t;if(!r)throw Error("options was missing required publicKey property");if(e.name==="AbortError"){if(t.signal instanceof AbortSignal)return new A({message:"Authentication ceremony was sent an abort signal",code:"ERROR_CEREMONY_ABORTED",cause:e})}else if(e.name==="NotAllowedError")return new A({message:e.message,code:"ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY",cause:e});else if(e.name==="SecurityError"){let s=window.location.hostname;if(!ir(s))return new A({message:`${window.location.hostname} is an invalid domain`,code:"ERROR_INVALID_DOMAIN",cause:e});else if(r.rpId!==s)return new A({message:`The RP ID "${r.rpId}" is invalid for this domain`,code:"ERROR_INVALID_RP_ID",cause:e})}else if(e.name==="UnknownError")return new A({message:"The authenticator was unable to process the specified options, or could not create a new assertion signature",code:"ERROR_AUTHENTICATOR_GENERAL_ERROR",cause:e});return new A({message:"a Non-Webauthn related error has occurred",code:"ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY",cause:e})}class Ds{createNewAbortSignal(){if(this.controller){let t=Error("Cancelling existing WebAuthn API call for new one");t.name="AbortError",this.controller.abort(t)}let e=new AbortController;return this.controller=e,e.signal}cancelCeremony(){if(this.controller){let e=Error("Manually cancelling existing WebAuthn API call");e.name="AbortError",this.controller.abort(e),this.controller=void 0}}}var Ct=new Ds;function or(e){if(!e)throw Error("Credential creation options are required");if(typeof PublicKeyCredential<"u"&&"parseCreationOptionsFromJSON"in PublicKeyCredential&&typeof PublicKeyCredential.parseCreationOptionsFromJSON==="function")return PublicKeyCredential.parseCreationOptionsFromJSON(e);let{challenge:t,user:r,excludeCredentials:s}=e,n=ne(e,["challenge","user","excludeCredentials"]),i=se(t).buffer,o=Object.assign(Object.assign({},r),{id:se(r.id).buffer}),a=Object.assign(Object.assign({},n),{challenge:i,user:o});if(s&&s.length>0){a.excludeCredentials=Array(s.length);for(let l=0;l<s.length;l++){let c=s[l];a.excludeCredentials[l]=Object.assign(Object.assign({},c),{id:se(c.id).buffer,type:c.type||"public-key",transports:c.transports})}}return a}function ar(e){if(!e)throw Error("Credential request options are required");if(typeof PublicKeyCredential<"u"&&"parseRequestOptionsFromJSON"in PublicKeyCredential&&typeof PublicKeyCredential.parseRequestOptionsFromJSON==="function")return PublicKeyCredential.parseRequestOptionsFromJSON(e);let{challenge:t,allowCredentials:r}=e,s=ne(e,["challenge","allowCredentials"]),n=se(t).buffer,i=Object.assign(Object.assign({},s),{challenge:n});if(r&&r.length>0){i.allowCredentials=Array(r.length);for(let o=0;o<r.length;o++){let a=r[o];i.allowCredentials[o]=Object.assign(Object.assign({},a),{id:se(a.id).buffer,type:a.type||"public-key",transports:a.transports})}}return i}function lr(e){var t;if("toJSON"in e&&typeof e.toJSON==="function")return e.toJSON();let r=e;return{id:e.id,rawId:e.id,response:{attestationObject:Z(new Uint8Array(e.response.attestationObject)),clientDataJSON:Z(new Uint8Array(e.response.clientDataJSON))},type:"public-key",clientExtensionResults:e.getClientExtensionResults(),authenticatorAttachment:(t=r.authenticatorAttachment)!==null&&t!==void 0?t:void 0}}function cr(e){var t;if("toJSON"in e&&typeof e.toJSON==="function")return e.toJSON();let r=e,s=e.getClientExtensionResults(),n=e.response;return{id:e.id,rawId:e.id,response:{authenticatorData:Z(new Uint8Array(n.authenticatorData)),clientDataJSON:Z(new Uint8Array(n.clientDataJSON)),signature:Z(new Uint8Array(n.signature)),userHandle:n.userHandle?Z(new Uint8Array(n.userHandle)):void 0},type:"public-key",clientExtensionResults:s,authenticatorAttachment:(t=r.authenticatorAttachment)!==null&&t!==void 0?t:void 0}}function ir(e){return e==="localhost"||/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i.test(e)}function Ye(){var e,t;return!!(P()&&("PublicKeyCredential"in window)&&window.PublicKeyCredential&&("credentials"in navigator)&&typeof((e=navigator===null||navigator===void 0?void 0:navigator.credentials)===null||e===void 0?void 0:e.create)==="function"&&typeof((t=navigator===null||navigator===void 0?void 0:navigator.credentials)===null||t===void 0?void 0:t.get)==="function")}async function ur(e){try{let t=await navigator.credentials.create(e);if(!t)return{data:null,error:new Oe("Empty credential response",t)};if(!(t instanceof PublicKeyCredential))return{data:null,error:new Oe("Browser returned unexpected credential type",t)};return{data:t,error:null}}catch(t){return{data:null,error:Us({error:t,options:e})}}}async function hr(e){try{let t=await navigator.credentials.get(e);if(!t)return{data:null,error:new Oe("Empty credential response",t)};if(!(t instanceof PublicKeyCredential))return{data:null,error:new Oe("Browser returned unexpected credential type",t)};return{data:t,error:null}}catch(t){return{data:null,error:$s({error:t,options:e})}}}var Ii={hints:["security-key"],authenticatorSelection:{authenticatorAttachment:"cross-platform",requireResidentKey:!1,userVerification:"preferred",residentKey:"discouraged"},attestation:"direct"},ji={userVerification:"preferred",hints:["security-key"],attestation:"direct"};function Pt(...e){let t=(n)=>n!==null&&typeof n==="object"&&!Array.isArray(n),r=(n)=>n instanceof ArrayBuffer||ArrayBuffer.isView(n),s={};for(let n of e){if(!n)continue;for(let i in n){let o=n[i];if(o===void 0)continue;if(Array.isArray(o))s[i]=o;else if(r(o))s[i]=o;else if(t(o)){let a=s[i];if(t(a))s[i]=Pt(a,o);else s[i]=Pt(o)}else s[i]=o}}return s}function Ni(e,t){return Pt(Ii,e,t||{})}function Li(e,t){return Pt(ji,e,t||{})}class dr{constructor(e){this.client=e,this.enroll=this._enroll.bind(this),this.challenge=this._challenge.bind(this),this.verify=this._verify.bind(this),this.authenticate=this._authenticate.bind(this),this.register=this._register.bind(this)}async _enroll(e){return this.client.mfa.enroll(Object.assign(Object.assign({},e),{factorType:"webauthn"}))}async _challenge({factorId:e,webauthn:t,friendlyName:r,signal:s},n){var i;try{let{data:o,error:a}=await this.client.mfa.challenge({factorId:e,webauthn:t});if(!o)return{data:null,error:a};let l=s!==null&&s!==void 0?s:Ct.createNewAbortSignal();if(o.webauthn.type==="create"){let{user:c}=o.webauthn.credential_options.publicKey;if(!c.name){let u=r;if(!u){let d=(await this.client.getUser()).data.user,f=((i=d===null||d===void 0?void 0:d.user_metadata)===null||i===void 0?void 0:i.name)||(d===null||d===void 0?void 0:d.email)||(d===null||d===void 0?void 0:d.id)||"User";c.name=`${c.id}:${f}`}else c.name=`${c.id}:${u}`}if(!c.displayName)c.displayName=c.name}switch(o.webauthn.type){case"create":{let c=Ni(o.webauthn.credential_options.publicKey,n===null||n===void 0?void 0:n.create),{data:u,error:h}=await ur({publicKey:c,signal:l});if(u)return{data:{factorId:e,challengeId:o.id,webauthn:{type:o.webauthn.type,credential_response:u}},error:null};return{data:null,error:h}}case"request":{let c=Li(o.webauthn.credential_options.publicKey,n===null||n===void 0?void 0:n.request),{data:u,error:h}=await hr(Object.assign(Object.assign({},o.webauthn.credential_options),{publicKey:c,signal:l}));if(u)return{data:{factorId:e,challengeId:o.id,webauthn:{type:o.webauthn.type,credential_response:u}},error:null};return{data:null,error:h}}}}catch(o){if(m(o))return{data:null,error:o};return{data:null,error:new I("Unexpected error in challenge",o)}}}async _verify({challengeId:e,factorId:t,webauthn:r}){return this.client.mfa.verify({factorId:t,challengeId:e,webauthn:r})}async _authenticate({factorId:e,webauthn:{rpId:t=typeof window<"u"?window.location.hostname:void 0,rpOrigins:r=typeof window<"u"?[window.location.origin]:void 0,signal:s}={}},n){if(!t)return{data:null,error:new le("rpId is required for WebAuthn authentication")};try{if(!Ye())return{data:null,error:new I("Browser does not support WebAuthn",null)};let{data:i,error:o}=await this.challenge({factorId:e,webauthn:{rpId:t,rpOrigins:r},signal:s},{request:n});if(!i)return{data:null,error:o};let{webauthn:a}=i;return this._verify({factorId:e,challengeId:i.challengeId,webauthn:{type:a.type,rpId:t,rpOrigins:r,credential_response:a.credential_response}})}catch(i){if(m(i))return{data:null,error:i};return{data:null,error:new I("Unexpected error in authenticate",i)}}}async _register({friendlyName:e,webauthn:{rpId:t=typeof window<"u"?window.location.hostname:void 0,rpOrigins:r=typeof window<"u"?[window.location.origin]:void 0,signal:s}={}},n){if(!t)return{data:null,error:new le("rpId is required for WebAuthn registration")};try{if(!Ye())return{data:null,error:new I("Browser does not support WebAuthn",null)};let{data:i,error:o}=await this._enroll({friendlyName:e});if(!i)return await this.client.mfa.listFactors().then((c)=>{var u;return(u=c.data)===null||u===void 0?void 0:u.all.find((h)=>h.factor_type==="webauthn"&&h.friendly_name===e&&h.status==="unverified")}).then((c)=>c?this.client.mfa.unenroll({factorId:c===null||c===void 0?void 0:c.id}):void 0),{data:null,error:o};let{data:a,error:l}=await this._challenge({factorId:i.id,friendlyName:i.friendly_name,webauthn:{rpId:t,rpOrigins:r},signal:s},{create:n});if(!a)return{data:null,error:l};return this._verify({factorId:i.id,challengeId:a.challengeId,webauthn:{rpId:t,rpOrigins:r,type:a.webauthn.type,credential_response:a.webauthn.credential_response}})}catch(i){if(m(i))return{data:null,error:i};return{data:null,error:new I("Unexpected error in register",i)}}}}Is();var Ui={url:ns,storageKey:is,autoRefreshToken:!0,persistSession:!0,detectSessionInUrl:!0,headers:os,flowType:"implicit",debug:!1,hasCustomAuthorizationHeader:!1,throwOnError:!1,lockAcquireTimeout:5000,skipAutoInitialize:!1,experimental:{}};var xe={},Bs=!1;class Xe{get jwks(){var e,t;return(t=(e=xe[this.storageKey])===null||e===void 0?void 0:e.jwks)!==null&&t!==void 0?t:{keys:[]}}set jwks(e){xe[this.storageKey]=Object.assign(Object.assign({},xe[this.storageKey]),{jwks:e})}get jwks_cached_at(){var e,t;return(t=(e=xe[this.storageKey])===null||e===void 0?void 0:e.cachedAt)!==null&&t!==void 0?t:Number.MIN_SAFE_INTEGER}set jwks_cached_at(e){xe[this.storageKey]=Object.assign(Object.assign({},xe[this.storageKey]),{cachedAt:e})}constructor(e){var t,r,s;this.userStorage=null,this.memoryStorage=null,this.stateChangeEmitters=new Map,this.autoRefreshTicker=null,this.autoRefreshTickTimeout=null,this.visibilityChangedCallback=null,this.refreshingDeferred=null,this.lastRefreshFailure=null,this._sessionRemovalEpoch=0,this.initializePromise=null,this._pendingInitNotifications=null,this.detectSessionInUrl=!0,this.hasCustomAuthorizationHeader=!1,this.suppressGetSessionWarning=!1,this.lock=null,this.lockAcquired=!1,this.pendingInLock=[],this.broadcastChannel=null,this.logger=console.log;let n=Object.assign(Object.assign({},Ui),e);if(this.storageKey=n.storageKey,this.instanceID=(t=Xe.nextInstanceID[this.storageKey])!==null&&t!==void 0?t:0,Xe.nextInstanceID[this.storageKey]=this.instanceID+1,this.logDebugMessages=!!n.debug,typeof n.debug==="function")this.logger=n.debug;if(this.instanceID>0&&P()){let i=`${this._logPrefix()} Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.`;if(console.warn(i),this.logDebugMessages)console.trace(i)}if(this.persistSession=n.persistSession,this.autoRefreshToken=n.autoRefreshToken,this.experimental=(r=n.experimental)!==null&&r!==void 0?r:{},this.admin=new Ae({url:n.url,headers:n.headers,fetch:n.fetch,experimental:this.experimental}),this.url=n.url,this.headers=n.headers,this.fetch=At(n.fetch),this.detectSessionInUrl=n.detectSessionInUrl,this.flowType=n.flowType,this.hasCustomAuthorizationHeader=n.hasCustomAuthorizationHeader,this.throwOnError=n.throwOnError,this.lockAcquireTimeout=n.lockAcquireTimeout,n.lock!=null){if(this.lock=n.lock,!Bs)Bs=!0,console.warn(`${this._logPrefix()} The "lock" option is deprecated and will be removed in v3. The client now coordinates session refreshes without a lock, so most apps can drop the option. See https://github.com/supabase/supabase-js/blob/master/packages/core/auth-js/migrations/lockless-coordination.md`)}if(!this.jwks)this.jwks={keys:[]},this.jwks_cached_at=Number.MIN_SAFE_INTEGER;if(this.mfa={verify:this._verify.bind(this),enroll:this._enroll.bind(this),unenroll:this._unenroll.bind(this),challenge:this._challenge.bind(this),listFactors:this._listFactors.bind(this),challengeAndVerify:this._challengeAndVerify.bind(this),getAuthenticatorAssuranceLevel:this._getAuthenticatorAssuranceLevel.bind(this),webauthn:new dr(this),recoveryCodes:{getStatus:this._getRecoveryCodesStatus.bind(this),generate:this._generateRecoveryCodes.bind(this),verify:this._verifyRecoveryCode.bind(this),regenerate:this._regenerateRecoveryCodes.bind(this),unenroll:this._unenrollRecoveryCodes.bind(this)}},this.oauth={getAuthorizationDetails:this._getAuthorizationDetails.bind(this),approveAuthorization:this._approveAuthorization.bind(this),denyAuthorization:this._denyAuthorization.bind(this),listGrants:this._listOAuthGrants.bind(this),revokeGrant:this._revokeOAuthGrant.bind(this)},this.passkey={startRegistration:this._startPasskeyRegistration.bind(this),verifyRegistration:this._verifyPasskeyRegistration.bind(this),startAuthentication:this._startPasskeyAuthentication.bind(this),verifyAuthentication:this._verifyPasskeyAuthentication.bind(this),list:this._listPasskeys.bind(this),update:this._updatePasskey.bind(this),delete:this._deletePasskey.bind(this)},this.persistSession){if(n.storage)this.storage=n.storage;else if(Rt())this.storage=globalThis.localStorage;else this.memoryStorage={},this.storage=rr(this.memoryStorage);if(n.userStorage)this.userStorage=n.userStorage}else this.memoryStorage={},this.storage=rr(this.memoryStorage);if(P()&&globalThis.BroadcastChannel&&this.persistSession&&this.storageKey){try{this.broadcastChannel=new globalThis.BroadcastChannel(this.storageKey)}catch(i){console.error("Failed to create a new BroadcastChannel, multi-tab state changes will not be available",i)}(s=this.broadcastChannel)===null||s===void 0||s.addEventListener("message",async(i)=>{if(this._debug("received broadcast notification from other tab or client",i),i.data.event==="TOKEN_REFRESHED"||i.data.event==="SIGNED_IN")this.lastRefreshFailure=null;try{await this._notifyAllSubscribers(i.data.event,i.data.session,!1)}catch(o){this._debug("#broadcastChannel","error",o)}})}if(!n.skipAutoInitialize)this.initialize().catch((i)=>{this._debug("#initialize()","error",i)})}isThrowOnErrorEnabled(){return this.throwOnError}_returnResult(e){if(this.throwOnError&&e&&e.error)throw e.error;return e}_logPrefix(){return`GoTrueClient@${this.storageKey}:${this.instanceID} (${wt}) ${new Date().toISOString()}`}_debug(...e){if(this.logDebugMessages)this.logger(this._logPrefix(),...e);return this}async initialize(){var e;if(this.initializePromise)return await this.initializePromise;this._pendingInitNotifications=[],this.initializePromise=(async()=>{if(this.lock!=null)return await this._acquireLock(this.lockAcquireTimeout,async()=>await this._initialize());return await this._initialize()})();let t=await this.initializePromise,r=(e=this._pendingInitNotifications)!==null&&e!==void 0?e:[];this._pendingInitNotifications=null;for(let s of r)await this._notifyAllSubscribers(s.event,s.session,s.broadcast);return t}async _initialize(){var e;try{let t={},r="none";if(P()){if(t=Xt(window.location.href),this._isImplicitGrantCallback(t))r="implicit";else if(await this._isPKCECallback(t))r="pkce"}if(P()&&this.detectSessionInUrl&&r!=="none"){let{data:s,error:n}=await this._getSessionFromURL(t,r);if(n){if(this._debug("#_initialize()","error detecting session from URL",n),us(n)){let a=(e=n.details)===null||e===void 0?void 0:e.code;if(a==="identity_already_exists"||a==="identity_not_found"||a==="single_identity_not_deletable")return{error:n}}return{error:n}}let{session:i,redirectType:o}=s;return this._debug("#_initialize()","detected session in URL",i,"redirect type",o),await this._saveSession(i),setTimeout(async()=>{if(o==="recovery")await this._notifyAllSubscribers("PASSWORD_RECOVERY",i);else await this._notifyAllSubscribers("SIGNED_IN",i)},0),{error:null}}return await this._recoverAndRefresh(),{error:null}}catch(t){if(m(t))return this._returnResult({error:t});return this._returnResult({error:new I("Unexpected error during initialization",t)})}finally{await this._handleVisibilityChange(),this._debug("#_initialize()","end")}}async signInAnonymously(e){var t,r,s;try{let n=await _(this.fetch,"POST",`${this.url}/signup`,{headers:this.headers,body:{data:(r=(t=e===null||e===void 0?void 0:e.options)===null||t===void 0?void 0:t.data)!==null&&r!==void 0?r:{},gotrue_meta_security:{captcha_token:(s=e===null||e===void 0?void 0:e.options)===null||s===void 0?void 0:s.captchaToken}},xform:U}),{data:i,error:o}=n;if(o||!i)return this._returnResult({data:{user:null,session:null},error:o});let{session:a,user:l}=i;if(i.session)await this._saveSession(i.session),await this._notifyAllSubscribers("SIGNED_IN",a);return this._returnResult({data:{user:l,session:a},error:null})}catch(n){if(m(n))return this._returnResult({data:{user:null,session:null},error:n});throw n}}async signUp(e){var t,r,s;let n=null;try{let i;if("email"in e){let{email:u,password:h,options:d}=e,f=null,g=null;if(this.flowType==="pkce")[f,g,n]=await this._getCodeChallengeAndMethod();i=await _(this.fetch,"POST",`${this.url}/signup`,{headers:this.headers,redirectTo:this._maybeAppendFlowIdToRedirect(d===null||d===void 0?void 0:d.emailRedirectTo,n),body:{email:u,password:h,data:(t=d===null||d===void 0?void 0:d.data)!==null&&t!==void 0?t:{},gotrue_meta_security:{captcha_token:d===null||d===void 0?void 0:d.captchaToken},code_challenge:f,code_challenge_method:g},xform:U})}else if("phone"in e){let{phone:u,password:h,options:d}=e;i=await _(this.fetch,"POST",`${this.url}/signup`,{headers:this.headers,body:{phone:u,password:h,data:(r=d===null||d===void 0?void 0:d.data)!==null&&r!==void 0?r:{},channel:(s=d===null||d===void 0?void 0:d.channel)!==null&&s!==void 0?s:"sms",gotrue_meta_security:{captcha_token:d===null||d===void 0?void 0:d.captchaToken}},xform:U})}else throw new Ee("You must provide either an email or phone number and a password");let{data:o,error:a}=i;if(a||!o)return await F(this.storage,this.storageKey,n),this._returnResult({data:{user:null,session:null},error:a});let{session:l,user:c}=o;if(o.session)await this._saveSession(o.session),await this._notifyAllSubscribers("SIGNED_IN",l);return this._returnResult({data:{user:c,session:l},error:null})}catch(i){if(await F(this.storage,this.storageKey,n),m(i))return this._returnResult({data:{user:null,session:null},error:i});throw i}}async signInWithPassword(e){try{let t;if("email"in e){let{email:n,password:i,options:o}=e;t=await _(this.fetch,"POST",`${this.url}/token?grant_type=password`,{headers:this.headers,body:{email:n,password:i,gotrue_meta_security:{captcha_token:o===null||o===void 0?void 0:o.captchaToken}},xform:er})}else if("phone"in e){let{phone:n,password:i,options:o}=e;t=await _(this.fetch,"POST",`${this.url}/token?grant_type=password`,{headers:this.headers,body:{phone:n,password:i,gotrue_meta_security:{captcha_token:o===null||o===void 0?void 0:o.captchaToken}},xform:er})}else throw new Ee("You must provide either an email or phone number and a password");let{data:r,error:s}=t;if(s)return this._returnResult({data:{user:null,session:null},error:s});else if(!r||!r.session||!r.user){let n=new re;return this._returnResult({data:{user:null,session:null},error:n})}if(r.session)await this._saveSession(r.session),await this._notifyAllSubscribers("SIGNED_IN",r.session);return this._returnResult({data:Object.assign({user:r.user,session:r.session},r.weak_password?{weakPassword:r.weak_password}:null),error:s})}catch(t){if(m(t))return this._returnResult({data:{user:null,session:null},error:t});throw t}}async signInWithOAuth(e){var t,r,s,n;return await this._handleProviderSignIn(e.provider,{redirectTo:(t=e.options)===null||t===void 0?void 0:t.redirectTo,scopes:(r=e.options)===null||r===void 0?void 0:r.scopes,queryParams:(s=e.options)===null||s===void 0?void 0:s.queryParams,skipBrowserRedirect:(n=e.options)===null||n===void 0?void 0:n.skipBrowserRedirect})}async exchangeCodeForSession(e,t){if(await this.initializePromise,this.lock!=null)return this._acquireLock(this.lockAcquireTimeout,async()=>this._exchangeCodeForSession(e,t));return this._exchangeCodeForSession(e,t)}async signInWithWeb3(e){let{chain:t}=e;switch(t){case"ethereum":return await this.signInWithEthereum(e);case"solana":return await this.signInWithSolana(e);default:throw Error(`@supabase/auth-js: Unsupported chain "${t}"`)}}async signInWithEthereum(e){var t,r,s,n,i,o,a,l,c,u,h;let d,f;if("message"in e)d=e.message,f=e.signature;else{let{chain:g,wallet:p,statement:v,options:w}=e,y;if(!P()){if(typeof p!=="object"||!(w===null||w===void 0?void 0:w.url))throw Error("@supabase/auth-js: Both wallet and url must be specified in non-browser environments.");y=p}else if(typeof p==="object")y=p;else{let D=window;if("ethereum"in D&&typeof D.ethereum==="object"&&"request"in D.ethereum&&typeof D.ethereum.request==="function")y=D.ethereum;else throw Error("@supabase/auth-js: No compatible Ethereum wallet interface on the window object (window.ethereum) detected. Make sure the user already has a wallet installed and connected for this app. Prefer passing the wallet interface object directly to signInWithWeb3({ chain: 'ethereum', wallet: resolvedUserWallet }) instead.")}let b=new URL((t=w===null||w===void 0?void 0:w.url)!==null&&t!==void 0?t:window.location.href),k=await y.request({method:"eth_requestAccounts"}).then((D)=>D).catch(()=>{throw Error("@supabase/auth-js: Wallet method eth_requestAccounts is missing or invalid")});if(!k||k.length===0)throw Error("@supabase/auth-js: No accounts available. Please ensure the wallet is connected.");let E=nr(k[0]),T=(r=w===null||w===void 0?void 0:w.signInWithEthereum)===null||r===void 0?void 0:r.chainId;if(!T){let D=await y.request({method:"eth_chainId"});T=js(D)}let ee={domain:b.host,address:E,statement:v,uri:b.href,version:"1",chainId:T,nonce:(s=w===null||w===void 0?void 0:w.signInWithEthereum)===null||s===void 0?void 0:s.nonce,issuedAt:(i=(n=w===null||w===void 0?void 0:w.signInWithEthereum)===null||n===void 0?void 0:n.issuedAt)!==null&&i!==void 0?i:new Date,expirationTime:(o=w===null||w===void 0?void 0:w.signInWithEthereum)===null||o===void 0?void 0:o.expirationTime,notBefore:(a=w===null||w===void 0?void 0:w.signInWithEthereum)===null||a===void 0?void 0:a.notBefore,requestId:(l=w===null||w===void 0?void 0:w.signInWithEthereum)===null||l===void 0?void 0:l.requestId,resources:(c=w===null||w===void 0?void 0:w.signInWithEthereum)===null||c===void 0?void 0:c.resources};d=Ls(ee),f=await y.request({method:"personal_sign",params:[Ns(d),E]})}try{let{data:g,error:p}=await _(this.fetch,"POST",`${this.url}/token?grant_type=web3`,{headers:this.headers,body:Object.assign({chain:"ethereum",message:d,signature:f},((u=e.options)===null||u===void 0?void 0:u.captchaToken)?{gotrue_meta_security:{captcha_token:(h=e.options)===null||h===void 0?void 0:h.captchaToken}}:null),xform:U});if(p)throw p;if(!g||!g.session||!g.user){let v=new re;return this._returnResult({data:{user:null,session:null},error:v})}if(g.session)await this._saveSession(g.session),await this._notifyAllSubscribers("SIGNED_IN",g.session);return this._returnResult({data:Object.assign({},g),error:p})}catch(g){if(m(g))return this._returnResult({data:{user:null,session:null},error:g});throw g}}async signInWithSolana(e){var t,r,s,n,i,o,a,l,c,u,h,d;let f,g;if("message"in e)f=e.message,g=e.signature;else{let{chain:p,wallet:v,statement:w,options:y}=e,b;if(!P()){if(typeof v!=="object"||!(y===null||y===void 0?void 0:y.url))throw Error("@supabase/auth-js: Both wallet and url must be specified in non-browser environments.");b=v}else if(typeof v==="object")b=v;else{let E=window;if("solana"in E&&typeof E.solana==="object"&&(("signIn"in E.solana)&&typeof E.solana.signIn==="function"||("signMessage"in E.solana)&&typeof E.solana.signMessage==="function"))b=E.solana;else throw Error("@supabase/auth-js: No compatible Solana wallet interface on the window object (window.solana) detected. Make sure the user already has a wallet installed and connected for this app. Prefer passing the wallet interface object directly to signInWithWeb3({ chain: 'solana', wallet: resolvedUserWallet }) instead.")}let k=new URL((t=y===null||y===void 0?void 0:y.url)!==null&&t!==void 0?t:window.location.href);if("signIn"in b&&b.signIn){let E=await b.signIn(Object.assign(Object.assign(Object.assign({issuedAt:new Date().toISOString()},y===null||y===void 0?void 0:y.signInWithSolana),{version:"1",domain:k.host,uri:k.href}),w?{statement:w}:null)),T;if(Array.isArray(E)&&E[0]&&typeof E[0]==="object")T=E[0];else if(E&&typeof E==="object"&&"signedMessage"in E&&"signature"in E)T=E;else throw Error("@supabase/auth-js: Wallet method signIn() returned unrecognized value");if("signedMessage"in T&&"signature"in T&&(typeof T.signedMessage==="string"||T.signedMessage instanceof Uint8Array)&&T.signature instanceof Uint8Array)f=typeof T.signedMessage==="string"?T.signedMessage:new TextDecoder().decode(T.signedMessage),g=T.signature;else throw Error("@supabase/auth-js: Wallet method signIn() API returned object without signedMessage and signature fields")}else{if(!("signMessage"in b)||typeof b.signMessage!=="function"||!("publicKey"in b)||typeof b!=="object"||!b.publicKey||!("toBase58"in b.publicKey)||typeof b.publicKey.toBase58!=="function")throw Error("@supabase/auth-js: Wallet does not have a compatible signMessage() and publicKey.toBase58() API");f=[`${k.host} wants you to sign in with your Solana account:`,b.publicKey.toBase58(),...w?["",w,""]:[""],"Version: 1",`URI: ${k.href}`,`Issued At: ${(s=(r=y===null||y===void 0?void 0:y.signInWithSolana)===null||r===void 0?void 0:r.issuedAt)!==null&&s!==void 0?s:new Date().toISOString()}`,...((n=y===null||y===void 0?void 0:y.signInWithSolana)===null||n===void 0?void 0:n.notBefore)?[`Not Before: ${y.signInWithSolana.notBefore}`]:[],...((i=y===null||y===void 0?void 0:y.signInWithSolana)===null||i===void 0?void 0:i.expirationTime)?[`Expiration Time: ${y.signInWithSolana.expirationTime}`]:[],...((o=y===null||y===void 0?void 0:y.signInWithSolana)===null||o===void 0?void 0:o.chainId)?[`Chain ID: ${y.signInWithSolana.chainId}`]:[],...((a=y===null||y===void 0?void 0:y.signInWithSolana)===null||a===void 0?void 0:a.nonce)?[`Nonce: ${y.signInWithSolana.nonce}`]:[],...((l=y===null||y===void 0?void 0:y.signInWithSolana)===null||l===void 0?void 0:l.requestId)?[`Request ID: ${y.signInWithSolana.requestId}`]:[],...((u=(c=y===null||y===void 0?void 0:y.signInWithSolana)===null||c===void 0?void 0:c.resources)===null||u===void 0?void 0:u.length)?["Resources",...y.signInWithSolana.resources.map((T)=>`- ${T}`)]:[]].join(`
-`);let E=await b.signMessage(new TextEncoder().encode(f),"utf8");if(!E||!(E instanceof Uint8Array))throw Error("@supabase/auth-js: Wallet signMessage() API returned an recognized value");g=E}}try{let{data:p,error:v}=await _(this.fetch,"POST",`${this.url}/token?grant_type=web3`,{headers:this.headers,body:Object.assign({chain:"solana",message:f,signature:Z(g)},((h=e.options)===null||h===void 0?void 0:h.captchaToken)?{gotrue_meta_security:{captcha_token:(d=e.options)===null||d===void 0?void 0:d.captchaToken}}:null),xform:U});if(v)throw v;if(!p||!p.session||!p.user){let w=new re;return this._returnResult({data:{user:null,session:null},error:w})}if(p.session)await this._saveSession(p.session),await this._notifyAllSubscribers("SIGNED_IN",p.session);return this._returnResult({data:Object.assign({},p),error:v})}catch(p){if(m(p))return this._returnResult({data:{user:null,session:null},error:p});throw p}}async _exchangeCodeForSession(e,t){let r=(t===null||t===void 0?void 0:t.flowId)!=null,s=r?Je(t===null||t===void 0?void 0:t.flowId):P()?Je(Xt(window.location.href)[Q]):null;if(r&&!s)this._debug("#_exchangeCodeForSession()","provided flowId is not a valid flow id",t===null||t===void 0?void 0:t.flowId);let{verifier:n,flowId:i}=r&&!s?{verifier:null,flowId:null}:await _s(this.storage,this.storageKey,s),[o,a]=(n!==null&&n!==void 0?n:"").split("/");try{if(!o&&this.flowType==="pkce")throw new zt;let{data:l,error:c}=await _(this.fetch,"POST",`${this.url}/token?grant_type=pkce`,{headers:this.headers,body:{auth_code:e,code_verifier:o},xform:U});if(await F(this.storage,this.storageKey,i),c)throw c;if(!l||!l.session||!l.user){let u=new re;return this._returnResult({data:{user:null,session:null,redirectType:null},error:u})}if(l.session)await this._saveSession(l.session),await this._notifyAllSubscribers(a==="recovery"?"PASSWORD_RECOVERY":"SIGNED_IN",l.session);return this._returnResult({data:Object.assign(Object.assign({},l),{redirectType:a!==null&&a!==void 0?a:null}),error:c})}catch(l){if(await F(this.storage,this.storageKey,i),m(l))return this._returnResult({data:{user:null,session:null,redirectType:null},error:l});throw l}}async signInWithIdToken(e){try{let{options:t,provider:r,token:s,access_token:n,nonce:i}=e,o=await _(this.fetch,"POST",`${this.url}/token?grant_type=id_token`,{headers:this.headers,body:{provider:r,id_token:s,access_token:n,nonce:i,gotrue_meta_security:{captcha_token:t===null||t===void 0?void 0:t.captchaToken}},xform:U}),{data:a,error:l}=o;if(l)return this._returnResult({data:{user:null,session:null},error:l});else if(!a||!a.session||!a.user){let c=new re;return this._returnResult({data:{user:null,session:null},error:c})}if(a.session)await this._saveSession(a.session),await this._notifyAllSubscribers("SIGNED_IN",a.session);return this._returnResult({data:a,error:l})}catch(t){if(m(t))return this._returnResult({data:{user:null,session:null},error:t});throw t}}async signInWithOtp(e){var t,r,s,n,i;let o=null;try{if("email"in e){let{email:a,options:l}=e,c=null,u=null;if(this.flowType==="pkce")[c,u,o]=await this._getCodeChallengeAndMethod();let{error:h}=await _(this.fetch,"POST",`${this.url}/otp`,{headers:this.headers,body:{email:a,data:(t=l===null||l===void 0?void 0:l.data)!==null&&t!==void 0?t:{},create_user:(r=l===null||l===void 0?void 0:l.shouldCreateUser)!==null&&r!==void 0?r:!0,gotrue_meta_security:{captcha_token:l===null||l===void 0?void 0:l.captchaToken},code_challenge:c,code_challenge_method:u},redirectTo:this._maybeAppendFlowIdToRedirect(l===null||l===void 0?void 0:l.emailRedirectTo,o)});return this._returnResult({data:{user:null,session:null},error:h})}if("phone"in e){let{phone:a,options:l}=e,{data:c,error:u}=await _(this.fetch,"POST",`${this.url}/otp`,{headers:this.headers,body:{phone:a,data:(s=l===null||l===void 0?void 0:l.data)!==null&&s!==void 0?s:{},create_user:(n=l===null||l===void 0?void 0:l.shouldCreateUser)!==null&&n!==void 0?n:!0,gotrue_meta_security:{captcha_token:l===null||l===void 0?void 0:l.captchaToken},channel:(i=l===null||l===void 0?void 0:l.channel)!==null&&i!==void 0?i:"sms"}});return this._returnResult({data:{user:null,session:null,messageId:c===null||c===void 0?void 0:c.message_id},error:u})}throw new Ee("You must provide either an email or phone number.")}catch(a){if(await F(this.storage,this.storageKey,o),m(a))return this._returnResult({data:{user:null,session:null},error:a});throw a}}async verifyOtp(e){var t,r;try{let s=void 0,n=void 0;if("options"in e)s=(t=e.options)===null||t===void 0?void 0:t.redirectTo,n=(r=e.options)===null||r===void 0?void 0:r.captchaToken;let{data:i,error:o}=await _(this.fetch,"POST",`${this.url}/verify`,{headers:this.headers,body:Object.assign(Object.assign({},e),{gotrue_meta_security:{captcha_token:n}}),redirectTo:s,xform:U});if(o)throw o;if(!i)throw Error("An error occurred on token verification.");let{session:a,user:l}=i;if(a===null||a===void 0?void 0:a.access_token)await this._saveSession(a),await this._notifyAllSubscribers(e.type=="recovery"?"PASSWORD_RECOVERY":"SIGNED_IN",a);return this._returnResult({data:{user:l,session:a},error:null})}catch(s){if(m(s))return this._returnResult({data:{user:null,session:null},error:s});throw s}}async signInWithSSO(e){var t,r,s,n;let i=null;try{let o=null,a=null;if(this.flowType==="pkce")[o,a,i]=await this._getCodeChallengeAndMethod();let l=await _(this.fetch,"POST",`${this.url}/sso`,{body:Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({},"providerId"in e?{provider_id:e.providerId}:null),"domain"in e?{domain:e.domain}:null),{redirect_to:this._maybeAppendFlowIdToRedirect((t=e.options)===null||t===void 0?void 0:t.redirectTo,i)}),((r=e===null||e===void 0?void 0:e.options)===null||r===void 0?void 0:r.captchaToken)?{gotrue_meta_security:{captcha_token:e.options.captchaToken}}:null),{skip_http_redirect:!0,code_challenge:o,code_challenge_method:a}),headers:this.headers,xform:Ps});if(((s=l.data)===null||s===void 0?void 0:s.url)&&P()&&!((n=e.options)===null||n===void 0?void 0:n.skipBrowserRedirect))window.location.assign(l.data.url);return this._returnResult(l)}catch(o){if(await F(this.storage,this.storageKey,i),m(o))return this._returnResult({data:null,error:o});throw o}}async reauthenticate(){if(await this.initializePromise,this.lock!=null)return await this._acquireLock(this.lockAcquireTimeout,async()=>await this._reauthenticate());return await this._reauthenticate()}async _reauthenticate(){try{return await this._useSession(async(e)=>{let{data:{session:t},error:r}=e;if(r)throw r;if(!t)throw new x;let{error:s}=await _(this.fetch,"GET",`${this.url}/reauthenticate`,{headers:this.headers,jwt:t.access_token});return this._returnResult({data:{user:null,session:null},error:s})})}catch(e){if(m(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async resend(e){let t=null;try{let r=`${this.url}/resend`;if("email"in e){let{email:s,type:n,options:i}=e,o=null,a=null;if(this.flowType==="pkce")[o,a,t]=await this._getCodeChallengeAndMethod();let{error:l}=await _(this.fetch,"POST",r,{headers:this.headers,body:{email:s,type:n,gotrue_meta_security:{captcha_token:i===null||i===void 0?void 0:i.captchaToken},code_challenge:o,code_challenge_method:a},redirectTo:this._maybeAppendFlowIdToRedirect(i===null||i===void 0?void 0:i.emailRedirectTo,t)});if(l)await F(this.storage,this.storageKey,t);return this._returnResult({data:{user:null,session:null},error:l})}else if("phone"in e){let{phone:s,type:n,options:i}=e,{data:o,error:a}=await _(this.fetch,"POST",r,{headers:this.headers,body:{phone:s,type:n,gotrue_meta_security:{captcha_token:i===null||i===void 0?void 0:i.captchaToken}}});return this._returnResult({data:{user:null,session:null,messageId:o===null||o===void 0?void 0:o.message_id},error:a})}throw new Ee("You must provide either an email or phone number and a type")}catch(r){if(await F(this.storage,this.storageKey,t),m(r))return this._returnResult({data:{user:null,session:null},error:r});throw r}}async getSession(){if(await this.initializePromise,this.lock!=null)return await this._acquireLock(this.lockAcquireTimeout,async()=>this._useSession(async(e)=>e));return await this._useSession(async(e)=>e)}async _acquireLock(e,t){this._debug("#_acquireLock","begin",e);try{if(this.lockAcquired){let r=this.pendingInLock.length?this.pendingInLock[this.pendingInLock.length-1]:Promise.resolve(),s=(async()=>(await r,await t()))();return this.pendingInLock.push((async()=>{try{await s}catch(n){}})()),s}return await this.lock(`lock:${this.storageKey}`,e,async()=>{this._debug("#_acquireLock","lock acquired for storage key",this.storageKey);try{this.lockAcquired=!0;let r=t();this.pendingInLock.push((async()=>{try{await r}catch(s){}})()),await r;while(this.pendingInLock.length){let s=[...this.pendingInLock];await Promise.all(s),this.pendingInLock.splice(0,s.length)}return await r}finally{this._debug("#_acquireLock","lock released for storage key",this.storageKey),this.lockAcquired=!1}})}finally{this._debug("#_acquireLock","end")}}async _useSession(e){this._debug("#_useSession","begin");try{let t=await this.__loadSession();return await e(t)}finally{this._debug("#_useSession","end")}}async __loadSession(){if(this._debug("#__loadSession()","begin"),this.lock!=null&&!this.lockAcquired)this._debug("#__loadSession()","used outside of an acquired lock!",Error().stack);try{let e=null,t=await C(this.storage,this.storageKey);if(this._debug("#getSession()","session from storage",t),t!==null)if(this._isValidSession(t))e=t;else this._debug("#getSession()","session from storage is not valid"),await this._removeSession();if(!e)return{data:{session:null},error:null};let r=e.expires_at?e.expires_at*1000-Date.now()<_t:!1;if(this._debug("#__loadSession()",`session has${r?"":" not"} expired`,"expires_at",e.expires_at),!r)return{data:{session:await this._hydrateSessionUser(e)},error:null};let{data:s,error:n}=await this._callRefreshToken(e.refresh_token);if(n){let i=await C(this.storage,this.storageKey);if(i&&this._isValidSession(i)&&i.expires_at&&i.expires_at*1000>Date.now())return this._returnResult({data:{session:await this._hydrateSessionUser(i)},error:null});return this._returnResult({data:{session:null},error:n})}return this._returnResult({data:{session:s},error:null})}finally{this._debug("#__loadSession()","end")}}async _hydrateSessionUser(e){if(this.userStorage){let t=await C(this.userStorage,this.storageKey+"-user");e.user=(t===null||t===void 0?void 0:t.user)?t.user:Ot()}if(this.storage.isServer&&e.user&&!e.user.__isUserNotAvailableProxy){let t={value:this.suppressGetSessionWarning};if(e.user=As(e.user,t),t.value)this.suppressGetSessionWarning=!0}return e}async getUser(e){if(e)return await this._getUser(e);await this.initializePromise;let t;if(this.lock!=null)t=await this._acquireLock(this.lockAcquireTimeout,async()=>await this._getUser());else t=await this._getUser();if(t.data.user)this.suppressGetSessionWarning=!0;return t}async _getUser(e){try{if(e)return await _(this.fetch,"GET",`${this.url}/user`,{headers:this.headers,jwt:e,xform:Y});return await this._useSession(async(t)=>{var r,s,n;let{data:i,error:o}=t;if(o)throw o;if(!((r=i.session)===null||r===void 0?void 0:r.access_token)&&!this.hasCustomAuthorizationHeader)return{data:{user:null},error:new x};return await _(this.fetch,"GET",`${this.url}/user`,{headers:this.headers,jwt:(n=(s=i.session)===null||s===void 0?void 0:s.access_token)!==null&&n!==void 0?n:void 0,xform:Y})})}catch(t){if(m(t)){if(Ke(t))await this._removeSession();return this._returnResult({data:{user:null},error:t})}throw t}}async updateUser(e,t={}){if(await this.initializePromise,this.lock!=null)return await this._acquireLock(this.lockAcquireTimeout,async()=>await this._updateUser(e,t));return await this._updateUser(e,t)}async _updateUser(e,t={}){let r=null;try{return await this._useSession(async(s)=>{let{data:n,error:i}=s;if(i)throw i;if(!n.session)throw new x;let o=n.session,a=null,l=null;if(this.flowType==="pkce"&&e.email!=null)[a,l,r]=await this._getCodeChallengeAndMethod();let{data:c,error:u}=await _(this.fetch,"PUT",`${this.url}/user`,{headers:this.headers,redirectTo:this._maybeAppendFlowIdToRedirect(t===null||t===void 0?void 0:t.emailRedirectTo,r),body:Object.assign(Object.assign({},e),{code_challenge:a,code_challenge_method:l}),jwt:o.access_token,xform:Y});if(u)throw u;return o.user=c.user,await this._saveSession(o),await this._notifyAllSubscribers("USER_UPDATED",o),this._returnResult({data:{user:o.user},error:null})})}catch(s){if(await F(this.storage,this.storageKey,r),m(s))return this._returnResult({data:{user:null},error:s});throw s}}async setSession(e){if(await this.initializePromise,this.lock!=null)return await this._acquireLock(this.lockAcquireTimeout,async()=>await this._setSession(e));return await this._setSession(e)}async _setSession(e){try{if(!e.access_token||!e.refresh_token)throw new x;let t=Date.now()/1000,r=t,s=!0,n=null,{payload:i}=ze(e.access_token);if(i.exp)r=i.exp,s=r<=t;if(s){let{data:o,error:a}=await this._callRefreshToken(e.refresh_token);if(a)return this._returnResult({data:{user:null,session:null},error:a});if(!o)return{data:{user:null,session:null},error:null};n=o}else{let{data:o,error:a}=await this._getUser(e.access_token);if(a)return this._returnResult({data:{user:null,session:null},error:a});n={access_token:e.access_token,refresh_token:e.refresh_token,user:o.user,token_type:"bearer",expires_in:r-t,expires_at:r},await this._saveSession(n),await this._notifyAllSubscribers("SIGNED_IN",n)}return this._returnResult({data:{user:n.user,session:n},error:null})}catch(t){if(m(t))return this._returnResult({data:{session:null,user:null},error:t});throw t}}async refreshSession(e){if(await this.initializePromise,this.lock!=null)return await this._acquireLock(this.lockAcquireTimeout,async()=>await this._refreshSession(e));return await this._refreshSession(e)}async _refreshSession(e){try{return await this._useSession(async(t)=>{var r;if(!e){let{data:i,error:o}=t;if(o)throw o;e=(r=i.session)!==null&&r!==void 0?r:void 0}if(!(e===null||e===void 0?void 0:e.refresh_token))throw new x;let{data:s,error:n}=await this._callRefreshToken(e.refresh_token);if(n)return this._returnResult({data:{user:null,session:null},error:n});if(!s)return this._returnResult({data:{user:null,session:null},error:null});return this._returnResult({data:{user:s.user,session:s},error:null})})}catch(t){if(m(t))return this._returnResult({data:{user:null,session:null},error:t});throw t}}async _getSessionFromURL(e,t){var r;try{if(!P())throw new ke("No browser detected.");if(e.error||e.error_description||e.error_code)throw new ke(e.error_description||"Error in URL with unspecified error_description",{error:e.error||"unspecified_error",code:e.error_code||"unspecified_code"});switch(t){case"implicit":if(this.flowType==="pkce")throw new bt("Not a valid PKCE flow url.");break;case"pkce":if(this.flowType==="implicit")throw new ke("Not a valid implicit grant flow url.");break;default:}if(t==="pkce"){if(this._debug("#_initialize()","begin","is PKCE flow",!0),!e.code)throw new bt("No code detected.");let{data:y,error:b}=await this._exchangeCodeForSession(e.code,{flowId:e[Q]});if(b)throw b;let k=new URL(window.location.href);return k.searchParams.delete("code"),k.searchParams.delete(Q),window.history.replaceState(window.history.state,"",k.toString()),{data:{session:y.session,redirectType:(r=y.redirectType)!==null&&r!==void 0?r:null},error:null}}let{provider_token:s,provider_refresh_token:n,access_token:i,refresh_token:o,expires_in:a,expires_at:l,token_type:c}=e;if(!i||!a||!o||!c)throw new ke("No session defined in URL");let u=Math.round(Date.now()/1000),h=parseInt(a),d=u+h;if(l)d=parseInt(l);let f=d-u;if(f*1000<=G)console.warn(`@supabase/gotrue-js: Session as retrieved from URL expires in ${f}s, should have been closer to ${h}s`);let g=d-h;if(u-g>=120)console.warn("@supabase/gotrue-js: Session as retrieved from URL was issued over 120s ago, URL could be stale",g,d,u);else if(u-g<0)console.warn("@supabase/gotrue-js: Session as retrieved from URL was issued in the future? Check the device clock for skew",g,d,u);let{data:p,error:v}=await this._getUser(i);if(v)throw v;let w={provider_token:s,provider_refresh_token:n,access_token:i,expires_in:h,expires_at:d,refresh_token:o,token_type:c,user:p.user};return window.location.hash="",this._debug("#_getSessionFromURL()","clearing window.location.hash"),this._returnResult({data:{session:w,redirectType:e.type},error:null})}catch(s){if(m(s))return this._returnResult({data:{session:null,redirectType:null},error:s});throw s}}_isImplicitGrantCallback(e){if(typeof this.detectSessionInUrl==="function")return this.detectSessionInUrl(new URL(window.location.href),e);return Boolean(e.access_token||e.error||e.error_description||e.error_code)}async _isPKCECallback(e){if(!e.code)return!1;let t=Je(e[Q]);if(t&&await C(this.storage,he(this.storageKey,t)))return!0;return!!await C(this.storage,`${this.storageKey}-code-verifier`)}async signOut(e={scope:"global"}){if(await this.initializePromise,this.lock!=null)return await this._acquireLock(this.lockAcquireTimeout,async()=>await this._signOut(e));return await this._signOut(e)}async _signOut({scope:e}={scope:"global"}){return await this._useSession(async(t)=>{var r;let s=async()=>{await this._removeSession()},{data:n,error:i}=t;if(i&&!Ke(i))return this._returnResult({error:i});let o=(r=n.session)===null||r===void 0?void 0:r.access_token;if(o){let{error:a}=await this.admin.signOut(o,e);if(a){if(!(Gt(a)&&(a.status===404||a.status===401||a.status===403)||Ke(a))){if(e!=="others")await s();return this._returnResult({error:a})}}}if(e!=="others")await s();return this._returnResult({error:null})})}onAuthStateChange(e){let t=gs(),r={id:t,callback:e,unsubscribe:()=>{this._debug("#unsubscribe()","state change callback with id removed",t),this.stateChangeEmitters.delete(t)}};return this._debug("#onAuthStateChange()","registered callback with id",t),this.stateChangeEmitters.set(t,r),(async()=>{if(await this.initializePromise,this.lock!=null)await this._acquireLock(this.lockAcquireTimeout,async()=>{this._emitInitialSession(t)});else await this._emitInitialSession(t)})(),{data:{subscription:r}}}async _emitInitialSession(e){return await this._useSession(async(t)=>{var r,s;try{let{data:{session:n},error:i}=t;if(i)throw i;await((r=this.stateChangeEmitters.get(e))===null||r===void 0?void 0:r.callback("INITIAL_SESSION",n)),this._debug("INITIAL_SESSION","callback id",e,"session",n)}catch(n){if(await((s=this.stateChangeEmitters.get(e))===null||s===void 0?void 0:s.callback("INITIAL_SESSION",null)),this._debug("INITIAL_SESSION","callback id",e,"error",n),Jt(n))return;if(Ke(n)||We(n)||Gt(n)&&(n.code==="refresh_token_not_found"||n.code==="refresh_token_already_used"||n.code==="session_expired"))console.warn(n);else console.error(n)}})}async resetPasswordForEmail(e,t={}){let r=null,s=null,n=null;if(this.flowType==="pkce")[r,s,n]=await this._getCodeChallengeAndMethod(!0);try{return await _(this.fetch,"POST",`${this.url}/recover`,{body:{email:e,code_challenge:r,code_challenge_method:s,gotrue_meta_security:{captcha_token:t.captchaToken}},headers:this.headers,redirectTo:this._maybeAppendFlowIdToRedirect(t.redirectTo,n)})}catch(i){if(await F(this.storage,this.storageKey,n),m(i))return this._returnResult({data:null,error:i});throw i}}async getUserIdentities(){var e;try{let{data:t,error:r}=await this.getUser();if(r)throw r;return this._returnResult({data:{identities:(e=t.user.identities)!==null&&e!==void 0?e:[]},error:null})}catch(t){if(m(t))return this._returnResult({data:null,error:t});throw t}}async linkIdentity(e){if("token"in e)return this.linkIdentityIdToken(e);return this.linkIdentityOAuth(e)}async linkIdentityOAuth(e){var t;let r=null;try{let{data:s,error:n}=await this._useSession(async(i)=>{var o,a,l,c,u;let{data:h,error:d}=i;if(d)throw d;let{url:f,flowId:g}=await this._getUrlForProvider(`${this.url}/user/identities/authorize`,e.provider,{redirectTo:(o=e.options)===null||o===void 0?void 0:o.redirectTo,scopes:(a=e.options)===null||a===void 0?void 0:a.scopes,queryParams:(l=e.options)===null||l===void 0?void 0:l.queryParams,skipBrowserRedirect:!0});return r=g,await _(this.fetch,"GET",f,{headers:this.headers,jwt:(u=(c=h.session)===null||c===void 0?void 0:c.access_token)!==null&&u!==void 0?u:void 0})});if(n)throw n;if(P()&&!((t=e.options)===null||t===void 0?void 0:t.skipBrowserRedirect))window.location.assign(s===null||s===void 0?void 0:s.url);return this._returnResult({data:{provider:e.provider,url:s===null||s===void 0?void 0:s.url,flowId:r},error:null})}catch(s){if(m(s))return this._returnResult({data:{provider:e.provider,url:null,flowId:r},error:s});throw s}}async linkIdentityIdToken(e){return await this._useSession(async(t)=>{var r;try{let{error:s,data:{session:n}}=t;if(s)throw s;let{options:i,provider:o,token:a,access_token:l,nonce:c}=e,u=await _(this.fetch,"POST",`${this.url}/token?grant_type=id_token`,{headers:this.headers,jwt:(r=n===null||n===void 0?void 0:n.access_token)!==null&&r!==void 0?r:void 0,body:{provider:o,id_token:a,access_token:l,nonce:c,link_identity:!0,gotrue_meta_security:{captcha_token:i===null||i===void 0?void 0:i.captchaToken}},xform:U}),{data:h,error:d}=u;if(d)return this._returnResult({data:{user:null,session:null},error:d});else if(!h||!h.session||!h.user)return this._returnResult({data:{user:null,session:null},error:new re});if(h.session)await this._saveSession(h.session),await this._notifyAllSubscribers("USER_UPDATED",h.session);return this._returnResult({data:h,error:d})}catch(s){if(await F(this.storage,this.storageKey,null),m(s))return this._returnResult({data:{user:null,session:null},error:s});throw s}})}async unlinkIdentity(e){try{return await this._useSession(async(t)=>{var r,s;let{data:n,error:i}=t;if(i)throw i;return await _(this.fetch,"DELETE",`${this.url}/user/identities/${e.identity_id}`,{headers:this.headers,jwt:(s=(r=n.session)===null||r===void 0?void 0:r.access_token)!==null&&s!==void 0?s:void 0})})}catch(t){if(m(t))return this._returnResult({data:null,error:t});throw t}}async _refreshAccessToken(e){this._debug("#_refreshAccessToken()","begin");try{let r=Date.now();return await vs(async(s)=>{if(s>0)await ms(200*Math.pow(2,s-1));return this._debug("#_refreshAccessToken()","refreshing attempt",s),await _(this.fetch,"POST",`${this.url}/token?grant_type=refresh_token`,{body:{refresh_token:e},headers:this.headers,xform:U})},(s,n)=>{let i=200*Math.pow(2,s);return n&&We(n)&&Date.now()+i-r<G})}catch(r){if(this._debug("#_refreshAccessToken()","error",r),m(r))return this._returnResult({data:{session:null,user:null},error:r});throw r}finally{this._debug("#_refreshAccessToken()","end")}}_isValidSession(e){return typeof e==="object"&&e!==null&&"access_token"in e&&"refresh_token"in e&&"expires_at"in e}async _handleProviderSignIn(e,t){let{url:r,flowId:s}=await this._getUrlForProvider(`${this.url}/authorize`,e,{redirectTo:t.redirectTo,scopes:t.scopes,queryParams:t.queryParams});if(this._debug("#_handleProviderSignIn()","provider",e,"options",t,"url",r),P()&&!t.skipBrowserRedirect)window.location.assign(r);return{data:{provider:e,url:r,flowId:s},error:null}}async _recoverAndRefresh(){var e,t;let r="#_recoverAndRefresh()";this._debug("#_recoverAndRefresh()","begin");try{let s=await C(this.storage,this.storageKey);if(s&&this.userStorage){let i=await C(this.userStorage,this.storageKey+"-user");if(!this.storage.isServer&&Object.is(this.storage,this.userStorage)&&!i)i={user:s.user},await z(this.userStorage,this.storageKey+"-user",i);s.user=(e=i===null||i===void 0?void 0:i.user)!==null&&e!==void 0?e:Ot()}else if(s&&!s.user){if(!s.user){let i=await C(this.storage,this.storageKey+"-user");if(i&&(i===null||i===void 0?void 0:i.user))s.user=i.user,await j(this.storage,this.storageKey+"-user"),await z(this.storage,this.storageKey,s);else s.user=Ot()}}if(this._debug("#_recoverAndRefresh()","session from storage",s),!this._isValidSession(s)){if(this._debug("#_recoverAndRefresh()","session is not valid"),s!==null)await this._removeSession();return}let n=((t=s.expires_at)!==null&&t!==void 0?t:1/0)*1000-Date.now()<_t;if(this._debug("#_recoverAndRefresh()",`session has${n?"":" not"} expired with margin of ${_t}s`),n){if(this.autoRefreshToken&&s.refresh_token){let{error:i}=await this._callRefreshToken(s.refresh_token);if(i)if(Jt(i))this._debug("#_recoverAndRefresh()","refresh discarded by commit guard",i);else this._debug("#_recoverAndRefresh()","refresh failed",i)}}else if(s.user&&s.user.__isUserNotAvailableProxy===!0)try{let{data:i,error:o}=await this._getUser(s.access_token);if(!o&&(i===null||i===void 0?void 0:i.user))s.user=i.user,await this._saveSession(s),await this._notifyAllSubscribers("SIGNED_IN",s);else this._debug("#_recoverAndRefresh()","could not get user data, skipping SIGNED_IN notification")}catch(i){console.error("Error getting user data:",i),this._debug("#_recoverAndRefresh()","error getting user data, skipping SIGNED_IN notification",i)}else await this._notifyAllSubscribers("SIGNED_IN",s)}catch(s){if(this._debug("#_recoverAndRefresh()","error",s),We(s))console.warn(s);else console.error(s);return}finally{this._debug("#_recoverAndRefresh()","end")}}async _callRefreshToken(e){var t,r;if(!e)throw new x;if(this.refreshingDeferred)return this.refreshingDeferred.promise;if(this.lastRefreshFailure&&this.lastRefreshFailure.refreshToken===e&&Date.now()<this.lastRefreshFailure.expiresAt)return this._debug("#_callRefreshToken()","returning cached failure (cooldown active)"),this.lastRefreshFailure.result;let s="#_callRefreshToken()";this._debug(s,"begin");try{this.refreshingDeferred=new Ge,this.refreshingDeferred.promise.then(void 0,()=>{});let n=await C(this.storage,this.storageKey),{data:i,error:o}=await this._refreshAccessToken(e);if(o)throw o;if(!i.session)throw new x;let a=await C(this.storage,this.storageKey);if(n!==null&&(a===null||a.refresh_token!==n.refresh_token)){this._debug(s,"commit guard: storage changed since refresh started, discarding rotated tokens",{startedWith:"present",nowHolds:a?"replaced":"cleared"});let h={data:null,error:new St};return this.refreshingDeferred.resolve(h),h}let c=this._sessionRemovalEpoch;if(await this._saveSession(i.session),this._sessionRemovalEpoch!==c){if(this._debug(s,"commit guard (post-save): _removeSession ran during _saveSession, undoing write"),await j(this.storage,this.storageKey),this.userStorage)await j(this.userStorage,this.storageKey+"-user");let h={data:null,error:new St};return this.refreshingDeferred.resolve(h),h}await this._notifyAllSubscribers("TOKEN_REFRESHED",i.session);let u={data:i.session,error:null};return this.lastRefreshFailure=null,this.refreshingDeferred.resolve(u),u}catch(n){if(this._debug(s,"error",n),m(n)){let i={data:null,error:n};if(!We(n)){let o=await C(this.storage,this.storageKey);if(!!((o===null||o===void 0?void 0:o.expires_at)&&o.expires_at*1000>Date.now()))this._debug(s,"proactive refresh failed, access token still valid — preserving session");else await this._removeSession()}return this.lastRefreshFailure={refreshToken:e,result:i,expiresAt:Date.now()+ss},(t=this.refreshingDeferred)===null||t===void 0||t.resolve(i),i}throw(r=this.refreshingDeferred)===null||r===void 0||r.reject(n),n}finally{this.refreshingDeferred=null,this._debug(s,"end")}}async _notifyAllSubscribers(e,t,r=!0){if(this._pendingInitNotifications!==null&&r){this._pendingInitNotifications.push({event:e,session:t,broadcast:r});return}let s=`#_notifyAllSubscribers(${e})`;this._debug(s,"begin",t,`broadcast = ${r}`);try{if(this.broadcastChannel&&r)this.broadcastChannel.postMessage({event:e,session:t});let n=[],i=Array.from(this.stateChangeEmitters.values()).map(async(o)=>{try{await o.callback(e,t)}catch(a){n.push(a)}});if(await Promise.all(i),n.length>0){for(let o=0;o<n.length;o+=1)console.error(n[o]);throw n[0]}}finally{this._debug(s,"end")}}async _saveSession(e){this._debug("#_saveSession()",e),this.suppressGetSessionWarning=!0;let t=Object.assign({},e),r=t.user&&t.user.__isUserNotAvailableProxy===!0;if(this.userStorage){if(!r&&t.user)await z(this.userStorage,this.storageKey+"-user",{user:t.user});let s=Object.assign({},t);delete s.user;let n=Zt(s);await z(this.storage,this.storageKey,n)}else{let s=Zt(t);await z(this.storage,this.storageKey,s)}}async _removeSession(){if(this._sessionRemovalEpoch+=1,this._debug("#_removeSession()"),this.lastRefreshFailure=null,this.suppressGetSessionWarning=!1,await j(this.storage,this.storageKey),await bs(this.storage,this.storageKey),await j(this.storage,this.storageKey+"-user"),this.userStorage)await j(this.userStorage,this.storageKey+"-user");await this._notifyAllSubscribers("SIGNED_OUT",null)}_removeVisibilityChangedCallback(){this._debug("#_removeVisibilityChangedCallback()");let e=this.visibilityChangedCallback;this.visibilityChangedCallback=null;try{if(e&&P()&&(window===null||window===void 0?void 0:window.removeEventListener))window.removeEventListener("visibilitychange",e)}catch(t){console.error("removing visibilitychange callback failed",t)}}async _startAutoRefresh(){await this._stopAutoRefresh(),this._debug("#_startAutoRefresh()");let e=setInterval(()=>this._autoRefreshTokenTick(),G);if(this.autoRefreshTicker=e,e&&typeof e==="object"&&typeof e.unref==="function")e.unref();else if(typeof Deno<"u"&&typeof Deno.unrefTimer==="function")Deno.unrefTimer(e);let t=setTimeout(async()=>{await this.initializePromise,await this._autoRefreshTokenTick()},0);if(this.autoRefreshTickTimeout=t,t&&typeof t==="object"&&typeof t.unref==="function")t.unref();else if(typeof Deno<"u"&&typeof Deno.unrefTimer==="function")Deno.unrefTimer(t)}async _stopAutoRefresh(){this._debug("#_stopAutoRefresh()");let e=this.autoRefreshTicker;if(this.autoRefreshTicker=null,e)clearInterval(e);let t=this.autoRefreshTickTimeout;if(this.autoRefreshTickTimeout=null,t)clearTimeout(t)}async startAutoRefresh(){this._removeVisibilityChangedCallback(),await this._startAutoRefresh()}async stopAutoRefresh(){this._removeVisibilityChangedCallback(),await this._stopAutoRefresh()}async dispose(){var e;this._removeVisibilityChangedCallback(),await this._stopAutoRefresh(),(e=this.broadcastChannel)===null||e===void 0||e.close(),this.broadcastChannel=null,this.stateChangeEmitters.clear()}async _autoRefreshTokenTick(){if(this._debug("#_autoRefreshTokenTick()","begin"),this.lock!=null){try{await this._acquireLock(0,async()=>{try{let e=Date.now();try{return await this._useSession(async(t)=>{let{data:{session:r}}=t;if(!r||!r.refresh_token||!r.expires_at){this._debug("#_autoRefreshTokenTick()","no session");return}let s=Math.floor((r.expires_at*1000-e)/G);if(this._debug("#_autoRefreshTokenTick()",`access token expires in ${s} ticks, a tick lasts ${G}ms, refresh threshold is ${Se} ticks`),s<=Se)await this._callRefreshToken(r.refresh_token)})}catch(t){console.error("Auto refresh tick failed with error. This is likely a transient error.",t)}}finally{this._debug("#_autoRefreshTokenTick()","end")}})}catch(e){if(e instanceof sr)this._debug("auto refresh token tick lock not available");else throw e}return}if(this.refreshingDeferred!==null){this._debug("#_autoRefreshTokenTick()","refresh already in flight, skipping");return}try{let e=Date.now();try{await this._useSession(async(t)=>{let{data:{session:r}}=t;if(!r||!r.refresh_token||!r.expires_at){this._debug("#_autoRefreshTokenTick()","no session");return}let s=Math.floor((r.expires_at*1000-e)/G);if(this._debug("#_autoRefreshTokenTick()",`access token expires in ${s} ticks, a tick lasts ${G}ms, refresh threshold is ${Se} ticks`),s<=Se)await this._callRefreshToken(r.refresh_token)})}catch(t){console.error("Auto refresh tick failed with error. This is likely a transient error.",t)}}finally{this._debug("#_autoRefreshTokenTick()","end")}}async _handleVisibilityChange(){if(this._debug("#_handleVisibilityChange()"),!P()||!(window===null||window===void 0?void 0:window.addEventListener)){if(this.autoRefreshToken)this.startAutoRefresh();return!1}try{this.visibilityChangedCallback=async()=>{try{await this._onVisibilityChanged(!1)}catch(e){this._debug("#visibilityChangedCallback","error",e)}},window===null||window===void 0||window.addEventListener("visibilitychange",this.visibilityChangedCallback),await this._onVisibilityChanged(!0)}catch(e){console.error("_handleVisibilityChange",e)}}async _onVisibilityChanged(e){let t=`#_onVisibilityChanged(${e})`;if(this._debug(t,"visibilityState",document.visibilityState),document.visibilityState==="visible"){if(this.autoRefreshToken)this._startAutoRefresh();if(!e)if(await this.initializePromise,this.lock!=null)await this._acquireLock(this.lockAcquireTimeout,async()=>{if(document.visibilityState!=="visible"){this._debug(t,"acquired the lock to recover the session, but the browser visibilityState is no longer visible, aborting");return}await this._recoverAndRefresh()});else{if(document.visibilityState!=="visible"){this._debug(t,"visibilityState is no longer visible, skipping recovery");return}await this._recoverAndRefresh()}}else if(document.visibilityState==="hidden"){if(this.autoRefreshToken)this._stopAutoRefresh()}}async _getUrlForProvider(e,t,r){let s=r===null||r===void 0?void 0:r.redirectTo,n=null,i=null,o=null;if(this.flowType==="pkce")[n,i,o]=await this._getCodeChallengeAndMethod(),s=this._maybeAppendFlowIdToRedirect(s,o);let a=[`provider=${encodeURIComponent(t)}`];if(s)a.push(`redirect_to=${encodeURIComponent(s)}`);if(r===null||r===void 0?void 0:r.scopes)a.push(`scopes=${encodeURIComponent(r.scopes)}`);if(n!=null&&i!=null){let l=new URLSearchParams({code_challenge:`${encodeURIComponent(n)}`,code_challenge_method:`${encodeURIComponent(i)}`});a.push(l.toString())}if(r===null||r===void 0?void 0:r.queryParams){let l=new URLSearchParams(r.queryParams);a.push(l.toString())}if(r===null||r===void 0?void 0:r.skipBrowserRedirect)a.push(`skip_http_redirect=${r.skipBrowserRedirect}`);return{url:`${e}?${a.join("&")}`,flowId:o}}_maybeAppendFlowIdToRedirect(e,t){if(!e||!t||!this.experimental.appendPkceFlowIdToRedirects)return e!==null&&e!==void 0?e:void 0;return Ss(e,t)}async _getCodeChallengeAndMethod(e=!1){return Es(this.storage,this.storageKey,e,(t)=>this._debug("#_getCodeChallengeAndMethod()","evicted oldest pending PKCE verifier slot",t))}async _unenroll(e){try{return await this._useSession(async(t)=>{var r;let{data:s,error:n}=t;if(n)return this._returnResult({data:null,error:n});return await _(this.fetch,"DELETE",`${this.url}/factors/${e.factorId}`,{headers:this.headers,jwt:(r=s===null||s===void 0?void 0:s.session)===null||r===void 0?void 0:r.access_token})})}catch(t){if(m(t))return this._returnResult({data:null,error:t});throw t}}async _enroll(e){try{return await this._useSession(async(t)=>{var r,s;let{data:n,error:i}=t;if(i)return this._returnResult({data:null,error:i});let o=Object.assign({friendly_name:e.friendlyName,factor_type:e.factorType},e.factorType==="phone"?{phone:e.phone}:e.factorType==="totp"?{issuer:e.issuer}:{}),{data:a,error:l}=await _(this.fetch,"POST",`${this.url}/factors`,{body:o,headers:this.headers,jwt:(r=n===null||n===void 0?void 0:n.session)===null||r===void 0?void 0:r.access_token});if(l)return this._returnResult({data:null,error:l});if(e.factorType==="totp"&&a.type==="totp"&&((s=a===null||a===void 0?void 0:a.totp)===null||s===void 0?void 0:s.qr_code))a.totp.qr_code=`data:image/svg+xml;utf-8,${a.totp.qr_code}`;return this._returnResult({data:a,error:null})})}catch(t){if(m(t))return this._returnResult({data:null,error:t});throw t}}async _verify(e){let t=async()=>{try{return await this._useSession(async(r)=>{var s;let{data:n,error:i}=r;if(i)return this._returnResult({data:null,error:i});let o=Object.assign({challenge_id:e.challengeId},"webauthn"in e?{webauthn:Object.assign(Object.assign({},e.webauthn),{credential_response:e.webauthn.type==="create"?lr(e.webauthn.credential_response):cr(e.webauthn.credential_response)})}:{code:e.code}),{data:a,error:l}=await _(this.fetch,"POST",`${this.url}/factors/${e.factorId}/verify`,{body:o,headers:this.headers,jwt:(s=n===null||n===void 0?void 0:n.session)===null||s===void 0?void 0:s.access_token});if(l)return this._returnResult({data:null,error:l});return await this._saveSession(Object.assign({expires_at:Math.round(Date.now()/1000)+a.expires_in},a)),await this._notifyAllSubscribers("MFA_CHALLENGE_VERIFIED",a),this._returnResult({data:a,error:l})})}catch(r){if(m(r))return this._returnResult({data:null,error:r});throw r}};if(this.lock!=null)return this._acquireLock(this.lockAcquireTimeout,t);return t()}async _challenge(e){let t=async()=>{try{return await this._useSession(async(r)=>{var s;let{data:n,error:i}=r;if(i)return this._returnResult({data:null,error:i});let o=await _(this.fetch,"POST",`${this.url}/factors/${e.factorId}/challenge`,{body:e,headers:this.headers,jwt:(s=n===null||n===void 0?void 0:n.session)===null||s===void 0?void 0:s.access_token});if(o.error)return o;let{data:a}=o;if(a.type!=="webauthn")return{data:a,error:null};switch(a.webauthn.type){case"create":return{data:Object.assign(Object.assign({},a),{webauthn:Object.assign(Object.assign({},a.webauthn),{credential_options:Object.assign(Object.assign({},a.webauthn.credential_options),{publicKey:or(a.webauthn.credential_options.publicKey)})})}),error:null};case"request":return{data:Object.assign(Object.assign({},a),{webauthn:Object.assign(Object.assign({},a.webauthn),{credential_options:Object.assign(Object.assign({},a.webauthn.credential_options),{publicKey:ar(a.webauthn.credential_options.publicKey)})})}),error:null}}})}catch(r){if(m(r))return this._returnResult({data:null,error:r});throw r}};if(this.lock!=null)return this._acquireLock(this.lockAcquireTimeout,t);return t()}async _challengeAndVerify(e){let{data:t,error:r}=await this._challenge({factorId:e.factorId});if(r)return this._returnResult({data:null,error:r});return await this._verify({factorId:e.factorId,challengeId:t.id,code:e.code})}async _listFactors(){var e;let{data:{user:t},error:r}=await this.getUser();if(r)return{data:null,error:r};let s={all:[],phone:[],totp:[],webauthn:[],recovery_code:[]};for(let n of(e=t===null||t===void 0?void 0:t.factors)!==null&&e!==void 0?e:[])if(s.all.push(n),n.status==="verified"&&n.factor_type in s&&Array.isArray(s[n.factor_type]))s[n.factor_type].push(n);return{data:s,error:null}}async _getAuthenticatorAssuranceLevel(e){var t,r,s,n;if(e)try{let{payload:d}=ze(e),f=null;if(d.aal)f=d.aal;let g=f,{data:{user:p},error:v}=await this.getUser(e);if(v)return this._returnResult({data:null,error:v});if(((r=(t=p===null||p===void 0?void 0:p.factors)===null||t===void 0?void 0:t.filter((b)=>b.status==="verified"))!==null&&r!==void 0?r:[]).length>0)g="aal2";let y=d.amr||[];return{data:{currentLevel:f,nextLevel:g,currentAuthenticationMethods:y},error:null}}catch(d){if(m(d))return this._returnResult({data:null,error:d});throw d}let{data:{session:i},error:o}=await this.getSession();if(o)return this._returnResult({data:null,error:o});if(!i)return{data:{currentLevel:null,nextLevel:null,currentAuthenticationMethods:[]},error:null};let{payload:a}=ze(i.access_token),l=null;if(a.aal)l=a.aal;let c=l;if(((n=(s=i.user.factors)===null||s===void 0?void 0:s.filter((d)=>d.status==="verified"))!==null&&n!==void 0?n:[]).length>0)c="aal2";let h=a.amr||[];return{data:{currentLevel:l,nextLevel:c,currentAuthenticationMethods:h},error:null}}async _getRecoveryCodesStatus(){Re(this.experimental);try{return await this._useSession(async(e)=>{var t;let{data:r,error:s}=e;if(s)return this._returnResult({data:null,error:s});let{data:n,error:i}=await _(this.fetch,"GET",`${this.url}/factors/recovery-codes`,{headers:this.headers,jwt:(t=r===null||r===void 0?void 0:r.session)===null||t===void 0?void 0:t.access_token});if(i)return this._returnResult({data:null,error:i});return this._returnResult({data:n,error:null})})}catch(e){if(m(e))return this._returnResult({data:null,error:e});throw e}}async _generateRecoveryCodes(e){Re(this.experimental);try{return await this._useSession(async(t)=>{var r;let{data:s,error:n}=t;if(n)return this._returnResult({data:null,error:n});let{data:i,error:o}=await _(this.fetch,"POST",`${this.url}/factors/recovery-codes`,{body:(e===null||e===void 0?void 0:e.friendlyName)?{friendly_name:e.friendlyName}:void 0,headers:this.headers,jwt:(r=s===null||s===void 0?void 0:s.session)===null||r===void 0?void 0:r.access_token});if(o)return this._returnResult({data:null,error:o});return this._returnResult({data:i,error:null})})}catch(t){if(m(t))return this._returnResult({data:null,error:t});throw t}}async _verifyRecoveryCode(e){Re(this.experimental);let t=async()=>{try{return await this._useSession(async(r)=>{var s;let{data:n,error:i}=r;if(i)return this._returnResult({data:null,error:i});let{data:o,error:a}=await _(this.fetch,"POST",`${this.url}/factors/recovery-codes/verify`,{body:{code:e.code},headers:this.headers,jwt:(s=n===null||n===void 0?void 0:n.session)===null||s===void 0?void 0:s.access_token});if(a)return this._returnResult({data:null,error:a});let l=Object.assign({expires_at:Tt(o.expires_in)},o);return await this._saveSession(l),await this._notifyAllSubscribers("MFA_CHALLENGE_VERIFIED",l),this._returnResult({data:o,error:null})})}catch(r){if(m(r))return this._returnResult({data:null,error:r});throw r}};if(this.lock!=null)return this._acquireLock(this.lockAcquireTimeout,t);return t()}async _regenerateRecoveryCodes(){Re(this.experimental);try{return await this._useSession(async(e)=>{var t;let{data:r,error:s}=e;if(s)return this._returnResult({data:null,error:s});let{data:n,error:i}=await _(this.fetch,"POST",`${this.url}/factors/recovery-codes/regenerate`,{headers:this.headers,jwt:(t=r===null||r===void 0?void 0:r.session)===null||t===void 0?void 0:t.access_token});if(i)return this._returnResult({data:null,error:i});return this._returnResult({data:n,error:null})})}catch(e){if(m(e))return this._returnResult({data:null,error:e});throw e}}async _unenrollRecoveryCodes(){Re(this.experimental);try{return await this._useSession(async(e)=>{var t;let{data:r,error:s}=e;if(s)return this._returnResult({data:null,error:s});let{data:n,error:i}=await _(this.fetch,"DELETE",`${this.url}/factors/recovery-codes`,{headers:this.headers,jwt:(t=r===null||r===void 0?void 0:r.session)===null||t===void 0?void 0:t.access_token});if(i)return this._returnResult({data:null,error:i});return this._returnResult({data:n,error:null})})}catch(e){if(m(e))return this._returnResult({data:null,error:e});throw e}}async _getAuthorizationDetails(e){try{return await this._useSession(async(t)=>{let{data:{session:r},error:s}=t;if(s)return this._returnResult({data:null,error:s});if(!r)return this._returnResult({data:null,error:new x});return await _(this.fetch,"GET",`${this.url}/oauth/authorizations/${e}`,{headers:this.headers,jwt:r.access_token,xform:(n)=>({data:n,error:null})})})}catch(t){if(m(t))return this._returnResult({data:null,error:t});throw t}}async _approveAuthorization(e,t){try{return await this._useSession(async(r)=>{let{data:{session:s},error:n}=r;if(n)return this._returnResult({data:null,error:n});if(!s)return this._returnResult({data:null,error:new x});let i=await _(this.fetch,"POST",`${this.url}/oauth/authorizations/${e}/consent`,{headers:this.headers,jwt:s.access_token,body:{action:"approve"},xform:(o)=>({data:o,error:null})});if(i.data&&i.data.redirect_url){if(P()&&!(t===null||t===void 0?void 0:t.skipBrowserRedirect))window.location.assign(i.data.redirect_url)}return i})}catch(r){if(m(r))return this._returnResult({data:null,error:r});throw r}}async _denyAuthorization(e,t){try{return await this._useSession(async(r)=>{let{data:{session:s},error:n}=r;if(n)return this._returnResult({data:null,error:n});if(!s)return this._returnResult({data:null,error:new x});let i=await _(this.fetch,"POST",`${this.url}/oauth/authorizations/${e}/consent`,{headers:this.headers,jwt:s.access_token,body:{action:"deny"},xform:(o)=>({data:o,error:null})});if(i.data&&i.data.redirect_url){if(P()&&!(t===null||t===void 0?void 0:t.skipBrowserRedirect))window.location.assign(i.data.redirect_url)}return i})}catch(r){if(m(r))return this._returnResult({data:null,error:r});throw r}}async _listOAuthGrants(){try{return await this._useSession(async(e)=>{let{data:{session:t},error:r}=e;if(r)return this._returnResult({data:null,error:r});if(!t)return this._returnResult({data:null,error:new x});return await _(this.fetch,"GET",`${this.url}/user/oauth/grants`,{headers:this.headers,jwt:t.access_token,xform:(s)=>({data:s,error:null})})})}catch(e){if(m(e))return this._returnResult({data:null,error:e});throw e}}async _revokeOAuthGrant(e){try{return await this._useSession(async(t)=>{let{data:{session:r},error:s}=t;if(s)return this._returnResult({data:null,error:s});if(!r)return this._returnResult({data:null,error:new x});return await _(this.fetch,"DELETE",`${this.url}/user/oauth/grants`,{headers:this.headers,jwt:r.access_token,query:{client_id:e.clientId},noResolveJson:!0}),{data:{},error:null}})}catch(t){if(m(t))return this._returnResult({data:null,error:t});throw t}}async fetchJwk(e,t={keys:[]}){let r=t.keys.find((o)=>o.kid===e);if(r)return r;let s=Date.now();if(r=this.jwks.keys.find((o)=>o.kid===e),r&&this.jwks_cached_at+cs>s)return r;let{data:n,error:i}=await _(this.fetch,"GET",`${this.url}/.well-known/jwks.json`,{headers:this.headers});if(i)throw i;if(!n.keys||n.keys.length===0)return null;if(this.jwks=n,this.jwks_cached_at=s,r=n.keys.find((o)=>o.kid===e),!r)return null;return r}async getClaims(e,t={}){try{let r=e;if(!r){let{data:d,error:f}=await this.getSession();if(f||!d.session)return this._returnResult({data:null,error:f});r=d.session.access_token}let{header:s,payload:n,signature:i,raw:{header:o,payload:a}}=ze(r);if(!(t===null||t===void 0?void 0:t.allowExpired))try{Ts(n.exp)}catch(d){throw new ce(d instanceof Error?d.message:"JWT validation failed")}let l=!s.alg||s.alg.startsWith("HS")||!s.kid||!(("crypto"in globalThis)&&("subtle"in globalThis.crypto))?null:await this.fetchJwk(s.kid,(t===null||t===void 0?void 0:t.keys)?{keys:t.keys}:t===null||t===void 0?void 0:t.jwks);if(!l){let{error:d}=await this.getUser(r);if(d)throw d;return{data:{claims:n,header:s,signature:i},error:null}}let c=Rs(s.alg),u=await crypto.subtle.importKey("jwk",l,c,!0,["verify"]);if(!await crypto.subtle.verify(c,u,i,ps(`${o}.${a}`)))throw new ce("Invalid JWT signature");return{data:{claims:n,header:s,signature:i},error:null}}catch(r){if(m(r))return this._returnResult({data:null,error:r});throw r}}async signInWithPasskey(e){var t,r,s,n;try{if(!Ye())return this._returnResult({data:null,error:new I("Browser does not support WebAuthn",null)});let{data:i,error:o}=await this._startPasskeyAuthentication({options:{captchaToken:(t=e===null||e===void 0?void 0:e.options)===null||t===void 0?void 0:t.captchaToken}});if(o||!i)return this._returnResult({data:null,error:o});let a=ar(i.options),l=(s=(r=e===null||e===void 0?void 0:e.options)===null||r===void 0?void 0:r.signal)!==null&&s!==void 0?s:Ct.createNewAbortSignal(),{data:c,error:u}=await hr({publicKey:a,signal:l,mediation:(n=e===null||e===void 0?void 0:e.options)===null||n===void 0?void 0:n.mediation});if(u||!c)return this._returnResult({data:null,error:u!==null&&u!==void 0?u:new I("WebAuthn ceremony failed",null)});let h=cr(c);return this._verifyPasskeyAuthentication({challengeId:i.challenge_id,credential:h})}catch(i){if(m(i))return this._returnResult({data:null,error:i});throw i}}async registerPasskey(e){var t,r;try{if(!Ye())return this._returnResult({data:null,error:new I("Browser does not support WebAuthn",null)});let{data:s,error:n}=await this._startPasskeyRegistration();if(n||!s)return this._returnResult({data:null,error:n});let i=or(s.options),o=(r=(t=e===null||e===void 0?void 0:e.options)===null||t===void 0?void 0:t.signal)!==null&&r!==void 0?r:Ct.createNewAbortSignal(),{data:a,error:l}=await ur({publicKey:i,signal:o});if(l||!a)return this._returnResult({data:null,error:l!==null&&l!==void 0?l:new I("WebAuthn ceremony failed",null)});let c=lr(a);return this._verifyPasskeyRegistration({challengeId:s.challenge_id,credential:c})}catch(s){if(m(s))return this._returnResult({data:null,error:s});throw s}}async _startPasskeyRegistration(){try{return await this._useSession(async(e)=>{let{data:{session:t},error:r}=e;if(r)return this._returnResult({data:null,error:r});if(!t)return this._returnResult({data:null,error:new x});let{data:s,error:n}=await _(this.fetch,"POST",`${this.url}/passkeys/registration/options`,{headers:this.headers,jwt:t.access_token,body:{}});if(n)return this._returnResult({data:null,error:n});return this._returnResult({data:s,error:null})})}catch(e){if(m(e))return this._returnResult({data:null,error:e});throw e}}async _verifyPasskeyRegistration(e){try{return await this._useSession(async(t)=>{let{data:{session:r},error:s}=t;if(s)return this._returnResult({data:null,error:s});if(!r)return this._returnResult({data:null,error:new x});let{data:n,error:i}=await _(this.fetch,"POST",`${this.url}/passkeys/registration/verify`,{headers:this.headers,jwt:r.access_token,body:{challenge_id:e.challengeId,credential:e.credential}});if(i)return this._returnResult({data:null,error:i});return this._returnResult({data:n,error:null})})}catch(t){if(m(t))return this._returnResult({data:null,error:t});throw t}}async _startPasskeyAuthentication(e){var t;try{let{data:r,error:s}=await _(this.fetch,"POST",`${this.url}/passkeys/authentication/options`,{headers:this.headers,body:{gotrue_meta_security:{captcha_token:(t=e===null||e===void 0?void 0:e.options)===null||t===void 0?void 0:t.captchaToken}}});if(s)return this._returnResult({data:null,error:s});return this._returnResult({data:r,error:null})}catch(r){if(m(r))return this._returnResult({data:null,error:r});throw r}}async _verifyPasskeyAuthentication(e){try{let{data:t,error:r}=await _(this.fetch,"POST",`${this.url}/passkeys/authentication/verify`,{headers:this.headers,body:{challenge_id:e.challengeId,credential:e.credential},xform:U});if(r)return this._returnResult({data:null,error:r});if(t.session)await this._saveSession(t.session),await this._notifyAllSubscribers("SIGNED_IN",t.session);return this._returnResult({data:t,error:null})}catch(t){if(m(t))return this._returnResult({data:null,error:t});throw t}}async _listPasskeys(){try{return await this._useSession(async(e)=>{let{data:{session:t},error:r}=e;if(r)return this._returnResult({data:null,error:r});if(!t)return this._returnResult({data:null,error:new x});let{data:s,error:n}=await _(this.fetch,"GET",`${this.url}/passkeys`,{headers:this.headers,jwt:t.access_token,xform:(i)=>({data:i,error:null})});if(n)return this._returnResult({data:null,error:n});return this._returnResult({data:s,error:null})})}catch(e){if(m(e))return this._returnResult({data:null,error:e});throw e}}async _updatePasskey(e){try{return await this._useSession(async(t)=>{let{data:{session:r},error:s}=t;if(s)return this._returnResult({data:null,error:s});if(!r)return this._returnResult({data:null,error:new x});let{data:n,error:i}=await _(this.fetch,"PATCH",`${this.url}/passkeys/${e.passkeyId}`,{headers:this.headers,jwt:r.access_token,body:{friendly_name:e.friendlyName}});if(i)return this._returnResult({data:null,error:i});return this._returnResult({data:n,error:null})})}catch(t){if(m(t))return this._returnResult({data:null,error:t});throw t}}async _deletePasskey(e){try{return await this._useSession(async(t)=>{let{data:{session:r},error:s}=t;if(s)return this._returnResult({data:null,error:s});if(!r)return this._returnResult({data:null,error:new x});let{error:n}=await _(this.fetch,"DELETE",`${this.url}/passkeys/${e.passkeyId}`,{headers:this.headers,jwt:r.access_token,noResolveJson:!0});if(n)return this._returnResult({data:null,error:n});return this._returnResult({data:null,error:null})})}catch(t){if(m(t))return this._returnResult({data:null,error:t});throw t}}}Xe.nextInstanceID={};var fr=Xe;var $i=fr,pr=$i;var Di="2.118.0",Qe="",It;if(typeof Deno<"u")Qe="deno",It=(Ze=Deno.version)===null||Ze===void 0?void 0:Ze.deno;else if(typeof document<"u")Qe="web";else if(typeof navigator<"u"&&navigator.product==="ReactNative")Qe="react-native";else{Qe="node";let e=globalThis.process;It=e===null||e===void 0||(et=e.version)===null||et===void 0?void 0:et.replace(/^v/,"")}var Ze,et,Gs=[`runtime=${Qe}`];if(It)Gs.push(`runtime-version=${It}`);var Bi={"X-Client-Info":`supabase-js/${Di}; ${Gs.join("; ")}`},Fi={headers:Bi},Mi={schema:"public"},qi={autoRefreshToken:!0,persistSession:!0,detectSessionInUrl:!0,flowType:"implicit"},Hi={},Ki={enabled:!1,respectSamplingDecision:!0};function Wi(e){if(!e||typeof e!=="string")return null;let t=e.split("-");if(t.length!==4)return null;let[r,s,n,i]=t;if(r.length!==2||s.length!==32||n.length!==16||i.length!==2)return null;let o=/^[0-9a-f]+$/i;if(!o.test(r)||!o.test(s)||!o.test(n)||!o.test(i))return null;if(s==="00000000000000000000000000000000"||n==="0000000000000000")return null;return{version:r,traceId:s,parentId:n,traceFlags:i,isSampled:(parseInt(i,16)&1)===1}}function Vi(e,t){if(!e||!t||t.length===0)return!1;let r;if(e instanceof URL)r=e;else try{r=new URL(e)}catch(s){return!1}for(let s of t)try{if(typeof s==="string"){if(Gi(r.hostname,s))return!0}else if(s instanceof RegExp){if(s.test(r.hostname))return!0}else if(typeof s==="function"){if(s(r))return!0}}catch(n){continue}return!1}function Gi(e,t){if(t===e)return!0;if(t.startsWith("*.")){let r=t.slice(2);if(e.endsWith(r)){if(e===r||e.endsWith("."+r))return!0}}return!1}function zi(e){let t=[];try{let r=new URL(e);t.push(r.hostname)}catch(r){}return t.push("*.supabase.co","*.supabase.in"),t.push("localhost","127.0.0.1","[::1]"),t}function tt(e){return tt=typeof Symbol=="function"&&typeof Symbol.iterator=="symbol"?function(t){return typeof t}:function(t){return t&&typeof Symbol=="function"&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},tt(e)}function Ji(e,t){if(tt(e)!="object"||!e)return e;var r=e[Symbol.toPrimitive];if(r!==void 0){var s=r.call(e,t||"default");if(tt(s)!="object")return s;throw TypeError("@@toPrimitive must return a primitive value.")}return(t==="string"?String:Number)(e)}function Yi(e){var t=Ji(e,"string");return tt(t)=="symbol"?t:t+""}function Xi(e,t,r){return(t=Yi(t))in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function Fs(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var s=Object.getOwnPropertySymbols(e);t&&(s=s.filter(function(n){return Object.getOwnPropertyDescriptor(e,n).enumerable})),r.push.apply(r,s)}return r}function O(e){for(var t=1;t<arguments.length;t++){var r=arguments[t]!=null?arguments[t]:{};t%2?Fs(Object(r),!0).forEach(function(s){Xi(e,s,r[s])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(r)):Fs(Object(r)).forEach(function(s){Object.defineProperty(e,s,Object.getOwnPropertyDescriptor(r,s))})}return e}var Qi=(e)=>{if(e)return(...t)=>e(...t);return(...t)=>fetch(...t)},Zi=()=>Headers,zs=(e)=>e.startsWith("sb_publishable_")||e.startsWith("sb_secret_"),eo="sb_temp_",Ms=new Set,to=(e)=>{var t,r;if(!e.startsWith("sb_")||zs(e)||e.startsWith(eo))return;let s=(t=(r=e.match(/^sb_[a-zA-Z0-9]+_/))===null||r===void 0?void 0:r[0])!==null&&t!==void 0?t:"unknown";if(Ms.has(s))return;Ms.add(s),console.warn("@supabase/supabase-js: Unrecognized Supabase API key format. The client will proceed and send this key as-is; if you see authentication errors you may need to upgrade @supabase/supabase-js to a version that recognizes this key type.")},qs=(e,t,r,s,n,i)=>{let o=Qi(s),a=Zi(),l=(n===null||n===void 0?void 0:n.enabled)===!0,c=(n===null||n===void 0?void 0:n.respectSamplingDecision)!==!1,u=l?zi(t):null,h=!((i===null||i===void 0?void 0:i.omitApiKeyAsBearer)&&zs(e));return async(d,f)=>{let g=await r(),p=new a(f===null||f===void 0?void 0:f.headers);if(!p.has("apikey"))p.set("apikey",e);if(!p.has("Authorization")){let v=g!==null&&g!==void 0?g:h?e:null;if(v)p.set("Authorization",`Bearer ${v}`)}if(u){let v=ro(d,u,c);if(v){if(v.traceparent&&!p.has("traceparent"))p.set("traceparent",v.traceparent);if(v.tracestate&&!p.has("tracestate"))p.set("tracestate",v.tracestate);if(v.baggage&&!p.has("baggage"))p.set("baggage",v.baggage)}}return o(d,O(O({},f),{},{headers:p}))}},Hs=!1,Ks=!1;function ro(e,t,r){let s=wr();if(!s){if(!Hs)Hs=!0,console.warn("@supabase/supabase-js: tracePropagation is enabled but the tracing runtime is not loaded, so trace headers will not be attached. Add `import '@supabase/supabase-js/tracing'` at your application entry point (requires the OpenTelemetry API package to be installed). The CDN/UMD build does not support trace propagation.");return null}if(!Vi(typeof e==="string"?e:e instanceof URL?e:e.url,t))return null;let n=s();if(!n||!n.traceparent){var i;if((n===null||n===void 0||(i=n.carrierKeys)===null||i===void 0?void 0:i.length)&&!Ks){Ks=!0;let o=n.carrierKeys.includes("sentry-trace")?" Sentry detected: set `propagateTraceparent: true` in Sentry.init() to emit it.":" Configure your tracing SDK to emit W3C trace context on outgoing requests.";console.warn(`@supabase/supabase-js: tracePropagation is enabled and a tracing SDK is active, but its propagator wrote [${n.carrierKeys.join(", ")}] and no W3C traceparent header, so trace headers will not be attached.`+o)}return null}if(r){let o=Wi(n.traceparent);if(o&&!o.isSampled)return{traceparent:n.traceparent}}return n}function Ws(e){return typeof e==="boolean"?{enabled:e}:e}function so(e){return e.endsWith("/")?e:e+"/"}var Vs=!1;function no(e){if(Vs)return;if(typeof e!=="object"||e===null||!("schema"in e)||e.schema===void 0)return;Vs=!0,console.warn(`@supabase/supabase-js: The "schema" option must be nested under "db", e.g. createClient(url, key, { db: { schema: 'myschema' } }). A top-level "schema" is ignored and queries go to the default schema.`)}function io(e,t){var r,s,n,i,o,a;let{db:l,auth:c,realtime:u,global:h}=e,{db:d,auth:f,realtime:g,global:p}=t,v=Ws(e.tracePropagation),w=Ws(t.tracePropagation),y={db:O(O({},d),l),auth:O(O({},f),c),realtime:O(O({},g),u),storage:{},global:O(O(O({},p),h),{},{headers:O(O({},(r=p===null||p===void 0?void 0:p.headers)!==null&&r!==void 0?r:{}),(s=h===null||h===void 0?void 0:h.headers)!==null&&s!==void 0?s:{})}),tracePropagation:{enabled:(n=(i=v===null||v===void 0?void 0:v.enabled)!==null&&i!==void 0?i:w===null||w===void 0?void 0:w.enabled)!==null&&n!==void 0?n:!1,respectSamplingDecision:(o=(a=v===null||v===void 0?void 0:v.respectSamplingDecision)!==null&&a!==void 0?a:w===null||w===void 0?void 0:w.respectSamplingDecision)!==null&&o!==void 0?o:!0},accessToken:async()=>""};if(e.accessToken)y.accessToken=e.accessToken;else delete y.accessToken;return y}function oo(e){let t=e===null||e===void 0?void 0:e.trim();if(!t)throw Error("supabaseUrl is required.");if(!t.match(/^https?:\/\//i))throw Error("Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.");try{return new URL(so(t))}catch(r){throw Error("Invalid supabaseUrl: Provided URL is malformed.")}}var ao=class extends pr{constructor(e){super(e)}},lo=class{constructor(e,t,r){var s,n;this.supabaseUrl=e,this.supabaseKey=t;let i=oo(e);if(!t)throw Error("supabaseKey is required.");to(t),no(r),this.realtimeUrl=new URL("realtime/v1",i),this.realtimeUrl.protocol=this.realtimeUrl.protocol.replace("http","ws"),this.authUrl=new URL("auth/v1",i),this.storageUrl=new URL("storage/v1",i),this.functionsUrl=new URL("functions/v1",i);let o=`sb-${i.hostname.split(".")[0]}-auth-token`,a={db:Mi,realtime:Hi,auth:O(O({},qi),{},{storageKey:o}),global:Fi,tracePropagation:Ki},l=io(r!==null&&r!==void 0?r:{},a);if(this.settings=l,this.storageKey=(s=l.auth.storageKey)!==null&&s!==void 0?s:"",this.headers=(n=l.global.headers)!==null&&n!==void 0?n:{},!l.accessToken){var c;this.auth=this._initSupabaseAuthClient((c=l.auth)!==null&&c!==void 0?c:{},this.headers,l.global.fetch)}else this.accessToken=l.accessToken,this.auth=new Proxy({},{get:(u,h)=>{throw Error(`@supabase/supabase-js: Supabase Client is configured with the accessToken option, accessing supabase.auth.${String(h)} is not possible`)}});if(this.fetch=qs(t,e,this._getSessionToken.bind(this),l.global.fetch,l.tracePropagation),this.functionsFetch=qs(t,e,this._getSessionToken.bind(this),l.global.fetch,l.tracePropagation,{omitApiKeyAsBearer:!0}),this.realtime=this._initRealtimeClient(O({headers:this.headers,accessToken:this._getAccessToken.bind(this),fetch:this.fetch},l.realtime)),this.accessToken)Promise.resolve(this.accessToken()).then((u)=>this.realtime.setAuth(u)).catch((u)=>console.warn("Failed to set initial Realtime auth token:",u));if(this.rest=new Pr(new URL("rest/v1",i).href,{headers:this.headers,schema:l.db.schema,fetch:this.fetch,timeout:l.db.timeout,urlLengthLimit:l.db.urlLengthLimit,retry:l.db.retry}),this.storage=new rs(this.storageUrl.href,this.headers,this.fetch,r===null||r===void 0?void 0:r.storage),!l.accessToken)this._listenForAuthEvents()}get functions(){return new st(this.functionsUrl.href,{headers:this.headers,customFetch:this.functionsFetch})}from(e){return this.rest.from(e)}schema(e){return this.rest.schema(e)}getOpenApiSpec(){return this.rest.getOpenApiSpec()}rpc(e,t={},r={head:!1,get:!1,count:void 0}){return this.rest.rpc(e,t,r)}channel(e,t={config:{}}){return this.realtime.channel(e,t)}getChannels(){return this.realtime.getChannels()}removeChannel(e){return this.realtime.removeChannel(e)}removeAllChannels(){return this.realtime.removeAllChannels()}async _getSessionToken(){var e=this,t,r;if(e.accessToken)return await e.accessToken();let{data:s}=await e.auth.getSession();return(t=(r=s.session)===null||r===void 0?void 0:r.access_token)!==null&&t!==void 0?t:null}async _getAccessToken(){var e=this,t;return(t=await e._getSessionToken())!==null&&t!==void 0?t:e.supabaseKey}_initSupabaseAuthClient({autoRefreshToken:e,persistSession:t,detectSessionInUrl:r,storage:s,userStorage:n,storageKey:i,flowType:o,lock:a,debug:l,throwOnError:c,experimental:u,lockAcquireTimeout:h,skipAutoInitialize:d},f,g){let p={Authorization:`Bearer ${this.supabaseKey}`,apikey:`${this.supabaseKey}`};return new ao({url:this.authUrl.href,headers:O(O({},p),f),storageKey:i,autoRefreshToken:e,persistSession:t,detectSessionInUrl:r,storage:s,userStorage:n,flowType:o,lock:a,debug:l,throwOnError:c,experimental:u,fetch:g,lockAcquireTimeout:h,skipAutoInitialize:d,hasCustomAuthorizationHeader:Object.keys(this.headers).some((v)=>v.toLowerCase()==="authorization")})}_initRealtimeClient(e){return new De(this.realtimeUrl.href,O(O({},e),{},{params:O(O({},{apikey:this.supabaseKey}),e===null||e===void 0?void 0:e.params)}))}_listenForAuthEvents(){return this.auth.onAuthStateChange((e,t)=>{this._handleTokenChanged(e,"CLIENT",t===null||t===void 0?void 0:t.access_token)})}_handleTokenChanged(e,t,r){if((e==="TOKEN_REFRESHED"||e==="SIGNED_IN"||e==="INITIAL_SESSION")&&this.changedAccessToken!==r)this.changedAccessToken=r,this.realtime.setAuth(r);else if(e==="SIGNED_OUT"){if(this.realtime.setAuth(),t=="STORAGE")this.auth.signOut();this.changedAccessToken=void 0}}},Js=(e,t,r)=>new lo(e,t,r);function co(){if(typeof window<"u"||globalThis.Deno!==void 0)return!1;let e=globalThis.process;if(!e)return!1;let t=e.version;if(t===void 0||t===null)return!1;let r=t.match(/^v(\d+)\./);if(!r)return!1;return parseInt(r[1],10)<=20}if(co())console.warn("⚠️  Node.js 20 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 22 or later. For more information, visit: https://github.com/orgs/supabase/discussions/45715");function uo(e,t){if(typeof e!=="object"||e===null)return null;if(!("type"in e)||e.type!=="lovable-preview-auth:result")return null;if(!("requestId"in e)||e.requestId!==t)return null;return{ok:"ok"in e&&Boolean(e.ok),value:"value"in e&&typeof e.value==="string"?e.value:null}}function Ys(){if(typeof window>"u")return;let e=location.hostname,r=["lovableproject.com","lovableproject-dev.com","lovable.app","gpt-eng.com","gptengineer.run"].some((y)=>e===y||e.endsWith("."+y)),s="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",n=r?new RegExp("^(?:id-preview(?:-[a-z0-9]+)?|project)--("+s+")(?:-dev)?(?=\\.|$)","i").exec(e)?.[1]??new RegExp("^live--("+s+")(?:-thr_[a-z0-9]+)?(?=\\.|$)","i").exec(e)?.[1]??new RegExp("^("+s+")(?=[.-])","i").exec(e)?.[1]:void 0,i=window.parent;if(!n||!(i!==null&&i!==window))return localStorage;let a=e.endsWith(".lovableproject-dev.com")||e.endsWith(".gpt-eng.com"),l=a?/^https:\/\/([a-z0-9-]+\.)*(lovable\.dev|gptengineer\.app)$|^http:\/\/localhost:3000$/:/^https:\/\/([a-z0-9-]+\.)*(lovable\.dev|gptengineer\.app)$/,u=location.ancestorOrigins?.[0]??(document.referrer?new URL(document.referrer).origin:""),h=u&&l.test(u)?[u]:a?["https://lovable.dev","http://localhost:3000"]:["https://lovable.dev"],d=2000,f=()=>Math.random().toString(36).slice(2)+Date.now().toString(36),g=(y,b,k)=>new Promise((E)=>{let T=f(),ee=!1,D=(fe)=>{if(ee)return;ee=!0,clearTimeout(tn),window.removeEventListener("message",yr),E(fe)},yr=(fe)=>{if(!h.includes(fe.origin))return;let vr=uo(fe.data,T);if(vr)D(vr)};window.addEventListener("message",yr);let tn=setTimeout(()=>{D(null)},d),mr={type:y,requestId:T,projectId:n,key:b};if(k!==void 0)mr.value=k;for(let fe of h)window.parent.postMessage(mr,fe)}),p=!0,v=250,w=(y)=>{try{return localStorage.getItem(y)}catch{return}};return{getItem:async(y)=>{let b=w(y),k=await g("lovable-preview-auth:get",y,b??void 0);if(!k&&p)await new Promise((E)=>setTimeout(E,v)),k=await g("lovable-preview-auth:get",y,b??void 0);if(p=!1,k?.ok&&k.value!==null){if(k.value===""){if(b!==void 0&&w(y)===b)localStorage.removeItem(y);return null}if(b===null&&w(y)===null)try{localStorage.setItem(y,k.value)}catch{}return k.value}return localStorage.getItem(y)},setItem:(y,b)=>(localStorage.setItem(y,b),g("lovable-preview-auth:set",y,b).then((k)=>{if(k?.ok&&k.value!==null&&localStorage.getItem(y)===b)if(k.value==="")localStorage.removeItem(y);else localStorage.setItem(y,k.value)})),removeItem:(y)=>{let b=w(y);return localStorage.removeItem(y),g("lovable-preview-auth:remove",y,b??void 0).then(()=>{})}}}function ho(e){return e.startsWith("sb_publishable_")||e.startsWith("sb_secret_")}function fo(e,t){if(typeof window<"u"||typeof process>"u")return;let r=process.env.SUPABASE_URL?.replace(/\/+$/,"");if(!r||r===e||process.env.SUPABASE_PUBLISHABLE_KEY!==t)return;return r}function po(e,t){let r=e.replace(/\/+$/,""),s=fo(r,t);return(n,i)=>{let o=new Headers(typeof Request<"u"&&n instanceof Request?n.headers:void 0);if(i?.headers)new Headers(i.headers).forEach((a,l)=>o.set(l,a));if(ho(t)&&o.get("Authorization")===`Bearer ${t}`)o.delete("Authorization");if(o.set("apikey",t),s){let a=typeof n==="string"?n:n instanceof URL?n.href:n.url;if(a.startsWith(`${r}/`)){let l=s+a.slice(r.length),c=typeof n==="string"||n instanceof URL?l:new Request(l,n);return fetch(c,{...i,headers:o})}}return fetch(n,{...i,headers:o})}}function go(){let e=import.meta.env.VITE_SUPABASE_URL||process.env.SUPABASE_URL,t=import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY||process.env.SUPABASE_PUBLISHABLE_KEY;if(!e||!t){let s=`Missing Supabase environment variable(s): ${[...!e?["SUPABASE_URL"]:[],...!t?["SUPABASE_PUBLISHABLE_KEY"]:[]].join(", ")}. Connect Supabase in Lovable Cloud.`;throw console.error(`[Supabase] ${s}`),Error(s)}return Js(e,t,{global:{fetch:po(e,t)},auth:{storage:Ys(),persistSession:!0,autoRefreshToken:!0}})}var gr,Xs=new Proxy({},{get(e,t,r){if(!gr)gr=go();return Reflect.get(gr,t,r)}});var Qs=window.fetch.bind(window),jt=new Map,yo=new Set(["/api/public/chat","/api/public/buddy-chat","/api/public/teach","/api/public/diagram","/api/public/picture","/api/public/visitor-session"]);window.fetch=async(e,t)=>{let r=new URL(typeof e==="string"?e:e instanceof URL?e.href:e.url,window.location.href);if(r.origin!==window.location.origin||!yo.has(r.pathname))return Qs(e,t);let{data:s}=await Xs.auth.getSession(),n=new Headers(e instanceof Request?e.headers:t?.headers);if(s.session)n.set("Authorization",`Bearer ${s.session.access_token}`);if(r.pathname!=="/api/public/visitor-session"&&!n.has("X-Request-ID")){let o=r.pathname+(typeof t?.body==="string"?t.body:"");for(let[l,c]of jt)if(Date.now()-c.at>120000)jt.delete(l);let a=jt.get(o)??{id:crypto.randomUUID(),at:Date.now()};jt.set(o,a),n.set("X-Request-ID",a.id)}let i=await Qs(e,{...t,headers:n});if(r.pathname!=="/api/public/visitor-session")Zs().catch(()=>{});return i};async function Zs(){let e=await window.fetch("/api/public/visitor-session"),t=await e.json(),r=document.getElementById("visitor-ai-status");if(!r){r=document.createElement("div"),r.id="visitor-ai-status",r.setAttribute("role","status"),r.className="visitor-ai-status";let n=document.querySelector("header");if(n)n.insertAdjacentElement("afterend",r)}r.replaceChildren();let s=document.createElement("a");if(s.href="/account",s.textContent=e.ok?"AI account & daily usage":"An adult needs to sign in and connect their AI account",r.append(s),e.ok&&t.level!=="ok"){let n=document.createElement("span");n.setAttribute("role","alert"),n.textContent=t.level==="warn"?" · 80% of your daily budget reached":" · Your daily budget reached",r.append(n)}}var en=document.createElement("style");en.textContent=".visitor-ai-status{font:inherit;font-size:13px;padding:8px 12px;flex:none}.visitor-ai-status a{color:inherit;text-decoration:underline}";document.head.append(en);Zs().catch(()=>{});window.fetch("/api/public/visitor-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({path:window.location.pathname})}).catch(()=>{});
+class RealtimeClient {
+  get endPoint() {
+    return this.socketAdapter.endPoint;
+  }
+  get timeout() {
+    return this.socketAdapter.timeout;
+  }
+  get transport() {
+    return this.socketAdapter.transport;
+  }
+  get heartbeatCallback() {
+    return this.socketAdapter.heartbeatCallback;
+  }
+  get heartbeatIntervalMs() {
+    return this.socketAdapter.heartbeatIntervalMs;
+  }
+  get heartbeatTimer() {
+    if (this.worker)
+      return this._workerHeartbeatTimer;
+    return this.socketAdapter.heartbeatTimer;
+  }
+  get pendingHeartbeatRef() {
+    if (this.worker)
+      return this._pendingWorkerHeartbeatRef;
+    return this.socketAdapter.pendingHeartbeatRef;
+  }
+  get reconnectTimer() {
+    return this.socketAdapter.reconnectTimer;
+  }
+  get vsn() {
+    return this.socketAdapter.vsn;
+  }
+  get encode() {
+    return this.socketAdapter.encode;
+  }
+  get decode() {
+    return this.socketAdapter.decode;
+  }
+  get reconnectAfterMs() {
+    return this.socketAdapter.reconnectAfterMs;
+  }
+  get sendBuffer() {
+    return this.socketAdapter.sendBuffer;
+  }
+  get stateChangeCallbacks() {
+    return this.socketAdapter.stateChangeCallbacks;
+  }
+  constructor(endPoint, options) {
+    var _a;
+    if (this.channels = [], this.accessTokenValue = null, this.accessToken = null, this.apiKey = null, this.httpEndpoint = "", this.headers = {}, this.params = {}, this.ref = 0, this.serializer = new Serializer, this._manuallySetToken = !1, this._authPromise = null, this._authGeneration = 0, this._workerHeartbeatTimer = void 0, this._pendingWorkerHeartbeatRef = null, this._pendingDisconnectTimer = null, this._disconnectOnEmptyChannelsAfterMs = 0, this._resolveFetch = (customFetch) => {
+      if (customFetch)
+        return (...args) => customFetch(...args);
+      return (...args) => fetch(...args);
+    }, !((_a = options === null || options === void 0 ? void 0 : options.params) === null || _a === void 0 ? void 0 : _a.apikey))
+      throw Error("API key is required to connect to Realtime");
+    this.apiKey = options.params.apikey;
+    let socketAdapterOptions = this._initializeOptions(options);
+    this.socketAdapter = new SocketAdapter(endPoint, socketAdapterOptions), this.httpEndpoint = httpEndpointURL(endPoint), this.fetch = this._resolveFetch(options === null || options === void 0 ? void 0 : options.fetch);
+  }
+  connect() {
+    if (this.isConnecting() || this.isDisconnecting() || this.isConnected())
+      return;
+    if (this.accessToken && !this._authPromise)
+      this._setAuthSafely("connect");
+    this._setupConnectionHandlers();
+    try {
+      this.socketAdapter.connect();
+    } catch (error) {
+      let errorMessage = error.message;
+      throw Error(`WebSocket not available: ${errorMessage}`);
+    }
+    this._handleNodeJsRaceCondition();
+  }
+  endpointURL() {
+    return this.socketAdapter.endPointURL();
+  }
+  async disconnect(code, reason) {
+    if (this._cancelPendingDisconnect(), this.isDisconnecting())
+      return "ok";
+    return await this.socketAdapter.disconnect(() => {
+      clearInterval(this._workerHeartbeatTimer), this._terminateWorker();
+    }, code, reason);
+  }
+  getChannels() {
+    return this.channels;
+  }
+  async removeChannel(channel) {
+    let status = await channel.unsubscribe();
+    if (status === "ok")
+      channel.teardown();
+    return status;
+  }
+  async removeAllChannels() {
+    let promises = this.channels.map(async (channel) => {
+      let result = await channel.unsubscribe();
+      return channel.teardown(), result;
+    }), result = await Promise.all(promises);
+    return await this.disconnect(), result;
+  }
+  log(kind, msg, data) {
+    this.socketAdapter.log(kind, msg, data);
+  }
+  hasLogger() {
+    return this.socketAdapter.hasLogger();
+  }
+  connectionState() {
+    return this.socketAdapter.connectionState() || CONNECTION_STATE.closed;
+  }
+  isConnected() {
+    return this.socketAdapter.isConnected();
+  }
+  isConnecting() {
+    return this.socketAdapter.isConnecting();
+  }
+  isDisconnecting() {
+    return this.socketAdapter.isDisconnecting();
+  }
+  channel(topic, params = { config: {} }) {
+    let realtimeTopic = `realtime:${topic}`, exists = this.getChannels().find((c) => c.topic === realtimeTopic);
+    if (!exists) {
+      let chan = new RealtimeChannel(`realtime:${topic}`, params, this);
+      return this._cancelPendingDisconnect(), this.channels.push(chan), chan;
+    } else
+      return exists;
+  }
+  push(data) {
+    this.socketAdapter.push(data);
+  }
+  async setAuth(token = null) {
+    let authGeneration = ++this._authGeneration, authPromise = this._performAuth(token, authGeneration);
+    if (authGeneration === this._authGeneration)
+      this._authPromise = authPromise;
+    try {
+      await authPromise;
+    } finally {
+      if (this._authPromise === authPromise)
+        this._authPromise = null;
+    }
+  }
+  _isManualToken() {
+    return this._manuallySetToken;
+  }
+  async sendHeartbeat() {
+    this.socketAdapter.sendHeartbeat();
+  }
+  onHeartbeat(callback) {
+    this.socketAdapter.heartbeatCallback = this._wrapHeartbeatCallback(callback);
+  }
+  _makeRef() {
+    return this.socketAdapter.makeRef();
+  }
+  _remove(channel) {
+    if (this.channels = this.channels.filter((c) => c.topic !== channel.topic), this.channels.length === 0)
+      this.log("transport", "no channels remaining, scheduling disconnect"), this._schedulePendingDisconnect();
+  }
+  _schedulePendingDisconnect() {
+    if (this._cancelPendingDisconnect(), this._disconnectOnEmptyChannelsAfterMs === 0) {
+      this.log("transport", "disconnecting immediately - no channels"), this.disconnect();
+      return;
+    }
+    this._pendingDisconnectTimer = setTimeout(() => {
+      if (this._pendingDisconnectTimer = null, this.channels.length === 0)
+        this.log("transport", "deferred disconnect fired - no channels, disconnecting"), this.disconnect();
+    }, this._disconnectOnEmptyChannelsAfterMs), this.log("transport", `deferred disconnect scheduled in ${this._disconnectOnEmptyChannelsAfterMs}ms`);
+  }
+  _cancelPendingDisconnect() {
+    if (this._pendingDisconnectTimer !== null)
+      this.log("transport", "pending disconnect cancelled - channel activity detected"), clearTimeout(this._pendingDisconnectTimer), this._pendingDisconnectTimer = null;
+  }
+  async _performAuth(token, authGeneration) {
+    let tokenToSend, isManualToken = !1;
+    if (token)
+      tokenToSend = token, isManualToken = !0;
+    else if (this.accessToken)
+      try {
+        tokenToSend = await this.accessToken();
+      } catch (e) {
+        this.log("error", "Error fetching access token from callback", e), tokenToSend = this.accessTokenValue;
+      }
+    else
+      tokenToSend = this.accessTokenValue;
+    if (authGeneration !== this._authGeneration)
+      return;
+    if (this.accessToken)
+      this._manuallySetToken = !1;
+    else if (isManualToken)
+      this._manuallySetToken = !0;
+    if (this.accessTokenValue != tokenToSend)
+      this.accessTokenValue = tokenToSend, this.channels.forEach((channel) => {
+        let payload = {
+          access_token: tokenToSend,
+          version: DEFAULT_VERSION
+        };
+        if (channel.updateJoinPayload(payload), channel.joinedOnce && channel.channelAdapter.isJoined())
+          channel.channelAdapter.push(CHANNEL_EVENTS.access_token, {
+            access_token: tokenToSend
+          });
+      });
+  }
+  async _waitForAuthIfNeeded() {
+    if (this._authPromise)
+      await this._authPromise;
+  }
+  _setAuthSafely(context = "general") {
+    if (!this._isManualToken())
+      this.setAuth().catch((e) => {
+        this.log("error", `Error setting auth in ${context}`, e);
+      });
+  }
+  _setupConnectionHandlers() {
+    this.socketAdapter.onOpen(() => {
+      if ((this._authPromise || (this.accessToken && !this.accessTokenValue ? this.setAuth() : Promise.resolve())).catch((e) => {
+        this.log("error", "error waiting for auth on connect", e);
+      }), this.worker && !this.workerRef)
+        this._startWorkerHeartbeat();
+    }), this.socketAdapter.onClose(() => {
+      if (this.worker && this.workerRef)
+        this._terminateWorker();
+    }), this.socketAdapter.onMessage((message) => {
+      if (message.ref && message.ref === this._pendingWorkerHeartbeatRef)
+        this._pendingWorkerHeartbeatRef = null;
+    });
+  }
+  _handleNodeJsRaceCondition() {
+    if (this.socketAdapter.isConnected())
+      this.socketAdapter.getSocket().onConnOpen();
+  }
+  _wrapHeartbeatCallback(heartbeatCallback) {
+    return (status, latency) => {
+      if (status === "disconnected")
+        return;
+      if (status == "sent")
+        this._setAuthSafely();
+      if (heartbeatCallback)
+        heartbeatCallback(status, latency);
+    };
+  }
+  _startWorkerHeartbeat() {
+    if (this.workerUrl)
+      this.log("worker", `starting worker for from ${this.workerUrl}`);
+    else
+      this.log("worker", "starting default worker");
+    let objectUrl = this._workerObjectUrl(this.workerUrl);
+    this.workerRef = new Worker(objectUrl), this.workerRef.onerror = (error) => {
+      this.log("worker", "worker error", error.message), this._terminateWorker(), this.disconnect();
+    }, this.workerRef.onmessage = (event) => {
+      if (event.data.event === "keepAlive")
+        this.sendHeartbeat();
+    }, this.workerRef.postMessage({
+      event: "start",
+      interval: this.heartbeatIntervalMs
+    });
+  }
+  _terminateWorker() {
+    if (this.workerRef)
+      this.log("worker", "terminating worker"), this.workerRef.terminate(), this.workerRef = void 0;
+  }
+  _workerObjectUrl(url) {
+    let result_url;
+    if (url)
+      result_url = url;
+    else {
+      let blob = new Blob([WORKER_SCRIPT], { type: "application/javascript" });
+      result_url = URL.createObjectURL(blob);
+    }
+    return result_url;
+  }
+  _initializeOptions(options) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+    this.worker = (_a = options === null || options === void 0 ? void 0 : options.worker) !== null && _a !== void 0 ? _a : !1, this.accessToken = (_b = options === null || options === void 0 ? void 0 : options.accessToken) !== null && _b !== void 0 ? _b : null;
+    let result = {};
+    result.timeout = (_c = options === null || options === void 0 ? void 0 : options.timeout) !== null && _c !== void 0 ? _c : DEFAULT_TIMEOUT, result.heartbeatIntervalMs = (_d = options === null || options === void 0 ? void 0 : options.heartbeatIntervalMs) !== null && _d !== void 0 ? _d : CONNECTION_TIMEOUTS.HEARTBEAT_INTERVAL, this._disconnectOnEmptyChannelsAfterMs = (_e = options === null || options === void 0 ? void 0 : options.disconnectOnEmptyChannelsAfterMs) !== null && _e !== void 0 ? _e : 2 * ((_f = options === null || options === void 0 ? void 0 : options.heartbeatIntervalMs) !== null && _f !== void 0 ? _f : CONNECTION_TIMEOUTS.HEARTBEAT_INTERVAL), result.transport = (_g = options === null || options === void 0 ? void 0 : options.transport) !== null && _g !== void 0 ? _g : websocket_factory_default.getWebSocketConstructor(), result.params = options === null || options === void 0 ? void 0 : options.params, result.logger = options === null || options === void 0 ? void 0 : options.logger, result.heartbeatCallback = this._wrapHeartbeatCallback(options === null || options === void 0 ? void 0 : options.heartbeatCallback), result.sessionStorage = (_h = options === null || options === void 0 ? void 0 : options.sessionStorage) !== null && _h !== void 0 ? _h : resolveSessionStorage(), result.reconnectAfterMs = (_j = options === null || options === void 0 ? void 0 : options.reconnectAfterMs) !== null && _j !== void 0 ? _j : (tries) => RECONNECT_INTERVALS[tries - 1] || DEFAULT_RECONNECT_FALLBACK;
+    let defaultEncode, defaultDecode, vsn = (_k = options === null || options === void 0 ? void 0 : options.vsn) !== null && _k !== void 0 ? _k : DEFAULT_VSN;
+    switch (vsn) {
+      case VSN_1_0_0:
+        defaultEncode = (payload, callback) => callback(JSON.stringify(payload)), defaultDecode = (payload, callback) => callback(JSON.parse(payload));
+        break;
+      case VSN_2_0_0:
+        defaultEncode = this.serializer.encode.bind(this.serializer), defaultDecode = this.serializer.decode.bind(this.serializer);
+        break;
+      default:
+        throw Error(`Unsupported serializer version: ${result.vsn}`);
+    }
+    if (result.vsn = vsn, result.encode = (_l = options === null || options === void 0 ? void 0 : options.encode) !== null && _l !== void 0 ? _l : defaultEncode, result.decode = (_m = options === null || options === void 0 ? void 0 : options.decode) !== null && _m !== void 0 ? _m : defaultDecode, result.beforeReconnect = this._reconnectAuth.bind(this), (options === null || options === void 0 ? void 0 : options.logLevel) || (options === null || options === void 0 ? void 0 : options.log_level))
+      this.logLevel = options.logLevel || options.log_level, result.params = Object.assign(Object.assign({}, result.params), { log_level: this.logLevel });
+    if (this.worker) {
+      if (typeof window < "u" && !window.Worker)
+        throw Error("Web Worker is not supported");
+      this.workerUrl = options === null || options === void 0 ? void 0 : options.workerUrl, result.autoSendHeartbeat = !this.worker;
+    }
+    return result;
+  }
+  async _reconnectAuth() {
+    if (await this._waitForAuthIfNeeded(), !this.isConnected())
+      this.connect();
+  }
+}
+
+// ../persist/node_modules/iceberg-js/dist/index.mjs
+var IcebergError = class extends Error {
+  constructor(message, opts) {
+    super(message);
+    this.name = "IcebergError", this.status = opts.status, this.icebergType = opts.icebergType, this.icebergCode = opts.icebergCode, this.details = opts.details, this.isCommitStateUnknown = opts.icebergType === "CommitStateUnknownException" || [500, 502, 504].includes(opts.status) && opts.icebergType?.includes("CommitState") === !0;
+  }
+  isNotFound() {
+    return this.status === 404;
+  }
+  isConflict() {
+    return this.status === 409;
+  }
+  isAuthenticationTimeout() {
+    return this.status === 419;
+  }
+};
+function buildUrl(baseUrl, path, query) {
+  let url = new URL(path, baseUrl);
+  if (query) {
+    for (let [key, value] of Object.entries(query))
+      if (value !== void 0)
+        url.searchParams.set(key, value);
+  }
+  return url.toString();
+}
+async function buildAuthHeaders(auth) {
+  if (!auth || auth.type === "none")
+    return {};
+  if (auth.type === "bearer")
+    return { Authorization: `Bearer ${auth.token}` };
+  if (auth.type === "header")
+    return { [auth.name]: auth.value };
+  if (auth.type === "custom")
+    return await auth.getHeaders();
+  return {};
+}
+function createFetchClient(options) {
+  let fetchFn = options.fetchImpl ?? globalThis.fetch;
+  return {
+    async request({
+      method,
+      path,
+      query,
+      body,
+      headers
+    }) {
+      let url = buildUrl(options.baseUrl, path, query), authHeaders = await buildAuthHeaders(options.auth), res = await fetchFn(url, {
+        method,
+        headers: {
+          ...body ? { "Content-Type": "application/json" } : {},
+          ...authHeaders,
+          ...headers
+        },
+        body: body ? JSON.stringify(body) : void 0
+      }), text = await res.text(), isJson = (res.headers.get("content-type") || "").includes("application/json"), data = isJson && text ? JSON.parse(text) : text;
+      if (!res.ok) {
+        let errBody = isJson ? data : void 0, errorDetail = errBody?.error;
+        throw new IcebergError(errorDetail?.message ?? `Request failed with status ${res.status}`, {
+          status: res.status,
+          icebergType: errorDetail?.type,
+          icebergCode: errorDetail?.code,
+          details: errBody
+        });
+      }
+      return { status: res.status, headers: res.headers, data };
+    }
+  };
+}
+function namespaceToPath(namespace) {
+  return namespace.join("\x1F");
+}
+var NamespaceOperations = class {
+  constructor(client, prefix = "") {
+    this.client = client, this.prefix = prefix;
+  }
+  async listNamespaces(parent) {
+    let query = parent ? { parent: namespaceToPath(parent.namespace) } : void 0;
+    return (await this.client.request({
+      method: "GET",
+      path: `${this.prefix}/namespaces`,
+      query
+    })).data.namespaces.map((ns) => ({ namespace: ns }));
+  }
+  async createNamespace(id, metadata) {
+    let request = {
+      namespace: id.namespace,
+      properties: metadata?.properties
+    };
+    return (await this.client.request({
+      method: "POST",
+      path: `${this.prefix}/namespaces`,
+      body: request
+    })).data;
+  }
+  async dropNamespace(id) {
+    await this.client.request({
+      method: "DELETE",
+      path: `${this.prefix}/namespaces/${namespaceToPath(id.namespace)}`
+    });
+  }
+  async loadNamespaceMetadata(id) {
+    return {
+      properties: (await this.client.request({
+        method: "GET",
+        path: `${this.prefix}/namespaces/${namespaceToPath(id.namespace)}`
+      })).data.properties
+    };
+  }
+  async namespaceExists(id) {
+    try {
+      return await this.client.request({
+        method: "HEAD",
+        path: `${this.prefix}/namespaces/${namespaceToPath(id.namespace)}`
+      }), !0;
+    } catch (error) {
+      if (error instanceof IcebergError && error.status === 404)
+        return !1;
+      throw error;
+    }
+  }
+  async createNamespaceIfNotExists(id, metadata) {
+    try {
+      return await this.createNamespace(id, metadata);
+    } catch (error) {
+      if (error instanceof IcebergError && error.status === 409)
+        return;
+      throw error;
+    }
+  }
+};
+function namespaceToPath2(namespace) {
+  return namespace.join("\x1F");
+}
+var TableOperations = class {
+  constructor(client, prefix = "", accessDelegation) {
+    this.client = client, this.prefix = prefix, this.accessDelegation = accessDelegation;
+  }
+  async listTables(namespace) {
+    return (await this.client.request({
+      method: "GET",
+      path: `${this.prefix}/namespaces/${namespaceToPath2(namespace.namespace)}/tables`
+    })).data.identifiers;
+  }
+  async createTable(namespace, request) {
+    let headers = {};
+    if (this.accessDelegation)
+      headers["X-Iceberg-Access-Delegation"] = this.accessDelegation;
+    return (await this.client.request({
+      method: "POST",
+      path: `${this.prefix}/namespaces/${namespaceToPath2(namespace.namespace)}/tables`,
+      body: request,
+      headers
+    })).data.metadata;
+  }
+  async updateTable(id, request) {
+    let response = await this.client.request({
+      method: "POST",
+      path: `${this.prefix}/namespaces/${namespaceToPath2(id.namespace)}/tables/${id.name}`,
+      body: request
+    });
+    return {
+      "metadata-location": response.data["metadata-location"],
+      metadata: response.data.metadata
+    };
+  }
+  async dropTable(id, options) {
+    await this.client.request({
+      method: "DELETE",
+      path: `${this.prefix}/namespaces/${namespaceToPath2(id.namespace)}/tables/${id.name}`,
+      query: { purgeRequested: String(options?.purge ?? !1) }
+    });
+  }
+  async loadTable(id) {
+    let headers = {};
+    if (this.accessDelegation)
+      headers["X-Iceberg-Access-Delegation"] = this.accessDelegation;
+    return (await this.client.request({
+      method: "GET",
+      path: `${this.prefix}/namespaces/${namespaceToPath2(id.namespace)}/tables/${id.name}`,
+      headers
+    })).data.metadata;
+  }
+  async tableExists(id) {
+    let headers = {};
+    if (this.accessDelegation)
+      headers["X-Iceberg-Access-Delegation"] = this.accessDelegation;
+    try {
+      return await this.client.request({
+        method: "HEAD",
+        path: `${this.prefix}/namespaces/${namespaceToPath2(id.namespace)}/tables/${id.name}`,
+        headers
+      }), !0;
+    } catch (error) {
+      if (error instanceof IcebergError && error.status === 404)
+        return !1;
+      throw error;
+    }
+  }
+  async createTableIfNotExists(namespace, request) {
+    try {
+      return await this.createTable(namespace, request);
+    } catch (error) {
+      if (error instanceof IcebergError && error.status === 409)
+        return await this.loadTable({ namespace: namespace.namespace, name: request.name });
+      throw error;
+    }
+  }
+}, IcebergRestCatalog = class {
+  constructor(options) {
+    let prefix = "v1";
+    if (options.catalogName)
+      prefix += `/${options.catalogName}`;
+    let baseUrl = options.baseUrl.endsWith("/") ? options.baseUrl : `${options.baseUrl}/`;
+    this.client = createFetchClient({
+      baseUrl,
+      auth: options.auth,
+      fetchImpl: options.fetch
+    }), this.accessDelegation = options.accessDelegation?.join(","), this.namespaceOps = new NamespaceOperations(this.client, prefix), this.tableOps = new TableOperations(this.client, prefix, this.accessDelegation);
+  }
+  async listNamespaces(parent) {
+    return this.namespaceOps.listNamespaces(parent);
+  }
+  async createNamespace(id, metadata) {
+    return this.namespaceOps.createNamespace(id, metadata);
+  }
+  async dropNamespace(id) {
+    await this.namespaceOps.dropNamespace(id);
+  }
+  async loadNamespaceMetadata(id) {
+    return this.namespaceOps.loadNamespaceMetadata(id);
+  }
+  async listTables(namespace) {
+    return this.tableOps.listTables(namespace);
+  }
+  async createTable(namespace, request) {
+    return this.tableOps.createTable(namespace, request);
+  }
+  async updateTable(id, request) {
+    return this.tableOps.updateTable(id, request);
+  }
+  async dropTable(id, options) {
+    await this.tableOps.dropTable(id, options);
+  }
+  async loadTable(id) {
+    return this.tableOps.loadTable(id);
+  }
+  async namespaceExists(id) {
+    return this.namespaceOps.namespaceExists(id);
+  }
+  async tableExists(id) {
+    return this.tableOps.tableExists(id);
+  }
+  async createNamespaceIfNotExists(id, metadata) {
+    return this.namespaceOps.createNamespaceIfNotExists(id, metadata);
+  }
+  async createTableIfNotExists(namespace, request) {
+    return this.tableOps.createTableIfNotExists(namespace, request);
+  }
+};
+
+// ../persist/node_modules/@supabase/storage-js/dist/index.mjs
+function _typeof2(o) {
+  return _typeof2 = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(o$1) {
+    return typeof o$1;
+  } : function(o$1) {
+    return o$1 && typeof Symbol == "function" && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
+  }, _typeof2(o);
+}
+function toPrimitive2(t, r) {
+  if (_typeof2(t) != "object" || !t)
+    return t;
+  var e = t[Symbol.toPrimitive];
+  if (e !== void 0) {
+    var i = e.call(t, r || "default");
+    if (_typeof2(i) != "object")
+      return i;
+    throw TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (r === "string" ? String : Number)(t);
+}
+function toPropertyKey2(t) {
+  var i = toPrimitive2(t, "string");
+  return _typeof2(i) == "symbol" ? i : i + "";
+}
+function _defineProperty2(e, r, t) {
+  return (r = toPropertyKey2(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
+}
+function ownKeys2(e, r) {
+  var t = Object.keys(e);
+  if (Object.getOwnPropertySymbols) {
+    var o = Object.getOwnPropertySymbols(e);
+    r && (o = o.filter(function(r$1) {
+      return Object.getOwnPropertyDescriptor(e, r$1).enumerable;
+    })), t.push.apply(t, o);
+  }
+  return t;
+}
+function _objectSpread22(e) {
+  for (var r = 1;r < arguments.length; r++) {
+    var t = arguments[r] != null ? arguments[r] : {};
+    r % 2 ? ownKeys2(Object(t), !0).forEach(function(r$1) {
+      _defineProperty2(e, r$1, t[r$1]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys2(Object(t)).forEach(function(r$1) {
+      Object.defineProperty(e, r$1, Object.getOwnPropertyDescriptor(t, r$1));
+    });
+  }
+  return e;
+}
+var StorageError = class extends Error {
+  constructor(message, namespace = "storage", status, statusCode) {
+    super(message);
+    this.__isStorageError = !0, this.namespace = namespace, this.name = namespace === "vectors" ? "StorageVectorsError" : "StorageError", this.status = status, this.statusCode = statusCode;
+  }
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      status: this.status,
+      statusCode: this.statusCode
+    };
+  }
+};
+function isStorageError(error) {
+  return typeof error === "object" && error !== null && "__isStorageError" in error;
+}
+var StorageApiError = class extends StorageError {
+  constructor(message, status, statusCode, namespace = "storage", code) {
+    super(message, namespace, status, statusCode);
+    this.name = namespace === "vectors" ? "StorageVectorsApiError" : "StorageApiError", this.status = status, this.statusCode = statusCode, this.code = code;
+  }
+  toJSON() {
+    return _objectSpread22(_objectSpread22({}, super.toJSON()), {}, { code: this.code });
+  }
+}, StorageUnknownError = class extends StorageError {
+  constructor(message, originalError, namespace = "storage") {
+    super(message, namespace);
+    this.name = namespace === "vectors" ? "StorageVectorsUnknownError" : "StorageUnknownError", this.originalError = originalError;
+  }
+};
+function setHeader(headers, name, value) {
+  let result = _objectSpread22({}, headers), nameLower = name.toLowerCase();
+  for (let key of Object.keys(result))
+    if (key.toLowerCase() === nameLower)
+      delete result[key];
+  return result[nameLower] = value, result;
+}
+function normalizeHeaders(headers) {
+  let result = {};
+  for (let [key, value] of Object.entries(headers))
+    result[key.toLowerCase()] = value;
+  return result;
+}
+var resolveFetch2 = (customFetch) => {
+  if (customFetch)
+    return (...args) => customFetch(...args);
+  return (...args) => fetch(...args);
+}, isPlainObject = (value) => {
+  if (typeof value !== "object" || value === null)
+    return !1;
+  let prototype = Object.getPrototypeOf(value);
+  return (prototype === null || prototype === Object.prototype || Object.getPrototypeOf(prototype) === null) && !(Symbol.toStringTag in value) && !(Symbol.iterator in value);
+}, recursiveToCamel = (item) => {
+  if (Array.isArray(item))
+    return item.map((el) => recursiveToCamel(el));
+  else if (typeof item === "function" || item !== Object(item))
+    return item;
+  let result = {};
+  return Object.entries(item).forEach(([key, value]) => {
+    let newKey = key.replace(/([-_][a-z])/gi, (c) => c.toUpperCase().replace(/[-_]/g, ""));
+    result[newKey] = recursiveToCamel(value);
+  }), result;
+}, isValidBucketName = (bucketName) => {
+  if (!bucketName || typeof bucketName !== "string")
+    return !1;
+  if (bucketName.length === 0 || bucketName.length > 100)
+    return !1;
+  if (bucketName.trim() !== bucketName)
+    return !1;
+  if (bucketName.includes("/") || bucketName.includes("\\"))
+    return !1;
+  return /^[\w!.\*'() &$@=;:+,?-]+$/.test(bucketName);
+}, encodeStoragePath = (path) => path.split("/").map(encodeURIComponent).join("/"), _getErrorMessage = (err) => {
+  if (typeof err === "object" && err !== null) {
+    let e = err;
+    if (typeof e.msg === "string")
+      return e.msg;
+    if (typeof e.message === "string")
+      return e.message;
+    if (typeof e.error_description === "string")
+      return e.error_description;
+    if (typeof e.error === "string")
+      return e.error;
+    if (typeof e.error === "object" && e.error !== null) {
+      let nested = e.error;
+      if (typeof nested.message === "string")
+        return nested.message;
+    }
+  }
+  return JSON.stringify(err);
+}, handleError = async (error, reject, options, namespace) => {
+  if (error !== null && typeof error === "object" && "json" in error && typeof error.json === "function") {
+    let responseError = error, status = parseInt(String(responseError.status), 10);
+    if (!Number.isFinite(status))
+      status = 500;
+    responseError.json().then((err) => {
+      let statusCode = (err === null || err === void 0 ? void 0 : err.statusCode) || (err === null || err === void 0 ? void 0 : err.code) || status + "";
+      reject(new StorageApiError(_getErrorMessage(err), status, statusCode, namespace, err === null || err === void 0 ? void 0 : err.code));
+    }).catch(() => {
+      let statusCode = status + "";
+      reject(new StorageApiError(responseError.statusText || `HTTP ${status} error`, status, statusCode, namespace));
+    });
+  } else
+    reject(new StorageUnknownError(_getErrorMessage(error), error, namespace));
+}, _getRequestParams = (method, options, parameters, body) => {
+  let params = {
+    method,
+    headers: (options === null || options === void 0 ? void 0 : options.headers) || {}
+  };
+  if (method === "GET" || method === "HEAD" || !body)
+    return _objectSpread22(_objectSpread22({}, params), parameters);
+  if (isPlainObject(body)) {
+    var _contentType;
+    let headers = (options === null || options === void 0 ? void 0 : options.headers) || {}, contentType;
+    for (let [key, value] of Object.entries(headers))
+      if (key.toLowerCase() === "content-type")
+        contentType = value;
+    params.headers = setHeader(headers, "Content-Type", (_contentType = contentType) !== null && _contentType !== void 0 ? _contentType : "application/json"), params.body = JSON.stringify(body);
+  } else
+    params.body = body;
+  if (options === null || options === void 0 ? void 0 : options.duplex)
+    params.duplex = options.duplex;
+  return _objectSpread22(_objectSpread22({}, params), parameters);
+};
+async function _handleRequest(fetcher, method, url, options, parameters, body, namespace) {
+  return new Promise((resolve, reject) => {
+    fetcher(url, _getRequestParams(method, options, parameters, body)).then((result) => {
+      if (!result.ok)
+        throw result;
+      if (options === null || options === void 0 ? void 0 : options.noResolveJson)
+        return result;
+      if (namespace === "vectors") {
+        let contentType = result.headers.get("content-type");
+        if (result.headers.get("content-length") === "0" || result.status === 204)
+          return {};
+        if (!contentType || !contentType.includes("application/json"))
+          return {};
+      }
+      return result.json();
+    }).then((data) => resolve(data)).catch((error) => handleError(error, reject, options, namespace));
+  });
+}
+function createFetchApi(namespace = "storage") {
+  return {
+    get: async (fetcher, url, options, parameters) => _handleRequest(fetcher, "GET", url, options, parameters, void 0, namespace),
+    post: async (fetcher, url, body, options, parameters) => _handleRequest(fetcher, "POST", url, options, parameters, body, namespace),
+    put: async (fetcher, url, body, options, parameters) => _handleRequest(fetcher, "PUT", url, options, parameters, body, namespace),
+    head: async (fetcher, url, options, parameters) => _handleRequest(fetcher, "HEAD", url, _objectSpread22(_objectSpread22({}, options), {}, { noResolveJson: !0 }), parameters, void 0, namespace),
+    remove: async (fetcher, url, body, options, parameters) => _handleRequest(fetcher, "DELETE", url, options, parameters, body, namespace)
+  };
+}
+var defaultApi = createFetchApi("storage"), { get, post, put, head, remove } = defaultApi, vectorsApi = createFetchApi("vectors"), BaseApiClient = class {
+  constructor(url, headers = {}, fetch$1, namespace = "storage") {
+    this.shouldThrowOnError = !1, this.url = url, this.headers = normalizeHeaders(headers), this.fetch = resolveFetch2(fetch$1), this.namespace = namespace;
+  }
+  throwOnError() {
+    return this.shouldThrowOnError = !0, this;
+  }
+  setHeader(name, value) {
+    return this.headers = setHeader(this.headers, name, value), this;
+  }
+  async handleOperation(operation) {
+    var _this = this;
+    try {
+      return {
+        data: await operation(),
+        error: null
+      };
+    } catch (error) {
+      if (_this.shouldThrowOnError)
+        throw error;
+      if (isStorageError(error))
+        return {
+          data: null,
+          error
+        };
+      throw error;
+    }
+  }
+}, _Symbol$toStringTag$1;
+_Symbol$toStringTag$1 = Symbol.toStringTag;
+var StreamDownloadBuilder = class {
+  constructor(downloadFn, shouldThrowOnError) {
+    this.downloadFn = downloadFn, this.shouldThrowOnError = shouldThrowOnError, this[_Symbol$toStringTag$1] = "StreamDownloadBuilder", this.promise = null;
+  }
+  then(onfulfilled, onrejected) {
+    return this.getPromise().then(onfulfilled, onrejected);
+  }
+  catch(onrejected) {
+    return this.getPromise().catch(onrejected);
+  }
+  finally(onfinally) {
+    return this.getPromise().finally(onfinally);
+  }
+  getPromise() {
+    if (!this.promise)
+      this.promise = this.execute();
+    return this.promise;
+  }
+  async execute() {
+    var _this = this;
+    try {
+      return {
+        data: (await _this.downloadFn()).body,
+        error: null
+      };
+    } catch (error) {
+      if (_this.shouldThrowOnError)
+        throw error;
+      if (isStorageError(error))
+        return {
+          data: null,
+          error
+        };
+      throw error;
+    }
+  }
+}, _Symbol$toStringTag;
+_Symbol$toStringTag = Symbol.toStringTag;
+var BlobDownloadBuilder = class {
+  constructor(downloadFn, shouldThrowOnError) {
+    this.downloadFn = downloadFn, this.shouldThrowOnError = shouldThrowOnError, this[_Symbol$toStringTag] = "BlobDownloadBuilder", this.promise = null;
+  }
+  asStream() {
+    return new StreamDownloadBuilder(this.downloadFn, this.shouldThrowOnError);
+  }
+  then(onfulfilled, onrejected) {
+    return this.getPromise().then(onfulfilled, onrejected);
+  }
+  catch(onrejected) {
+    return this.getPromise().catch(onrejected);
+  }
+  finally(onfinally) {
+    return this.getPromise().finally(onfinally);
+  }
+  getPromise() {
+    if (!this.promise)
+      this.promise = this.execute();
+    return this.promise;
+  }
+  async execute() {
+    var _this = this;
+    try {
+      return {
+        data: await (await _this.downloadFn()).blob(),
+        error: null
+      };
+    } catch (error) {
+      if (_this.shouldThrowOnError)
+        throw error;
+      if (isStorageError(error))
+        return {
+          data: null,
+          error
+        };
+      throw error;
+    }
+  }
+}, DEFAULT_SEARCH_OPTIONS = {
+  limit: 100,
+  offset: 0,
+  sortBy: {
+    column: "name",
+    order: "asc"
+  }
+}, DEFAULT_FILE_OPTIONS = {
+  cacheControl: "3600",
+  contentType: "text/plain;charset=UTF-8",
+  upsert: !1
+}, StorageFileApi = class extends BaseApiClient {
+  constructor(url, headers = {}, bucketId, fetch$1) {
+    super(url, headers, fetch$1, "storage");
+    this.bucketId = bucketId;
+  }
+  async uploadOrUpdate(method, path, fileBody, fileOptions) {
+    var _this = this;
+    return _this.handleOperation(async () => {
+      let body, options = _objectSpread22(_objectSpread22({}, DEFAULT_FILE_OPTIONS), fileOptions), headers = _objectSpread22(_objectSpread22({}, _this.headers), method === "POST" && { "x-upsert": String(options.upsert) }), metadata = options.metadata;
+      if (typeof Blob < "u" && fileBody instanceof Blob || typeof FormData < "u" && fileBody instanceof FormData)
+        body = _this.prepareUploadFormData(fileBody, options);
+      else {
+        if (body = fileBody, headers["cache-control"] = `max-age=${options.cacheControl}`, headers["content-type"] = options.contentType, options.contentEncoding)
+          headers["content-encoding"] = options.contentEncoding;
+        if (metadata)
+          headers["x-metadata"] = _this.toBase64(_this.encodeMetadata(metadata));
+        if ((typeof ReadableStream < "u" && body instanceof ReadableStream || body && typeof body === "object" && ("pipe" in body) && typeof body.pipe === "function") && !options.duplex)
+          options.duplex = "half";
+      }
+      if (fileOptions === null || fileOptions === void 0 ? void 0 : fileOptions.headers)
+        for (let [key, value] of Object.entries(fileOptions.headers))
+          headers = setHeader(headers, key, value);
+      let cleanPath = _this._removeEmptyFolders(path), _path = _this._getFinalPath(cleanPath), data = await (method == "PUT" ? put : post)(_this.fetch, `${_this.url}/object/${_path}`, body, _objectSpread22({ headers }, (options === null || options === void 0 ? void 0 : options.duplex) ? { duplex: options.duplex } : {}));
+      return {
+        path: cleanPath,
+        id: data.Id,
+        fullPath: data.Key
+      };
+    });
+  }
+  async upload(path, fileBody, fileOptions) {
+    return this.uploadOrUpdate("POST", path, fileBody, fileOptions);
+  }
+  async uploadToSignedUrl(path, token, fileBody, fileOptions) {
+    var _this3 = this;
+    let cleanPath = _this3._removeEmptyFolders(path), _path = _this3._getFinalPath(cleanPath), url = new URL(_this3.url + `/object/upload/sign/${_path}`);
+    return url.searchParams.set("token", token), _this3.handleOperation(async () => {
+      let body, options = _objectSpread22(_objectSpread22({}, DEFAULT_FILE_OPTIONS), fileOptions), headers = _objectSpread22(_objectSpread22({}, _this3.headers), { "x-upsert": String(options.upsert) }), metadata = options.metadata;
+      if (typeof Blob < "u" && fileBody instanceof Blob || typeof FormData < "u" && fileBody instanceof FormData)
+        body = _this3.prepareUploadFormData(fileBody, options);
+      else {
+        if (body = fileBody, headers["cache-control"] = `max-age=${options.cacheControl}`, headers["content-type"] = options.contentType, options.contentEncoding)
+          headers["content-encoding"] = options.contentEncoding;
+        if (metadata)
+          headers["x-metadata"] = _this3.toBase64(_this3.encodeMetadata(metadata));
+        if ((typeof ReadableStream < "u" && body instanceof ReadableStream || body && typeof body === "object" && ("pipe" in body) && typeof body.pipe === "function") && !options.duplex)
+          options.duplex = "half";
+      }
+      if (fileOptions === null || fileOptions === void 0 ? void 0 : fileOptions.headers)
+        for (let [key, value] of Object.entries(fileOptions.headers))
+          headers = setHeader(headers, key, value);
+      return {
+        path: cleanPath,
+        fullPath: (await put(_this3.fetch, url.toString(), body, _objectSpread22({ headers }, (options === null || options === void 0 ? void 0 : options.duplex) ? { duplex: options.duplex } : {}))).Key
+      };
+    });
+  }
+  async createSignedUploadUrl(path, options) {
+    var _this4 = this;
+    return _this4.handleOperation(async () => {
+      let _path = _this4._getFinalPath(path), headers = _objectSpread22({}, _this4.headers);
+      if (options === null || options === void 0 ? void 0 : options.upsert)
+        headers["x-upsert"] = "true";
+      let data = await post(_this4.fetch, `${_this4.url}/object/upload/sign/${_path}`, {}, { headers }), url = new URL(_this4.url + data.url), token = url.searchParams.get("token");
+      if (!token)
+        throw new StorageError("No token returned by API");
+      return {
+        signedUrl: url.toString(),
+        path,
+        token
+      };
+    });
+  }
+  async update(path, fileBody, fileOptions) {
+    return this.uploadOrUpdate("PUT", path, fileBody, fileOptions);
+  }
+  async move(fromPath, toPath, options) {
+    var _this6 = this;
+    return _this6.handleOperation(async () => await post(_this6.fetch, `${_this6.url}/object/move`, {
+      bucketId: _this6.bucketId,
+      sourceKey: fromPath,
+      destinationKey: toPath,
+      destinationBucket: options === null || options === void 0 ? void 0 : options.destinationBucket,
+      sourceVersionId: options === null || options === void 0 ? void 0 : options.sourceVersionId
+    }, { headers: _this6.headers }));
+  }
+  async copy(fromPath, toPath, options) {
+    var _this7 = this;
+    return _this7.handleOperation(async () => {
+      let copyOptions = options;
+      return { path: (await post(_this7.fetch, `${_this7.url}/object/copy`, {
+        bucketId: _this7.bucketId,
+        sourceKey: fromPath,
+        destinationKey: toPath,
+        destinationBucket: options === null || options === void 0 ? void 0 : options.destinationBucket,
+        sourceVersionId: options === null || options === void 0 ? void 0 : options.sourceVersionId,
+        copyMetadata: typeof (copyOptions === null || copyOptions === void 0 ? void 0 : copyOptions.copyMetadata) === "boolean" ? copyOptions.copyMetadata : void 0,
+        metadata: (copyOptions === null || copyOptions === void 0 ? void 0 : copyOptions.copyMetadata) === !1 ? copyOptions.metadata : void 0
+      }, { headers: _this7.headers })).Key };
+    });
+  }
+  async createSignedUrl(path, expiresIn, options) {
+    var _this8 = this;
+    return _this8.handleOperation(async () => {
+      let _path = _this8._getFinalPath(path), hasTransform = typeof (options === null || options === void 0 ? void 0 : options.transform) === "object" && options.transform !== null && Object.keys(options.transform).length > 0, data = await post(_this8.fetch, `${_this8.url}/object/sign/${_path}`, _objectSpread22(_objectSpread22({ expiresIn }, hasTransform ? { transform: options.transform } : {}), (options === null || options === void 0 ? void 0 : options.versionId) != null ? { versionId: options.versionId } : {}), { headers: _this8.headers }), query = new URLSearchParams;
+      if (options === null || options === void 0 ? void 0 : options.download)
+        query.set("download", options.download === !0 ? "" : options.download);
+      if ((options === null || options === void 0 ? void 0 : options.cacheNonce) != null)
+        query.set("cacheNonce", String(options.cacheNonce));
+      let queryString = query.toString();
+      return { signedUrl: encodeURI(`${_this8.url}${data.signedURL}${queryString ? `&${queryString}` : ""}`) };
+    });
+  }
+  async createSignedUrls(paths, expiresIn, options) {
+    var _this9 = this;
+    return _this9.handleOperation(async () => {
+      let data = await post(_this9.fetch, `${_this9.url}/object/sign/${_this9.bucketId}`, {
+        expiresIn,
+        paths
+      }, { headers: _this9.headers }), query = new URLSearchParams;
+      if (options === null || options === void 0 ? void 0 : options.download)
+        query.set("download", options.download === !0 ? "" : options.download);
+      if ((options === null || options === void 0 ? void 0 : options.cacheNonce) != null)
+        query.set("cacheNonce", String(options.cacheNonce));
+      let queryString = query.toString();
+      return data.map((datum) => _objectSpread22(_objectSpread22({}, datum), {}, { signedUrl: datum.signedURL ? encodeURI(`${_this9.url}${datum.signedURL}${queryString ? `&${queryString}` : ""}`) : null }));
+    });
+  }
+  download(path, options, parameters) {
+    let renderPath = typeof (options === null || options === void 0 ? void 0 : options.transform) === "object" && options.transform !== null && Object.keys(options.transform).length > 0 ? "render/image/authenticated" : "object", query = new URLSearchParams;
+    if (options === null || options === void 0 ? void 0 : options.transform)
+      this.applyTransformOptsToQuery(query, options.transform);
+    if ((options === null || options === void 0 ? void 0 : options.cacheNonce) != null)
+      query.set("cacheNonce", String(options.cacheNonce));
+    if ((options === null || options === void 0 ? void 0 : options.versionId) != null)
+      query.set("versionId", String(options.versionId));
+    let queryString = query.toString(), _path = this._getFinalPath(path);
+    return new BlobDownloadBuilder(() => get(this.fetch, `${this.url}/${renderPath}/${_path}${queryString ? `?${queryString}` : ""}`, {
+      headers: this.headers,
+      noResolveJson: !0
+    }, parameters), this.shouldThrowOnError);
+  }
+  async info(path, options) {
+    var _this10 = this;
+    let _path = _this10._getFinalPath(path), query = new URLSearchParams;
+    if ((options === null || options === void 0 ? void 0 : options.versionId) != null)
+      query.set("versionId", String(options.versionId));
+    let queryString = query.toString();
+    return _this10.handleOperation(async () => recursiveToCamel(await get(_this10.fetch, `${_this10.url}/object/info/${_path}${queryString ? `?${queryString}` : ""}`, { headers: _this10.headers })));
+  }
+  async exists(path) {
+    var _this11 = this;
+    let _path = _this11._getFinalPath(path);
+    try {
+      return await head(_this11.fetch, `${_this11.url}/object/${_path}`, { headers: _this11.headers }), {
+        data: !0,
+        error: null
+      };
+    } catch (error) {
+      if (_this11.shouldThrowOnError)
+        throw error;
+      if (isStorageError(error)) {
+        var _error$originalError;
+        let status = error instanceof StorageApiError ? error.status : error instanceof StorageUnknownError ? (_error$originalError = error.originalError) === null || _error$originalError === void 0 ? void 0 : _error$originalError.status : void 0;
+        if (status !== void 0 && [400, 404].includes(status))
+          return {
+            data: !1,
+            error
+          };
+      }
+      throw error;
+    }
+  }
+  getPublicUrl(path, options) {
+    let _path = this._getFinalPath(path), query = new URLSearchParams;
+    if (options === null || options === void 0 ? void 0 : options.download)
+      query.set("download", options.download === !0 ? "" : options.download);
+    if (options === null || options === void 0 ? void 0 : options.transform)
+      this.applyTransformOptsToQuery(query, options.transform);
+    if ((options === null || options === void 0 ? void 0 : options.cacheNonce) != null)
+      query.set("cacheNonce", String(options.cacheNonce));
+    if ((options === null || options === void 0 ? void 0 : options.versionId) != null)
+      query.set("versionId", String(options.versionId));
+    let queryString = query.toString(), renderPath = typeof (options === null || options === void 0 ? void 0 : options.transform) === "object" && options.transform !== null && Object.keys(options.transform).length > 0 ? "render/image" : "object";
+    return { data: { publicUrl: encodeURI(`${this.url}/${renderPath}/public/${_path}`) + (queryString ? `?${queryString}` : "") } };
+  }
+  async remove(paths) {
+    var _this12 = this;
+    return _this12.handleOperation(async () => await remove(_this12.fetch, `${_this12.url}/object/${_this12.bucketId}`, { prefixes: paths }, { headers: _this12.headers }));
+  }
+  async purgeCache(path, options, parameters) {
+    var _this13 = this;
+    return _this13.handleOperation(async () => {
+      let _path = encodeStoragePath(_this13._getFinalPath(path)), query = new URLSearchParams;
+      if (options === null || options === void 0 ? void 0 : options.transformations)
+        query.set("transformations", "true");
+      let queryString = query.toString();
+      return await remove(_this13.fetch, `${_this13.url}/cdn/${_path}${queryString ? `?${queryString}` : ""}`, {}, { headers: _this13.headers }, parameters);
+    });
+  }
+  async list(path, options, parameters) {
+    var _this14 = this;
+    return _this14.handleOperation(async () => {
+      let sortBy = (options === null || options === void 0 ? void 0 : options.sortBy) ? _objectSpread22(_objectSpread22({}, DEFAULT_SEARCH_OPTIONS.sortBy), options.sortBy) : DEFAULT_SEARCH_OPTIONS.sortBy, body = _objectSpread22(_objectSpread22(_objectSpread22({}, DEFAULT_SEARCH_OPTIONS), options), {}, {
+        sortBy,
+        prefix: path || ""
+      });
+      return await post(_this14.fetch, `${_this14.url}/object/list/${_this14.bucketId}`, body, { headers: _this14.headers }, parameters);
+    });
+  }
+  async listV2(options, parameters) {
+    var _this15 = this;
+    return _this15.handleOperation(async () => {
+      let body = _objectSpread22({}, options);
+      return await post(_this15.fetch, `${_this15.url}/object/list-v2/${_this15.bucketId}`, body, { headers: _this15.headers }, parameters);
+    });
+  }
+  prepareUploadFormData(fileBody, options) {
+    let body = new FormData, files = [];
+    if (fileBody instanceof FormData)
+      fileBody.forEach((value, name) => {
+        if (typeof value === "string")
+          body.append(name, value);
+        else
+          files.push([name, value]);
+      });
+    else
+      files.push(["", fileBody]);
+    if (!body.has("cacheControl"))
+      body.append("cacheControl", options.cacheControl);
+    if (options.metadata && !body.has("metadata"))
+      body.append("metadata", this.encodeMetadata(options.metadata));
+    if (options.contentEncoding && !body.has("contentEncoding"))
+      body.append("contentEncoding", options.contentEncoding);
+    for (let [name, file] of files)
+      body.append(name, file);
+    return body;
+  }
+  encodeMetadata(metadata) {
+    return JSON.stringify(metadata);
+  }
+  toBase64(data) {
+    if (typeof Buffer < "u")
+      return Buffer.from(data).toString("base64");
+    return btoa(data);
+  }
+  _getFinalPath(path) {
+    return `${this.bucketId}/${path.replace(/^\/+/, "")}`;
+  }
+  _removeEmptyFolders(path) {
+    return path.replace(/^\/|\/$/g, "").replace(/\/+/g, "/");
+  }
+  applyTransformOptsToQuery(query, transform) {
+    if (transform.width)
+      query.set("width", transform.width.toString());
+    if (transform.height)
+      query.set("height", transform.height.toString());
+    if (transform.resize)
+      query.set("resize", transform.resize);
+    if (transform.format)
+      query.set("format", transform.format);
+    if (transform.quality)
+      query.set("quality", transform.quality.toString());
+    return query;
+  }
+}, version2 = "2.118.0", DEFAULT_HEADERS = { "X-Client-Info": `storage-js/${version2}` }, StorageBucketApi = class extends BaseApiClient {
+  constructor(url, headers = {}, fetch$1, opts) {
+    let baseUrl = new URL(url);
+    if (opts === null || opts === void 0 ? void 0 : opts.useNewHostname) {
+      if (/supabase\.(co|in|red)$/.test(baseUrl.hostname) && !baseUrl.hostname.includes("storage.supabase."))
+        baseUrl.hostname = baseUrl.hostname.replace("supabase.", "storage.supabase.");
+    }
+    let finalUrl = baseUrl.href.replace(/\/$/, ""), finalHeaders = _objectSpread22(_objectSpread22({}, DEFAULT_HEADERS), headers);
+    super(finalUrl, finalHeaders, fetch$1, "storage");
+  }
+  async listBuckets(options) {
+    var _this = this;
+    return _this.handleOperation(async () => {
+      let queryString = _this.listBucketOptionsToQueryString(options);
+      return await get(_this.fetch, `${_this.url}/bucket${queryString}`, { headers: _this.headers });
+    });
+  }
+  async getBucket(id) {
+    var _this2 = this;
+    return _this2.handleOperation(async () => await get(_this2.fetch, `${_this2.url}/bucket/${id}`, { headers: _this2.headers }));
+  }
+  async createBucket(id, options = { public: !1 }) {
+    var _this3 = this;
+    return _this3.handleOperation(async () => await post(_this3.fetch, `${_this3.url}/bucket`, {
+      id,
+      name: id,
+      type: options.type,
+      public: options.public,
+      file_size_limit: options.fileSizeLimit,
+      allowed_mime_types: options.allowedMimeTypes,
+      versioning_status: options.versioningStatus
+    }, { headers: _this3.headers }));
+  }
+  async updateBucket(id, options) {
+    var _this4 = this;
+    return _this4.handleOperation(async () => await put(_this4.fetch, `${_this4.url}/bucket/${id}`, {
+      id,
+      name: id,
+      public: options.public,
+      file_size_limit: options.fileSizeLimit,
+      allowed_mime_types: options.allowedMimeTypes,
+      versioning_status: options.versioningStatus
+    }, { headers: _this4.headers }));
+  }
+  async emptyBucket(id) {
+    var _this5 = this;
+    return _this5.handleOperation(async () => await post(_this5.fetch, `${_this5.url}/bucket/${id}/empty`, {}, { headers: _this5.headers }));
+  }
+  async deleteBucket(id) {
+    var _this6 = this;
+    return _this6.handleOperation(async () => await remove(_this6.fetch, `${_this6.url}/bucket/${id}`, {}, { headers: _this6.headers }));
+  }
+  async getBucketLifecycle(id) {
+    var _this7 = this;
+    return _this7.handleOperation(async () => await get(_this7.fetch, _this7.bucketLifecycleUrl(id), { headers: _this7.headers }));
+  }
+  async updateBucketLifecycle(id, configuration) {
+    var _this8 = this;
+    return _this8.handleOperation(async () => await put(_this8.fetch, _this8.bucketLifecycleUrl(id), configuration, { headers: _this8.headers }));
+  }
+  async deleteBucketLifecycle(id) {
+    var _this9 = this;
+    return _this9.handleOperation(async () => await remove(_this9.fetch, _this9.bucketLifecycleUrl(id), {}, { headers: _this9.headers }));
+  }
+  async purgeBucketCache(id, options, parameters) {
+    var _this10 = this;
+    return _this10.handleOperation(async () => {
+      let query = new URLSearchParams;
+      if (options === null || options === void 0 ? void 0 : options.transformations)
+        query.set("transformations", "true");
+      let queryString = query.toString();
+      return await remove(_this10.fetch, `${_this10.url}/cdn/${encodeStoragePath(id)}${queryString ? `?${queryString}` : ""}`, {}, { headers: _this10.headers }, parameters);
+    });
+  }
+  bucketLifecycleUrl(id) {
+    return `${this.url}/bucket/${encodeStoragePath(id)}/lifecycle`;
+  }
+  listBucketOptionsToQueryString(options) {
+    let params = {};
+    if (options) {
+      if ("limit" in options)
+        params.limit = String(options.limit);
+      if ("offset" in options)
+        params.offset = String(options.offset);
+      if (options.search)
+        params.search = options.search;
+      if (options.sortColumn)
+        params.sortColumn = options.sortColumn;
+      if (options.sortOrder)
+        params.sortOrder = options.sortOrder;
+    }
+    return Object.keys(params).length > 0 ? "?" + new URLSearchParams(params).toString() : "";
+  }
+}, StorageAnalyticsClient = class extends BaseApiClient {
+  constructor(url, headers = {}, fetch$1) {
+    let finalUrl = url.replace(/\/$/, ""), finalHeaders = _objectSpread22(_objectSpread22({}, DEFAULT_HEADERS), headers);
+    super(finalUrl, finalHeaders, fetch$1, "storage");
+  }
+  async createBucket(name) {
+    var _this = this;
+    return _this.handleOperation(async () => await post(_this.fetch, `${_this.url}/bucket`, { name }, { headers: _this.headers }));
+  }
+  async listBuckets(options) {
+    var _this2 = this;
+    return _this2.handleOperation(async () => {
+      let queryParams = new URLSearchParams;
+      if ((options === null || options === void 0 ? void 0 : options.limit) !== void 0)
+        queryParams.set("limit", options.limit.toString());
+      if ((options === null || options === void 0 ? void 0 : options.offset) !== void 0)
+        queryParams.set("offset", options.offset.toString());
+      if (options === null || options === void 0 ? void 0 : options.sortColumn)
+        queryParams.set("sortColumn", options.sortColumn);
+      if (options === null || options === void 0 ? void 0 : options.sortOrder)
+        queryParams.set("sortOrder", options.sortOrder);
+      if (options === null || options === void 0 ? void 0 : options.search)
+        queryParams.set("search", options.search);
+      let queryString = queryParams.toString(), url = queryString ? `${_this2.url}/bucket?${queryString}` : `${_this2.url}/bucket`;
+      return await get(_this2.fetch, url, { headers: _this2.headers });
+    });
+  }
+  async deleteBucket(bucketName) {
+    var _this3 = this;
+    return _this3.handleOperation(async () => await remove(_this3.fetch, `${_this3.url}/bucket/${bucketName}`, {}, { headers: _this3.headers }));
+  }
+  from(bucketName) {
+    var _this4 = this;
+    if (!isValidBucketName(bucketName))
+      throw new StorageError("Invalid bucket name: File, folder, and bucket names must follow AWS object key naming guidelines and should avoid the use of any other characters.");
+    let catalog = new IcebergRestCatalog({
+      baseUrl: this.url,
+      catalogName: bucketName,
+      auth: {
+        type: "custom",
+        getHeaders: async () => _this4.headers
+      },
+      fetch: this.fetch
+    }), shouldThrowOnError = this.shouldThrowOnError;
+    return new Proxy(catalog, { get(target, prop) {
+      let value = target[prop];
+      if (typeof value !== "function")
+        return value;
+      return async (...args) => {
+        try {
+          return {
+            data: await value.apply(target, args),
+            error: null
+          };
+        } catch (error) {
+          if (shouldThrowOnError)
+            throw error;
+          return {
+            data: null,
+            error
+          };
+        }
+      };
+    } });
+  }
+}, VectorIndexApi = class extends BaseApiClient {
+  constructor(url, headers = {}, fetch$1) {
+    let finalUrl = url.replace(/\/$/, ""), finalHeaders = _objectSpread22(_objectSpread22({}, DEFAULT_HEADERS), {}, { "Content-Type": "application/json" }, headers);
+    super(finalUrl, finalHeaders, fetch$1, "vectors");
+  }
+  async createIndex(options) {
+    var _this = this;
+    return _this.handleOperation(async () => await vectorsApi.post(_this.fetch, `${_this.url}/CreateIndex`, options, { headers: _this.headers }) || {});
+  }
+  async getIndex(vectorBucketName, indexName) {
+    var _this2 = this;
+    return _this2.handleOperation(async () => await vectorsApi.post(_this2.fetch, `${_this2.url}/GetIndex`, {
+      vectorBucketName,
+      indexName
+    }, { headers: _this2.headers }));
+  }
+  async listIndexes(options) {
+    var _this3 = this;
+    return _this3.handleOperation(async () => await vectorsApi.post(_this3.fetch, `${_this3.url}/ListIndexes`, options, { headers: _this3.headers }));
+  }
+  async deleteIndex(vectorBucketName, indexName) {
+    var _this4 = this;
+    return _this4.handleOperation(async () => await vectorsApi.post(_this4.fetch, `${_this4.url}/DeleteIndex`, {
+      vectorBucketName,
+      indexName
+    }, { headers: _this4.headers }) || {});
+  }
+}, VectorDataApi = class extends BaseApiClient {
+  constructor(url, headers = {}, fetch$1) {
+    let finalUrl = url.replace(/\/$/, ""), finalHeaders = _objectSpread22(_objectSpread22({}, DEFAULT_HEADERS), {}, { "Content-Type": "application/json" }, headers);
+    super(finalUrl, finalHeaders, fetch$1, "vectors");
+  }
+  async putVectors(options) {
+    var _this = this;
+    if (options.vectors.length < 1 || options.vectors.length > 500)
+      throw Error("Vector batch size must be between 1 and 500 items");
+    return _this.handleOperation(async () => await vectorsApi.post(_this.fetch, `${_this.url}/PutVectors`, options, { headers: _this.headers }) || {});
+  }
+  async getVectors(options) {
+    var _this2 = this;
+    return _this2.handleOperation(async () => await vectorsApi.post(_this2.fetch, `${_this2.url}/GetVectors`, options, { headers: _this2.headers }));
+  }
+  async listVectors(options) {
+    var _this3 = this;
+    if (options.segmentCount !== void 0) {
+      if (options.segmentCount < 1 || options.segmentCount > 16)
+        throw Error("segmentCount must be between 1 and 16");
+      if (options.segmentIndex !== void 0) {
+        if (options.segmentIndex < 0 || options.segmentIndex >= options.segmentCount)
+          throw Error(`segmentIndex must be between 0 and ${options.segmentCount - 1}`);
+      }
+    }
+    return _this3.handleOperation(async () => await vectorsApi.post(_this3.fetch, `${_this3.url}/ListVectors`, options, { headers: _this3.headers }));
+  }
+  async queryVectors(options) {
+    var _this4 = this;
+    return _this4.handleOperation(async () => await vectorsApi.post(_this4.fetch, `${_this4.url}/QueryVectors`, options, { headers: _this4.headers }));
+  }
+  async deleteVectors(options) {
+    var _this5 = this;
+    if (options.keys.length < 1 || options.keys.length > 500)
+      throw Error("Keys batch size must be between 1 and 500 items");
+    return _this5.handleOperation(async () => await vectorsApi.post(_this5.fetch, `${_this5.url}/DeleteVectors`, options, { headers: _this5.headers }) || {});
+  }
+}, VectorBucketApi = class extends BaseApiClient {
+  constructor(url, headers = {}, fetch$1) {
+    let finalUrl = url.replace(/\/$/, ""), finalHeaders = _objectSpread22(_objectSpread22({}, DEFAULT_HEADERS), {}, { "Content-Type": "application/json" }, headers);
+    super(finalUrl, finalHeaders, fetch$1, "vectors");
+  }
+  async createBucket(vectorBucketName) {
+    var _this = this;
+    return _this.handleOperation(async () => await vectorsApi.post(_this.fetch, `${_this.url}/CreateVectorBucket`, { vectorBucketName }, { headers: _this.headers }) || {});
+  }
+  async getBucket(vectorBucketName) {
+    var _this2 = this;
+    return _this2.handleOperation(async () => await vectorsApi.post(_this2.fetch, `${_this2.url}/GetVectorBucket`, { vectorBucketName }, { headers: _this2.headers }));
+  }
+  async listBuckets(options = {}) {
+    var _this3 = this;
+    return _this3.handleOperation(async () => await vectorsApi.post(_this3.fetch, `${_this3.url}/ListVectorBuckets`, options, { headers: _this3.headers }));
+  }
+  async deleteBucket(vectorBucketName) {
+    var _this4 = this;
+    return _this4.handleOperation(async () => await vectorsApi.post(_this4.fetch, `${_this4.url}/DeleteVectorBucket`, { vectorBucketName }, { headers: _this4.headers }) || {});
+  }
+}, StorageVectorsClient = class extends VectorBucketApi {
+  constructor(url, options = {}) {
+    super(url, options.headers || {}, options.fetch);
+  }
+  from(vectorBucketName) {
+    return new VectorBucketScope(this.url, this.headers, vectorBucketName, this.fetch);
+  }
+  async createBucket(vectorBucketName) {
+    var _superprop_getCreateBucket = () => super.createBucket, _this = this;
+    return _superprop_getCreateBucket().call(_this, vectorBucketName);
+  }
+  async getBucket(vectorBucketName) {
+    var _superprop_getGetBucket = () => super.getBucket, _this2 = this;
+    return _superprop_getGetBucket().call(_this2, vectorBucketName);
+  }
+  async listBuckets(options = {}) {
+    var _superprop_getListBuckets = () => super.listBuckets, _this3 = this;
+    return _superprop_getListBuckets().call(_this3, options);
+  }
+  async deleteBucket(vectorBucketName) {
+    var _superprop_getDeleteBucket = () => super.deleteBucket, _this4 = this;
+    return _superprop_getDeleteBucket().call(_this4, vectorBucketName);
+  }
+}, VectorBucketScope = class extends VectorIndexApi {
+  constructor(url, headers, vectorBucketName, fetch$1) {
+    super(url, headers, fetch$1);
+    this.vectorBucketName = vectorBucketName;
+  }
+  async createIndex(options) {
+    var _superprop_getCreateIndex = () => super.createIndex, _this5 = this;
+    return _superprop_getCreateIndex().call(_this5, _objectSpread22(_objectSpread22({}, options), {}, { vectorBucketName: _this5.vectorBucketName }));
+  }
+  async listIndexes(options = {}) {
+    var _superprop_getListIndexes = () => super.listIndexes, _this6 = this;
+    return _superprop_getListIndexes().call(_this6, _objectSpread22(_objectSpread22({}, options), {}, { vectorBucketName: _this6.vectorBucketName }));
+  }
+  async getIndex(indexName) {
+    var _superprop_getGetIndex = () => super.getIndex, _this7 = this;
+    return _superprop_getGetIndex().call(_this7, _this7.vectorBucketName, indexName);
+  }
+  async deleteIndex(indexName) {
+    var _superprop_getDeleteIndex = () => super.deleteIndex, _this8 = this;
+    return _superprop_getDeleteIndex().call(_this8, _this8.vectorBucketName, indexName);
+  }
+  index(indexName) {
+    return new VectorIndexScope(this.url, this.headers, this.vectorBucketName, indexName, this.fetch);
+  }
+}, VectorIndexScope = class extends VectorDataApi {
+  constructor(url, headers, vectorBucketName, indexName, fetch$1) {
+    super(url, headers, fetch$1);
+    this.vectorBucketName = vectorBucketName, this.indexName = indexName;
+  }
+  async putVectors(options) {
+    var _superprop_getPutVectors = () => super.putVectors, _this9 = this;
+    return _superprop_getPutVectors().call(_this9, _objectSpread22(_objectSpread22({}, options), {}, {
+      vectorBucketName: _this9.vectorBucketName,
+      indexName: _this9.indexName
+    }));
+  }
+  async getVectors(options) {
+    var _superprop_getGetVectors = () => super.getVectors, _this10 = this;
+    return _superprop_getGetVectors().call(_this10, _objectSpread22(_objectSpread22({}, options), {}, {
+      vectorBucketName: _this10.vectorBucketName,
+      indexName: _this10.indexName
+    }));
+  }
+  async listVectors(options = {}) {
+    var _superprop_getListVectors = () => super.listVectors, _this11 = this;
+    return _superprop_getListVectors().call(_this11, _objectSpread22(_objectSpread22({}, options), {}, {
+      vectorBucketName: _this11.vectorBucketName,
+      indexName: _this11.indexName
+    }));
+  }
+  async queryVectors(options) {
+    var _superprop_getQueryVectors = () => super.queryVectors, _this12 = this;
+    return _superprop_getQueryVectors().call(_this12, _objectSpread22(_objectSpread22({}, options), {}, {
+      vectorBucketName: _this12.vectorBucketName,
+      indexName: _this12.indexName
+    }));
+  }
+  async deleteVectors(options) {
+    var _superprop_getDeleteVectors = () => super.deleteVectors, _this13 = this;
+    return _superprop_getDeleteVectors().call(_this13, _objectSpread22(_objectSpread22({}, options), {}, {
+      vectorBucketName: _this13.vectorBucketName,
+      indexName: _this13.indexName
+    }));
+  }
+}, StorageClient = class extends StorageBucketApi {
+  constructor(url, headers = {}, fetch$1, opts) {
+    super(url, headers, fetch$1, opts);
+  }
+  from(id) {
+    return new StorageFileApi(this.url, this.headers, id, this.fetch);
+  }
+  get vectors() {
+    return new StorageVectorsClient(this.url + "/vector", {
+      headers: this.headers,
+      fetch: this.fetch
+    });
+  }
+  get analytics() {
+    return new StorageAnalyticsClient(this.url + "/iceberg", this.headers, this.fetch);
+  }
+};
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/version.js
+var version3 = "2.118.0";
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/constants.js
+var AUTO_REFRESH_TICK_DURATION_MS = 30000, AUTO_REFRESH_TICK_THRESHOLD = 3, EXPIRY_MARGIN_MS = AUTO_REFRESH_TICK_THRESHOLD * AUTO_REFRESH_TICK_DURATION_MS, REFRESH_FAILURE_COOLDOWN_MS = 2 * AUTO_REFRESH_TICK_DURATION_MS, GOTRUE_URL = "http://localhost:9999", STORAGE_KEY = "supabase.auth.token";
+var DEFAULT_HEADERS2 = { "X-Client-Info": `gotrue-js/${version3}` };
+var API_VERSION_HEADER_NAME = "X-Supabase-Api-Version", API_VERSIONS = {
+  "2024-01-01": {
+    timestamp: Date.parse("2024-01-01T00:00:00.0Z"),
+    name: "2024-01-01"
+  }
+}, BASE64URL_REGEX = /^([a-z0-9_-]{4})*($|[a-z0-9_-]{3}$|[a-z0-9_-]{2}$)$/i, PKCE_FLOW_ID_PARAM = "sb_flow_id", PKCE_MAX_CONCURRENT_FLOWS = 5, JWKS_TTL = 600000;
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/errors.js
+class AuthError extends Error {
+  constructor(message, status, code) {
+    super(message);
+    this.__isAuthError = !0, this.name = "AuthError", this.status = status, this.code = code;
+  }
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      status: this.status,
+      code: this.code
+    };
+  }
+}
+function isAuthError(error) {
+  return typeof error === "object" && error !== null && "__isAuthError" in error;
+}
+
+class AuthApiError extends AuthError {
+  constructor(message, status, code) {
+    super(message, status, code);
+    this.name = "AuthApiError", this.status = status, this.code = code;
+  }
+}
+function isAuthApiError(error) {
+  return isAuthError(error) && error.name === "AuthApiError";
+}
+
+class AuthUnknownError extends AuthError {
+  constructor(message, originalError) {
+    super(message);
+    this.name = "AuthUnknownError", this.originalError = originalError;
+  }
+}
+
+class CustomAuthError extends AuthError {
+  constructor(message, name, status, code) {
+    super(message, status, code);
+    this.name = name, this.status = status;
+  }
+}
+
+class AuthSessionMissingError extends CustomAuthError {
+  constructor() {
+    super("Auth session missing!", "AuthSessionMissingError", 400, void 0);
+  }
+}
+function isAuthSessionMissingError(error) {
+  return isAuthError(error) && error.name === "AuthSessionMissingError";
+}
+
+class AuthInvalidTokenResponseError extends CustomAuthError {
+  constructor() {
+    super("Auth session or user missing", "AuthInvalidTokenResponseError", 500, void 0);
+  }
+}
+
+class AuthInvalidCredentialsError extends CustomAuthError {
+  constructor(message) {
+    super(message, "AuthInvalidCredentialsError", 400, void 0);
+  }
+}
+
+class AuthImplicitGrantRedirectError extends CustomAuthError {
+  constructor(message, details = null) {
+    super(message, "AuthImplicitGrantRedirectError", 500, void 0);
+    this.details = null, this.details = details;
+  }
+  toJSON() {
+    return Object.assign(Object.assign({}, super.toJSON()), { details: this.details });
+  }
+}
+function isAuthImplicitGrantRedirectError(error) {
+  return isAuthError(error) && error.name === "AuthImplicitGrantRedirectError";
+}
+
+class AuthPKCEGrantCodeExchangeError extends CustomAuthError {
+  constructor(message, details = null) {
+    super(message, "AuthPKCEGrantCodeExchangeError", 500, void 0);
+    this.details = null, this.details = details;
+  }
+  toJSON() {
+    return Object.assign(Object.assign({}, super.toJSON()), { details: this.details });
+  }
+}
+
+class AuthPKCECodeVerifierMissingError extends CustomAuthError {
+  constructor() {
+    super("PKCE code verifier not found in storage. This can happen if the auth flow was initiated in a different browser or device, or if the storage was cleared. For SSR frameworks (Next.js, SvelteKit, etc.), use @supabase/ssr on both the server and client to store the code verifier in cookies.", "AuthPKCECodeVerifierMissingError", 400, "pkce_code_verifier_not_found");
+  }
+}
+class AuthRetryableFetchError extends CustomAuthError {
+  constructor(message, status) {
+    super(message, "AuthRetryableFetchError", status, void 0);
+  }
+}
+function isAuthRetryableFetchError(error) {
+  return isAuthError(error) && error.name === "AuthRetryableFetchError";
+}
+
+class AuthRefreshDiscardedError extends CustomAuthError {
+  constructor(message = "Refresh result discarded: session state changed mid-flight (e.g., concurrent signOut)") {
+    super(message, "AuthRefreshDiscardedError", 409, void 0);
+  }
+}
+function isAuthRefreshDiscardedError(error) {
+  return isAuthError(error) && error.name === "AuthRefreshDiscardedError";
+}
+
+class AuthWeakPasswordError extends CustomAuthError {
+  constructor(message, status, reasons) {
+    super(message, "AuthWeakPasswordError", status, "weak_password");
+    this.reasons = reasons;
+  }
+  toJSON() {
+    return Object.assign(Object.assign({}, super.toJSON()), { reasons: this.reasons });
+  }
+}
+class AuthInvalidJwtError extends CustomAuthError {
+  constructor(message) {
+    super(message, "AuthInvalidJwtError", 400, "invalid_jwt");
+  }
+}
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/base64url.js
+var TO_BASE64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".split(""), IGNORE_BASE64URL = ` 	
+\r=`.split(""), FROM_BASE64URL = (() => {
+  let charMap = Array(128);
+  for (let i = 0;i < charMap.length; i += 1)
+    charMap[i] = -1;
+  for (let i = 0;i < IGNORE_BASE64URL.length; i += 1)
+    charMap[IGNORE_BASE64URL[i].charCodeAt(0)] = -2;
+  for (let i = 0;i < TO_BASE64URL.length; i += 1)
+    charMap[TO_BASE64URL[i].charCodeAt(0)] = i;
+  return charMap;
+})();
+function byteToBase64URL(byte, state, emit) {
+  if (byte !== null) {
+    state.queue = state.queue << 8 | byte, state.queuedBits += 8;
+    while (state.queuedBits >= 6) {
+      let pos = state.queue >> state.queuedBits - 6 & 63;
+      emit(TO_BASE64URL[pos]), state.queuedBits -= 6;
+    }
+  } else if (state.queuedBits > 0) {
+    state.queue = state.queue << 6 - state.queuedBits, state.queuedBits = 6;
+    while (state.queuedBits >= 6) {
+      let pos = state.queue >> state.queuedBits - 6 & 63;
+      emit(TO_BASE64URL[pos]), state.queuedBits -= 6;
+    }
+  }
+}
+function byteFromBase64URL(charCode, state, emit) {
+  let bits = FROM_BASE64URL[charCode];
+  if (bits > -1) {
+    state.queue = state.queue << 6 | bits, state.queuedBits += 6;
+    while (state.queuedBits >= 8)
+      emit(state.queue >> state.queuedBits - 8 & 255), state.queuedBits -= 8;
+  } else if (bits === -2)
+    return;
+  else
+    throw Error(`Invalid Base64-URL character "${String.fromCharCode(charCode)}"`);
+}
+function stringFromBase64URL(str) {
+  let conv = [], utf8Emit = (codepoint) => {
+    conv.push(String.fromCodePoint(codepoint));
+  }, utf8State = {
+    utf8seq: 0,
+    codepoint: 0
+  }, b64State = { queue: 0, queuedBits: 0 }, byteEmit = (byte) => {
+    stringFromUTF8(byte, utf8State, utf8Emit);
+  };
+  for (let i = 0;i < str.length; i += 1)
+    byteFromBase64URL(str.charCodeAt(i), b64State, byteEmit);
+  return conv.join("");
+}
+function codepointToUTF8(codepoint, emit) {
+  if (codepoint <= 127) {
+    emit(codepoint);
+    return;
+  } else if (codepoint <= 2047) {
+    emit(192 | codepoint >> 6), emit(128 | codepoint & 63);
+    return;
+  } else if (codepoint <= 65535) {
+    emit(224 | codepoint >> 12), emit(128 | codepoint >> 6 & 63), emit(128 | codepoint & 63);
+    return;
+  } else if (codepoint <= 1114111) {
+    emit(240 | codepoint >> 18), emit(128 | codepoint >> 12 & 63), emit(128 | codepoint >> 6 & 63), emit(128 | codepoint & 63);
+    return;
+  }
+  throw Error(`Unrecognized Unicode codepoint: ${codepoint.toString(16)}`);
+}
+function stringToUTF8(str, emit) {
+  for (let i = 0;i < str.length; i += 1) {
+    let codepoint = str.charCodeAt(i);
+    if (codepoint > 55295 && codepoint <= 56319) {
+      let highSurrogate = (codepoint - 55296) * 1024 & 65535;
+      codepoint = (str.charCodeAt(i + 1) - 56320 & 65535 | highSurrogate) + 65536, i += 1;
+    }
+    codepointToUTF8(codepoint, emit);
+  }
+}
+function stringFromUTF8(byte, state, emit) {
+  if (state.utf8seq === 0) {
+    if (byte <= 127) {
+      emit(byte);
+      return;
+    }
+    for (let leadingBit = 1;leadingBit < 6; leadingBit += 1)
+      if ((byte >> 7 - leadingBit & 1) === 0) {
+        state.utf8seq = leadingBit;
+        break;
+      }
+    if (state.utf8seq === 2)
+      state.codepoint = byte & 31;
+    else if (state.utf8seq === 3)
+      state.codepoint = byte & 15;
+    else if (state.utf8seq === 4)
+      state.codepoint = byte & 7;
+    else
+      throw Error("Invalid UTF-8 sequence");
+    state.utf8seq -= 1;
+  } else if (state.utf8seq > 0) {
+    if (byte <= 127)
+      throw Error("Invalid UTF-8 sequence");
+    if (state.codepoint = state.codepoint << 6 | byte & 63, state.utf8seq -= 1, state.utf8seq === 0)
+      emit(state.codepoint);
+  }
+}
+function base64UrlToUint8Array(str) {
+  let result = [], state = { queue: 0, queuedBits: 0 }, onByte = (byte) => {
+    result.push(byte);
+  };
+  for (let i = 0;i < str.length; i += 1)
+    byteFromBase64URL(str.charCodeAt(i), state, onByte);
+  return new Uint8Array(result);
+}
+function stringToUint8Array(str) {
+  let result = [];
+  return stringToUTF8(str, (byte) => result.push(byte)), new Uint8Array(result);
+}
+function bytesToBase64URL(bytes) {
+  let result = [], state = { queue: 0, queuedBits: 0 }, onChar = (char) => {
+    result.push(char);
+  };
+  return bytes.forEach((byte) => byteToBase64URL(byte, state, onChar)), byteToBase64URL(null, state, onChar), result.join("");
+}
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/helpers.js
+function expiresAt(expiresIn) {
+  return Math.round(Date.now() / 1000) + expiresIn;
+}
+function generateCallbackId() {
+  return Symbol("auth-callback");
+}
+var isBrowser = () => typeof window < "u" && typeof document < "u", localStorageWriteTests = {
+  tested: !1,
+  writable: !1
+}, supportsLocalStorage = () => {
+  if (!isBrowser())
+    return !1;
+  try {
+    if (typeof globalThis.localStorage !== "object")
+      return !1;
+  } catch (e) {
+    return !1;
+  }
+  if (localStorageWriteTests.tested)
+    return localStorageWriteTests.writable;
+  let randomKey = `lswt-${Math.random()}${Math.random()}`;
+  try {
+    globalThis.localStorage.setItem(randomKey, randomKey), globalThis.localStorage.removeItem(randomKey), localStorageWriteTests.tested = !0, localStorageWriteTests.writable = !0;
+  } catch (e) {
+    localStorageWriteTests.tested = !0, localStorageWriteTests.writable = !1;
+  }
+  return localStorageWriteTests.writable;
+};
+function parseParametersFromURL(href) {
+  let result = {}, url = new URL(href);
+  if (url.hash && url.hash[0] === "#")
+    try {
+      new URLSearchParams(url.hash.substring(1)).forEach((value, key) => {
+        result[key] = value;
+      });
+    } catch (_e) {}
+  return url.searchParams.forEach((value, key) => {
+    result[key] = value;
+  }), result;
+}
+var resolveFetch3 = (customFetch) => {
+  if (customFetch)
+    return (...args) => customFetch(...args);
+  return (...args) => fetch(...args);
+}, looksLikeFetchResponse = (maybeResponse) => typeof maybeResponse === "object" && maybeResponse !== null && ("status" in maybeResponse) && ("ok" in maybeResponse) && ("json" in maybeResponse) && typeof maybeResponse.json === "function", setItemAsync = async (storage, key, data) => {
+  await storage.setItem(key, JSON.stringify(data));
+}, getItemAsync = async (storage, key) => {
+  let value = await storage.getItem(key);
+  if (!value)
+    return null;
+  try {
+    return JSON.parse(value);
+  } catch (_a) {
+    return null;
+  }
+}, removeItemAsync = async (storage, key) => {
+  await storage.removeItem(key);
+};
+
+class Deferred {
+  constructor() {
+    this.promise = new Deferred.promiseConstructor((res, rej) => {
+      this.resolve = res, this.reject = rej;
+    });
+  }
+}
+Deferred.promiseConstructor = Promise;
+function decodeJWT(token) {
+  let parts = token.split(".");
+  if (parts.length !== 3)
+    throw new AuthInvalidJwtError("Invalid JWT structure");
+  for (let i = 0;i < parts.length; i++)
+    if (!BASE64URL_REGEX.test(parts[i]))
+      throw new AuthInvalidJwtError("JWT not in base64url format");
+  return {
+    header: JSON.parse(stringFromBase64URL(parts[0])),
+    payload: JSON.parse(stringFromBase64URL(parts[1])),
+    signature: base64UrlToUint8Array(parts[2]),
+    raw: {
+      header: parts[0],
+      payload: parts[1]
+    }
+  };
+}
+async function sleep2(time) {
+  return await new Promise((accept) => {
+    setTimeout(() => accept(null), time);
+  });
+}
+function retryable(fn, isRetryable) {
+  return new Promise((accept, reject) => {
+    (async () => {
+      for (let attempt = 0;attempt < 1 / 0; attempt++)
+        try {
+          let result = await fn(attempt);
+          if (!isRetryable(attempt, null, result)) {
+            accept(result);
+            return;
+          }
+        } catch (e) {
+          if (!isRetryable(attempt, e)) {
+            reject(e);
+            return;
+          }
+        }
+    })();
+  });
+}
+function dec2hex(dec) {
+  return ("0" + dec.toString(16)).substr(-2);
+}
+function generatePKCEVerifier() {
+  let array = new Uint32Array(56);
+  if (typeof crypto > "u") {
+    let verifier = "";
+    for (let i = 0;i < 56; i++)
+      verifier += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~".charAt(Math.floor(Math.random() * 66));
+    return verifier;
+  }
+  return crypto.getRandomValues(array), Array.from(array, dec2hex).join("");
+}
+async function sha256(randomString) {
+  let encodedData = (/* @__PURE__ */ new TextEncoder()).encode(randomString), hash = await crypto.subtle.digest("SHA-256", encodedData), bytes = new Uint8Array(hash);
+  return Array.from(bytes).map((c) => String.fromCharCode(c)).join("");
+}
+async function generatePKCEChallenge(verifier) {
+  if (!(typeof crypto < "u" && typeof crypto.subtle < "u" && typeof TextEncoder < "u"))
+    return console.warn("WebCrypto API is not supported. Code challenge method will default to use plain instead of sha256."), verifier;
+  let hashed = await sha256(verifier);
+  return btoa(hashed).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+var PKCE_FLOW_ID_PATTERN = /^[a-zA-Z0-9_-]{8,64}$/;
+function validatePKCEFlowId(flowId) {
+  return typeof flowId === "string" && PKCE_FLOW_ID_PATTERN.test(flowId) ? flowId : null;
+}
+function generatePKCEFlowId() {
+  if (typeof crypto < "u" && typeof crypto.getRandomValues === "function") {
+    let bytes = new Uint8Array(16);
+    return crypto.getRandomValues(bytes), Array.from(bytes, dec2hex).join("");
+  }
+  let flowId = "";
+  for (let i = 0;i < 32; i++)
+    flowId += Math.floor(Math.random() * 16).toString(16);
+  return flowId;
+}
+var pkceVerifierSlotKey = (storageKey, flowId) => `${storageKey}-flow-${flowId}-code-verifier`, pkceFlowIndexKey = (storageKey) => `${storageKey}-flows-code-verifier`;
+async function getPKCEFlowIndex(storage, storageKey) {
+  let index = await getItemAsync(storage, pkceFlowIndexKey(storageKey));
+  return Array.isArray(index) ? index.filter((id) => validatePKCEFlowId(id) !== null) : [];
+}
+async function storePKCEVerifier(storage, storageKey, flowId, verifier, onEvictFlow) {
+  await setItemAsync(storage, pkceVerifierSlotKey(storageKey, flowId), verifier);
+  let index = (await getPKCEFlowIndex(storage, storageKey)).filter((id) => id !== flowId);
+  index.push(flowId);
+  while (index.length > PKCE_MAX_CONCURRENT_FLOWS) {
+    let evicted = index.shift();
+    await removeItemAsync(storage, pkceVerifierSlotKey(storageKey, evicted)), onEvictFlow === null || onEvictFlow === void 0 || onEvictFlow(evicted);
+  }
+  await setItemAsync(storage, pkceFlowIndexKey(storageKey), index), await setItemAsync(storage, `${storageKey}-code-verifier`, verifier);
+}
+async function retrievePKCEVerifier(storage, storageKey, flowId) {
+  if (flowId) {
+    let verifier = await getItemAsync(storage, pkceVerifierSlotKey(storageKey, flowId));
+    return { verifier: typeof verifier === "string" ? verifier : null, flowId };
+  }
+  let verifier = await getItemAsync(storage, `${storageKey}-code-verifier`);
+  return { verifier: typeof verifier === "string" ? verifier : null, flowId: null };
+}
+async function removePKCEVerifier(storage, storageKey, flowId) {
+  let legacyKey = `${storageKey}-code-verifier`;
+  if (!flowId) {
+    await removeItemAsync(storage, legacyKey);
+    return;
+  }
+  let slotKey = pkceVerifierSlotKey(storageKey, flowId), slotValue = await getItemAsync(storage, slotKey);
+  await removeItemAsync(storage, slotKey);
+  let index = await getPKCEFlowIndex(storage, storageKey), remaining = index.filter((id) => id !== flowId);
+  if (remaining.length !== index.length)
+    if (remaining.length > 0)
+      await setItemAsync(storage, pkceFlowIndexKey(storageKey), remaining);
+    else
+      await removeItemAsync(storage, pkceFlowIndexKey(storageKey));
+  if (slotValue != null && slotValue === await getItemAsync(storage, legacyKey))
+    await removeItemAsync(storage, legacyKey);
+}
+async function removeAllPKCEVerifiers(storage, storageKey) {
+  let index = await getPKCEFlowIndex(storage, storageKey);
+  for (let flowId of index)
+    await removeItemAsync(storage, pkceVerifierSlotKey(storageKey, flowId));
+  await removeItemAsync(storage, pkceFlowIndexKey(storageKey)), await removeItemAsync(storage, `${storageKey}-code-verifier`);
+}
+function appendFlowIdToRedirectTo(redirectTo, flowId) {
+  let hashIndex = redirectTo.indexOf("#"), base = hashIndex === -1 ? redirectTo : redirectTo.slice(0, hashIndex), fragment = hashIndex === -1 ? "" : redirectTo.slice(hashIndex), queryIndex = base.indexOf("?");
+  if (queryIndex !== -1) {
+    let path = base.slice(0, queryIndex), remaining = base.slice(queryIndex + 1).split("&").filter((pair) => pair !== "" && pair !== PKCE_FLOW_ID_PARAM && !pair.startsWith(`${PKCE_FLOW_ID_PARAM}=`));
+    base = remaining.length > 0 ? `${path}?${remaining.join("&")}` : path;
+  }
+  let separator = base.includes("?") ? "&" : "?";
+  return `${base}${separator}${PKCE_FLOW_ID_PARAM}=${encodeURIComponent(flowId)}${fragment}`;
+}
+async function getCodeChallengeAndMethod(storage, storageKey, isPasswordRecovery = !1, onEvictFlow) {
+  let codeVerifier = generatePKCEVerifier(), storedCodeVerifier = codeVerifier;
+  if (isPasswordRecovery)
+    storedCodeVerifier += "/recovery";
+  let flowId = generatePKCEFlowId();
+  await storePKCEVerifier(storage, storageKey, flowId, storedCodeVerifier, onEvictFlow);
+  let codeChallenge = await generatePKCEChallenge(codeVerifier);
+  return [codeChallenge, codeVerifier === codeChallenge ? "plain" : "s256", flowId];
+}
+var API_VERSION_REGEX = /^2[0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/i;
+function parseResponseAPIVersion(response) {
+  let apiVersion = response.headers.get(API_VERSION_HEADER_NAME);
+  if (!apiVersion)
+    return null;
+  if (!apiVersion.match(API_VERSION_REGEX))
+    return null;
+  try {
+    return /* @__PURE__ */ new Date(`${apiVersion}T00:00:00.0Z`);
+  } catch (_e) {
+    return null;
+  }
+}
+function validateExp(exp) {
+  if (!exp)
+    throw Error("Missing exp claim");
+  let timeNow = Math.floor(Date.now() / 1000);
+  if (exp <= timeNow)
+    throw Error("JWT has expired");
+}
+function getAlgorithm(alg) {
+  switch (alg) {
+    case "RS256":
+      return {
+        name: "RSASSA-PKCS1-v1_5",
+        hash: { name: "SHA-256" }
+      };
+    case "ES256":
+      return {
+        name: "ECDSA",
+        namedCurve: "P-256",
+        hash: { name: "SHA-256" }
+      };
+    default:
+      throw Error("Invalid alg claim");
+  }
+}
+var UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function validateUUID(str) {
+  if (!UUID_REGEX.test(str))
+    throw Error("@supabase/auth-js: Expected parameter to be UUID but is not");
+}
+function assertRecoveryCodesExperimentalEnabled(experimental) {
+  if (!experimental.recoveryCodes)
+    throw Error("@supabase/auth-js: the MFA recovery codes API is experimental and disabled by default. Enable it by passing `auth: { experimental: { recoveryCodes: true } }` to createClient (or to the GoTrueClient constructor).");
+}
+function userNotAvailableProxy() {
+  return new Proxy({}, {
+    get: (target, prop) => {
+      if (prop === "__isUserNotAvailableProxy")
+        return !0;
+      if (typeof prop === "symbol") {
+        let sProp = prop.toString();
+        if (sProp === "Symbol(Symbol.toPrimitive)" || sProp === "Symbol(Symbol.toStringTag)" || sProp === "Symbol(util.inspect.custom)")
+          return;
+      }
+      throw Error(`@supabase/auth-js: client was created with userStorage option and there was no user stored in the user storage. Accessing the "${prop}" property of the session object is not supported. Please use getUser() instead.`);
+    },
+    set: (_target, prop) => {
+      throw Error(`@supabase/auth-js: client was created with userStorage option and there was no user stored in the user storage. Setting the "${prop}" property of the session object is not supported. Please use getUser() to fetch a user object you can manipulate.`);
+    },
+    deleteProperty: (_target, prop) => {
+      throw Error(`@supabase/auth-js: client was created with userStorage option and there was no user stored in the user storage. Deleting the "${prop}" property of the session object is not supported. Please use getUser() to fetch a user object you can manipulate.`);
+    }
+  });
+}
+function insecureUserWarningProxy(user, suppressWarningRef) {
+  return new Proxy(user, {
+    get: (target, prop, receiver) => {
+      if (prop === "__isInsecureUserWarningProxy")
+        return !0;
+      if (typeof prop === "symbol") {
+        let sProp = prop.toString();
+        if (sProp === "Symbol(Symbol.toPrimitive)" || sProp === "Symbol(Symbol.toStringTag)" || sProp === "Symbol(util.inspect.custom)" || sProp === "Symbol(nodejs.util.inspect.custom)")
+          return Reflect.get(target, prop, receiver);
+      }
+      if (!suppressWarningRef.value && typeof prop === "string")
+        console.warn("Using the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server."), suppressWarningRef.value = !0;
+      return Reflect.get(target, prop, receiver);
+    }
+  });
+}
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/fetch.js
+var _getErrorMessage2 = (err) => {
+  if (typeof err === "object" && err !== null) {
+    let e = err;
+    if (typeof e.msg === "string")
+      return e.msg;
+    if (typeof e.message === "string")
+      return e.message;
+    if (typeof e.error_description === "string")
+      return e.error_description;
+    if (typeof e.error === "string")
+      return e.error;
+  }
+  return JSON.stringify(err);
+}, NETWORK_ERROR_CODES = [
+  500,
+  501,
+  502,
+  503,
+  504,
+  520,
+  521,
+  522,
+  523,
+  524,
+  525,
+  526,
+  527,
+  528,
+  529,
+  530
+];
+async function handleError2(error) {
+  var _a;
+  if (!looksLikeFetchResponse(error))
+    throw new AuthRetryableFetchError(_getErrorMessage2(error), 0);
+  let data;
+  try {
+    data = await error.json();
+  } catch (e) {
+    if (NETWORK_ERROR_CODES.includes(error.status))
+      throw new AuthRetryableFetchError(error.statusText || `HTTP ${error.status}`, error.status);
+    throw new AuthUnknownError(_getErrorMessage2(e), e);
+  }
+  if (NETWORK_ERROR_CODES.includes(error.status))
+    throw new AuthRetryableFetchError(_getErrorMessage2(data), error.status);
+  let errorCode = void 0, responseAPIVersion = parseResponseAPIVersion(error);
+  if (responseAPIVersion && responseAPIVersion.getTime() >= API_VERSIONS["2024-01-01"].timestamp && typeof data === "object" && data && typeof data.code === "string")
+    errorCode = data.code;
+  else if (typeof data === "object" && data && typeof data.error_code === "string")
+    errorCode = data.error_code;
+  if (!errorCode) {
+    if (typeof data === "object" && data && typeof data.weak_password === "object" && data.weak_password && Array.isArray(data.weak_password.reasons) && data.weak_password.reasons.length && data.weak_password.reasons.reduce((a, i) => a && typeof i === "string", !0))
+      throw new AuthWeakPasswordError(_getErrorMessage2(data), error.status, data.weak_password.reasons);
+  } else if (errorCode === "weak_password")
+    throw new AuthWeakPasswordError(_getErrorMessage2(data), error.status, ((_a = data.weak_password) === null || _a === void 0 ? void 0 : _a.reasons) || []);
+  else if (errorCode === "session_not_found")
+    throw new AuthSessionMissingError;
+  throw new AuthApiError(_getErrorMessage2(data), error.status || 500, errorCode);
+}
+var _getRequestParams2 = (method, options, parameters, body) => {
+  let params = { method, headers: (options === null || options === void 0 ? void 0 : options.headers) || {} };
+  if (method === "GET")
+    return params;
+  return params.headers = Object.assign({ "Content-Type": "application/json;charset=UTF-8" }, options === null || options === void 0 ? void 0 : options.headers), params.body = JSON.stringify(body), Object.assign(Object.assign({}, params), parameters);
+};
+async function _request(fetcher, method, url, options) {
+  var _a;
+  let headers = Object.assign({}, options === null || options === void 0 ? void 0 : options.headers);
+  if (!headers[API_VERSION_HEADER_NAME])
+    headers[API_VERSION_HEADER_NAME] = API_VERSIONS["2024-01-01"].name;
+  if (options === null || options === void 0 ? void 0 : options.jwt)
+    headers.Authorization = `Bearer ${options.jwt}`;
+  let qs = (_a = options === null || options === void 0 ? void 0 : options.query) !== null && _a !== void 0 ? _a : {};
+  if (options === null || options === void 0 ? void 0 : options.redirectTo)
+    qs.redirect_to = options.redirectTo;
+  let queryString = Object.keys(qs).length ? "?" + new URLSearchParams(qs).toString() : "", data = await _handleRequest2(fetcher, method, url + queryString, {
+    headers,
+    noResolveJson: options === null || options === void 0 ? void 0 : options.noResolveJson
+  }, {}, options === null || options === void 0 ? void 0 : options.body);
+  return (options === null || options === void 0 ? void 0 : options.xform) ? options === null || options === void 0 ? void 0 : options.xform(data) : { data: Object.assign({}, data), error: null };
+}
+async function _handleRequest2(fetcher, method, url, options, parameters, body) {
+  let requestParams = _getRequestParams2(method, options, parameters, body), result;
+  try {
+    result = await fetcher(url, Object.assign({}, requestParams));
+  } catch (e) {
+    throw new AuthRetryableFetchError(_getErrorMessage2(e), 0);
+  }
+  if (!result.ok)
+    await handleError2(result);
+  if (options === null || options === void 0 ? void 0 : options.noResolveJson)
+    return result;
+  try {
+    return await result.json();
+  } catch (e) {
+    await handleError2(e);
+  }
+}
+function _sessionResponse(data) {
+  var _a;
+  let session = null;
+  if (hasSession(data)) {
+    if (session = Object.assign({}, data), !data.expires_at)
+      session.expires_at = expiresAt(data.expires_in);
+  }
+  let user = (_a = data.user) !== null && _a !== void 0 ? _a : typeof (data === null || data === void 0 ? void 0 : data.id) === "string" ? data : null;
+  return { data: { session, user }, error: null };
+}
+function _sessionResponsePassword(data) {
+  let response = _sessionResponse(data);
+  if (!response.error && data.weak_password && typeof data.weak_password === "object" && Array.isArray(data.weak_password.reasons) && data.weak_password.reasons.length && data.weak_password.message && typeof data.weak_password.message === "string" && data.weak_password.reasons.reduce((a, i) => a && typeof i === "string", !0))
+    response.data.weak_password = data.weak_password;
+  return response;
+}
+function _userResponse(data) {
+  var _a;
+  return { data: { user: (_a = data.user) !== null && _a !== void 0 ? _a : data }, error: null };
+}
+function _ssoResponse(data) {
+  return { data, error: null };
+}
+function _generateLinkResponse(data) {
+  let { action_link, email_otp, hashed_token, redirect_to, verification_type } = data, rest = __rest(data, ["action_link", "email_otp", "hashed_token", "redirect_to", "verification_type"]), properties = {
+    action_link,
+    email_otp,
+    hashed_token,
+    redirect_to,
+    verification_type
+  }, user = Object.assign({}, rest);
+  return {
+    data: {
+      properties,
+      user
+    },
+    error: null
+  };
+}
+function _noResolveJsonResponse(data) {
+  return data;
+}
+function hasSession(data) {
+  return !!data.access_token && !!data.refresh_token && !!data.expires_in;
+}
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/types.js
+var SIGN_OUT_SCOPES = ["global", "local", "others"];
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/GoTrueAdminApi.js
+class GoTrueAdminApi {
+  constructor({ url = "", headers = {}, fetch: fetch2, experimental }) {
+    this.url = url, this.headers = headers, this.fetch = resolveFetch3(fetch2), this.experimental = experimental !== null && experimental !== void 0 ? experimental : {}, this.mfa = {
+      listFactors: this._listFactors.bind(this),
+      deleteFactor: this._deleteFactor.bind(this)
+    }, this.oauth = {
+      listClients: this._listOAuthClients.bind(this),
+      createClient: this._createOAuthClient.bind(this),
+      getClient: this._getOAuthClient.bind(this),
+      updateClient: this._updateOAuthClient.bind(this),
+      deleteClient: this._deleteOAuthClient.bind(this),
+      regenerateClientSecret: this._regenerateOAuthClientSecret.bind(this)
+    }, this.customProviders = {
+      listProviders: this._listCustomProviders.bind(this),
+      createProvider: this._createCustomProvider.bind(this),
+      getProvider: this._getCustomProvider.bind(this),
+      updateProvider: this._updateCustomProvider.bind(this),
+      deleteProvider: this._deleteCustomProvider.bind(this)
+    }, this.passkey = {
+      listPasskeys: this._adminListPasskeys.bind(this),
+      deletePasskey: this._adminDeletePasskey.bind(this)
+    };
+  }
+  async signOut(jwt, scope = SIGN_OUT_SCOPES[0]) {
+    if (SIGN_OUT_SCOPES.indexOf(scope) < 0)
+      throw Error(`@supabase/auth-js: Parameter scope must be one of ${SIGN_OUT_SCOPES.join(", ")}`);
+    try {
+      return await _request(this.fetch, "POST", `${this.url}/logout?scope=${scope}`, {
+        headers: this.headers,
+        jwt,
+        noResolveJson: !0
+      }), { data: null, error: null };
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async inviteUserByEmail(email, options = {}) {
+    try {
+      return await _request(this.fetch, "POST", `${this.url}/invite`, {
+        body: { email, data: options.data },
+        headers: this.headers,
+        redirectTo: options.redirectTo,
+        xform: _userResponse
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: { user: null }, error };
+      throw error;
+    }
+  }
+  async generateLink(params) {
+    try {
+      let { options } = params, rest = __rest(params, ["options"]), body = Object.assign(Object.assign({}, rest), options);
+      if ("newEmail" in rest)
+        body.new_email = rest === null || rest === void 0 ? void 0 : rest.newEmail, delete body.newEmail;
+      return await _request(this.fetch, "POST", `${this.url}/admin/generate_link`, {
+        body,
+        headers: this.headers,
+        xform: _generateLinkResponse,
+        redirectTo: options === null || options === void 0 ? void 0 : options.redirectTo
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return {
+          data: {
+            properties: null,
+            user: null
+          },
+          error
+        };
+      throw error;
+    }
+  }
+  async createUser(attributes) {
+    try {
+      return await _request(this.fetch, "POST", `${this.url}/admin/users`, {
+        body: attributes,
+        headers: this.headers,
+        xform: _userResponse
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: { user: null }, error };
+      throw error;
+    }
+  }
+  async listUsers(params) {
+    var _a, _b, _c, _d, _e, _f, _g;
+    try {
+      let pagination = { nextPage: null, lastPage: 0, total: 0 }, response = await _request(this.fetch, "GET", `${this.url}/admin/users`, {
+        headers: this.headers,
+        noResolveJson: !0,
+        query: {
+          page: (_b = (_a = params === null || params === void 0 ? void 0 : params.page) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : "",
+          per_page: (_d = (_c = params === null || params === void 0 ? void 0 : params.perPage) === null || _c === void 0 ? void 0 : _c.toString()) !== null && _d !== void 0 ? _d : ""
+        },
+        xform: _noResolveJsonResponse
+      });
+      if (response.error)
+        throw response.error;
+      let users = await response.json(), total = (_e = response.headers.get("x-total-count")) !== null && _e !== void 0 ? _e : 0, links = (_g = (_f = response.headers.get("link")) === null || _f === void 0 ? void 0 : _f.split(",")) !== null && _g !== void 0 ? _g : [];
+      if (links.length > 0)
+        links.forEach((link) => {
+          let page = parseInt(link.split(";")[0].split("=")[1].substring(0, 1)), rel = JSON.parse(link.split(";")[1].split("=")[1]);
+          pagination[`${rel}Page`] = page;
+        }), pagination.total = parseInt(total);
+      return { data: Object.assign(Object.assign({}, users), pagination), error: null };
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: { users: [] }, error };
+      throw error;
+    }
+  }
+  async getUserById(uid) {
+    validateUUID(uid);
+    try {
+      return await _request(this.fetch, "GET", `${this.url}/admin/users/${uid}`, {
+        headers: this.headers,
+        xform: _userResponse
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: { user: null }, error };
+      throw error;
+    }
+  }
+  async updateUserById(uid, attributes) {
+    validateUUID(uid);
+    try {
+      return await _request(this.fetch, "PUT", `${this.url}/admin/users/${uid}`, {
+        body: attributes,
+        headers: this.headers,
+        xform: _userResponse
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: { user: null }, error };
+      throw error;
+    }
+  }
+  async deleteUser(id, shouldSoftDelete = !1) {
+    validateUUID(id);
+    try {
+      return await _request(this.fetch, "DELETE", `${this.url}/admin/users/${id}`, {
+        headers: this.headers,
+        body: {
+          should_soft_delete: shouldSoftDelete
+        },
+        xform: _userResponse
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: { user: null }, error };
+      throw error;
+    }
+  }
+  async _listFactors(params) {
+    validateUUID(params.userId);
+    try {
+      let { data, error } = await _request(this.fetch, "GET", `${this.url}/admin/users/${params.userId}/factors`, {
+        headers: this.headers,
+        xform: (factors) => ({ data: { factors }, error: null })
+      });
+      return { data, error };
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _deleteFactor(params) {
+    validateUUID(params.userId), validateUUID(params.id);
+    try {
+      return { data: await _request(this.fetch, "DELETE", `${this.url}/admin/users/${params.userId}/factors/${params.id}`, {
+        headers: this.headers
+      }), error: null };
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _listOAuthClients(params) {
+    var _a, _b, _c, _d, _e, _f, _g;
+    try {
+      let pagination = { nextPage: null, lastPage: 0, total: 0 }, response = await _request(this.fetch, "GET", `${this.url}/admin/oauth/clients`, {
+        headers: this.headers,
+        noResolveJson: !0,
+        query: {
+          page: (_b = (_a = params === null || params === void 0 ? void 0 : params.page) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : "",
+          per_page: (_d = (_c = params === null || params === void 0 ? void 0 : params.perPage) === null || _c === void 0 ? void 0 : _c.toString()) !== null && _d !== void 0 ? _d : ""
+        },
+        xform: _noResolveJsonResponse
+      });
+      if (response.error)
+        throw response.error;
+      let clients = await response.json(), total = (_e = response.headers.get("x-total-count")) !== null && _e !== void 0 ? _e : 0, links = (_g = (_f = response.headers.get("link")) === null || _f === void 0 ? void 0 : _f.split(",")) !== null && _g !== void 0 ? _g : [];
+      if (links.length > 0)
+        links.forEach((link) => {
+          let page = parseInt(link.split(";")[0].split("=")[1].substring(0, 1)), rel = JSON.parse(link.split(";")[1].split("=")[1]);
+          pagination[`${rel}Page`] = page;
+        }), pagination.total = parseInt(total);
+      return { data: Object.assign(Object.assign({}, clients), pagination), error: null };
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: { clients: [] }, error };
+      throw error;
+    }
+  }
+  async _createOAuthClient(params) {
+    try {
+      return await _request(this.fetch, "POST", `${this.url}/admin/oauth/clients`, {
+        body: params,
+        headers: this.headers,
+        xform: (client) => ({ data: client, error: null })
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _getOAuthClient(clientId) {
+    try {
+      return await _request(this.fetch, "GET", `${this.url}/admin/oauth/clients/${clientId}`, {
+        headers: this.headers,
+        xform: (client) => ({ data: client, error: null })
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _updateOAuthClient(clientId, params) {
+    try {
+      return await _request(this.fetch, "PUT", `${this.url}/admin/oauth/clients/${clientId}`, {
+        body: params,
+        headers: this.headers,
+        xform: (client) => ({ data: client, error: null })
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _deleteOAuthClient(clientId) {
+    try {
+      return await _request(this.fetch, "DELETE", `${this.url}/admin/oauth/clients/${clientId}`, {
+        headers: this.headers,
+        noResolveJson: !0
+      }), { data: null, error: null };
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _regenerateOAuthClientSecret(clientId) {
+    try {
+      return await _request(this.fetch, "POST", `${this.url}/admin/oauth/clients/${clientId}/regenerate_secret`, {
+        headers: this.headers,
+        xform: (client) => ({ data: client, error: null })
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _listCustomProviders(params) {
+    try {
+      let query = {};
+      if (params === null || params === void 0 ? void 0 : params.type)
+        query.type = params.type;
+      return await _request(this.fetch, "GET", `${this.url}/admin/custom-providers`, {
+        headers: this.headers,
+        query,
+        xform: (data) => {
+          var _a;
+          return { data: { providers: (_a = data === null || data === void 0 ? void 0 : data.providers) !== null && _a !== void 0 ? _a : [] }, error: null };
+        }
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: { providers: [] }, error };
+      throw error;
+    }
+  }
+  async _createCustomProvider(params) {
+    try {
+      return await _request(this.fetch, "POST", `${this.url}/admin/custom-providers`, {
+        body: params,
+        headers: this.headers,
+        xform: (provider) => ({ data: provider, error: null })
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _getCustomProvider(identifier) {
+    try {
+      return await _request(this.fetch, "GET", `${this.url}/admin/custom-providers/${identifier}`, {
+        headers: this.headers,
+        xform: (provider) => ({ data: provider, error: null })
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _updateCustomProvider(identifier, params) {
+    try {
+      return await _request(this.fetch, "PUT", `${this.url}/admin/custom-providers/${identifier}`, {
+        body: params,
+        headers: this.headers,
+        xform: (provider) => ({ data: provider, error: null })
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _deleteCustomProvider(identifier) {
+    try {
+      return await _request(this.fetch, "DELETE", `${this.url}/admin/custom-providers/${identifier}`, {
+        headers: this.headers,
+        noResolveJson: !0
+      }), { data: null, error: null };
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _adminListPasskeys(params) {
+    validateUUID(params.userId);
+    try {
+      return await _request(this.fetch, "GET", `${this.url}/admin/users/${params.userId}/passkeys`, { headers: this.headers, xform: (data) => ({ data, error: null }) });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+  async _adminDeletePasskey(params) {
+    validateUUID(params.userId), validateUUID(params.passkeyId);
+    try {
+      return await _request(this.fetch, "DELETE", `${this.url}/admin/users/${params.userId}/passkeys/${params.passkeyId}`, { headers: this.headers, noResolveJson: !0 }), { data: null, error: null };
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      throw error;
+    }
+  }
+}
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/local-storage.js
+function memoryLocalStorageAdapter(store = {}) {
+  return {
+    getItem: (key) => store[key] || null,
+    setItem: (key, value) => {
+      store[key] = value;
+    },
+    removeItem: (key) => {
+      delete store[key];
+    }
+  };
+}
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/locks.js
+var internals = {
+  debug: !!(globalThis && supportsLocalStorage() && globalThis.localStorage && globalThis.localStorage.getItem("supabase.gotrue-js.locks.debug") === "true")
+};
+
+class LockAcquireTimeoutError extends Error {
+  constructor(message) {
+    super(message);
+    this.isAcquireTimeout = !0;
+  }
+}
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/polyfills.js
+function polyfillGlobalThis() {
+  if (typeof globalThis === "object")
+    return;
+  try {
+    Object.defineProperty(Object.prototype, "__magic__", {
+      get: function() {
+        return this;
+      },
+      configurable: !0
+    }), __magic__.globalThis = __magic__, delete Object.prototype.__magic__;
+  } catch (e) {
+    if (typeof self < "u")
+      self.globalThis = self;
+  }
+}
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/web3/ethereum.js
+function getAddress(address) {
+  if (!/^0x[a-fA-F0-9]{40}$/.test(address))
+    throw Error(`@supabase/auth-js: Address "${address}" is invalid.`);
+  return address.toLowerCase();
+}
+function fromHex(hex) {
+  return parseInt(hex, 16);
+}
+function toHex(value) {
+  let bytes = (/* @__PURE__ */ new TextEncoder()).encode(value);
+  return "0x" + Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+function createSiweMessage(parameters) {
+  var _a;
+  let { chainId, domain, expirationTime, issuedAt = /* @__PURE__ */ new Date, nonce, notBefore, requestId, resources, scheme, uri, version } = parameters;
+  {
+    if (!Number.isInteger(chainId))
+      throw Error(`@supabase/auth-js: Invalid SIWE message field "chainId". Chain ID must be a EIP-155 chain ID. Provided value: ${chainId}`);
+    if (!domain)
+      throw Error('@supabase/auth-js: Invalid SIWE message field "domain". Domain must be provided.');
+    if (nonce && nonce.length < 8)
+      throw Error(`@supabase/auth-js: Invalid SIWE message field "nonce". Nonce must be at least 8 characters. Provided value: ${nonce}`);
+    if (!uri)
+      throw Error('@supabase/auth-js: Invalid SIWE message field "uri". URI must be provided.');
+    if (version !== "1")
+      throw Error(`@supabase/auth-js: Invalid SIWE message field "version". Version must be '1'. Provided value: ${version}`);
+    if ((_a = parameters.statement) === null || _a === void 0 ? void 0 : _a.includes(`
+`))
+      throw Error(`@supabase/auth-js: Invalid SIWE message field "statement". Statement must not include '\\n'. Provided value: ${parameters.statement}`);
+  }
+  let address = getAddress(parameters.address), origin = scheme ? `${scheme}://${domain}` : domain, statement = parameters.statement ? `${parameters.statement}
+` : "", prefix = `${origin} wants you to sign in with your Ethereum account:
+${address}
+
+${statement}`, suffix = `URI: ${uri}
+Version: ${version}
+Chain ID: ${chainId}${nonce ? `
+Nonce: ${nonce}` : ""}
+Issued At: ${issuedAt.toISOString()}`;
+  if (expirationTime)
+    suffix += `
+Expiration Time: ${expirationTime.toISOString()}`;
+  if (notBefore)
+    suffix += `
+Not Before: ${notBefore.toISOString()}`;
+  if (requestId)
+    suffix += `
+Request ID: ${requestId}`;
+  if (resources) {
+    let content = `
+Resources:`;
+    for (let resource of resources) {
+      if (!resource || typeof resource !== "string")
+        throw Error(`@supabase/auth-js: Invalid SIWE message field "resources". Every resource must be a valid string. Provided value: ${resource}`);
+      content += `
+- ${resource}`;
+    }
+    suffix += content;
+  }
+  return `${prefix}
+${suffix}`;
+}
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/webauthn.errors.js
+class WebAuthnError extends Error {
+  constructor({ message, code, cause, name }) {
+    var _a;
+    super(message, { cause });
+    this.__isWebAuthnError = !0, this.name = (_a = name !== null && name !== void 0 ? name : cause instanceof Error ? cause.name : void 0) !== null && _a !== void 0 ? _a : "Unknown Error", this.code = code;
+  }
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code
+    };
+  }
+}
+
+class WebAuthnUnknownError extends WebAuthnError {
+  constructor(message, originalError) {
+    super({
+      code: "ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY",
+      cause: originalError,
+      message
+    });
+    this.name = "WebAuthnUnknownError", this.originalError = originalError;
+  }
+}
+function identifyRegistrationError({ error, options }) {
+  var _a, _b, _c;
+  let { publicKey } = options;
+  if (!publicKey)
+    throw Error("options was missing required publicKey property");
+  if (error.name === "AbortError") {
+    if (options.signal instanceof AbortSignal)
+      return new WebAuthnError({
+        message: "Registration ceremony was sent an abort signal",
+        code: "ERROR_CEREMONY_ABORTED",
+        cause: error
+      });
+  } else if (error.name === "ConstraintError") {
+    if (((_a = publicKey.authenticatorSelection) === null || _a === void 0 ? void 0 : _a.requireResidentKey) === !0)
+      return new WebAuthnError({
+        message: "Discoverable credentials were required but no available authenticator supported it",
+        code: "ERROR_AUTHENTICATOR_MISSING_DISCOVERABLE_CREDENTIAL_SUPPORT",
+        cause: error
+      });
+    else if (options.mediation === "conditional" && ((_b = publicKey.authenticatorSelection) === null || _b === void 0 ? void 0 : _b.userVerification) === "required")
+      return new WebAuthnError({
+        message: "User verification was required during automatic registration but it could not be performed",
+        code: "ERROR_AUTO_REGISTER_USER_VERIFICATION_FAILURE",
+        cause: error
+      });
+    else if (((_c = publicKey.authenticatorSelection) === null || _c === void 0 ? void 0 : _c.userVerification) === "required")
+      return new WebAuthnError({
+        message: "User verification was required but no available authenticator supported it",
+        code: "ERROR_AUTHENTICATOR_MISSING_USER_VERIFICATION_SUPPORT",
+        cause: error
+      });
+  } else if (error.name === "InvalidStateError")
+    return new WebAuthnError({
+      message: "The authenticator was previously registered",
+      code: "ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED",
+      cause: error
+    });
+  else if (error.name === "NotAllowedError")
+    return new WebAuthnError({
+      message: error.message,
+      code: "ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY",
+      cause: error
+    });
+  else if (error.name === "NotSupportedError") {
+    if (publicKey.pubKeyCredParams.filter((param) => param.type === "public-key").length === 0)
+      return new WebAuthnError({
+        message: 'No entry in pubKeyCredParams was of type "public-key"',
+        code: "ERROR_MALFORMED_PUBKEYCREDPARAMS",
+        cause: error
+      });
+    return new WebAuthnError({
+      message: "No available authenticator supported any of the specified pubKeyCredParams algorithms",
+      code: "ERROR_AUTHENTICATOR_NO_SUPPORTED_PUBKEYCREDPARAMS_ALG",
+      cause: error
+    });
+  } else if (error.name === "SecurityError") {
+    let effectiveDomain = window.location.hostname;
+    if (!isValidDomain(effectiveDomain))
+      return new WebAuthnError({
+        message: `${window.location.hostname} is an invalid domain`,
+        code: "ERROR_INVALID_DOMAIN",
+        cause: error
+      });
+    else if (publicKey.rp.id !== effectiveDomain)
+      return new WebAuthnError({
+        message: `The RP ID "${publicKey.rp.id}" is invalid for this domain`,
+        code: "ERROR_INVALID_RP_ID",
+        cause: error
+      });
+  } else if (error.name === "TypeError") {
+    if (publicKey.user.id.byteLength < 1 || publicKey.user.id.byteLength > 64)
+      return new WebAuthnError({
+        message: "User ID was not between 1 and 64 characters",
+        code: "ERROR_INVALID_USER_ID_LENGTH",
+        cause: error
+      });
+  } else if (error.name === "UnknownError")
+    return new WebAuthnError({
+      message: "The authenticator was unable to process the specified options, or could not create a new credential",
+      code: "ERROR_AUTHENTICATOR_GENERAL_ERROR",
+      cause: error
+    });
+  return new WebAuthnError({
+    message: "a Non-Webauthn related error has occurred",
+    code: "ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY",
+    cause: error
+  });
+}
+function identifyAuthenticationError({ error, options }) {
+  let { publicKey } = options;
+  if (!publicKey)
+    throw Error("options was missing required publicKey property");
+  if (error.name === "AbortError") {
+    if (options.signal instanceof AbortSignal)
+      return new WebAuthnError({
+        message: "Authentication ceremony was sent an abort signal",
+        code: "ERROR_CEREMONY_ABORTED",
+        cause: error
+      });
+  } else if (error.name === "NotAllowedError")
+    return new WebAuthnError({
+      message: error.message,
+      code: "ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY",
+      cause: error
+    });
+  else if (error.name === "SecurityError") {
+    let effectiveDomain = window.location.hostname;
+    if (!isValidDomain(effectiveDomain))
+      return new WebAuthnError({
+        message: `${window.location.hostname} is an invalid domain`,
+        code: "ERROR_INVALID_DOMAIN",
+        cause: error
+      });
+    else if (publicKey.rpId !== effectiveDomain)
+      return new WebAuthnError({
+        message: `The RP ID "${publicKey.rpId}" is invalid for this domain`,
+        code: "ERROR_INVALID_RP_ID",
+        cause: error
+      });
+  } else if (error.name === "UnknownError")
+    return new WebAuthnError({
+      message: "The authenticator was unable to process the specified options, or could not create a new assertion signature",
+      code: "ERROR_AUTHENTICATOR_GENERAL_ERROR",
+      cause: error
+    });
+  return new WebAuthnError({
+    message: "a Non-Webauthn related error has occurred",
+    code: "ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY",
+    cause: error
+  });
+}
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/lib/webauthn.js
+class WebAuthnAbortService {
+  createNewAbortSignal() {
+    if (this.controller) {
+      let abortError = Error("Cancelling existing WebAuthn API call for new one");
+      abortError.name = "AbortError", this.controller.abort(abortError);
+    }
+    let newController = new AbortController;
+    return this.controller = newController, newController.signal;
+  }
+  cancelCeremony() {
+    if (this.controller) {
+      let abortError = Error("Manually cancelling existing WebAuthn API call");
+      abortError.name = "AbortError", this.controller.abort(abortError), this.controller = void 0;
+    }
+  }
+}
+var webAuthnAbortService = new WebAuthnAbortService;
+function deserializeCredentialCreationOptions(options) {
+  if (!options)
+    throw Error("Credential creation options are required");
+  if (typeof PublicKeyCredential < "u" && "parseCreationOptionsFromJSON" in PublicKeyCredential && typeof PublicKeyCredential.parseCreationOptionsFromJSON === "function")
+    return PublicKeyCredential.parseCreationOptionsFromJSON(options);
+  let { challenge: challengeStr, user: userOpts, excludeCredentials } = options, restOptions = __rest(options, ["challenge", "user", "excludeCredentials"]), challenge = base64UrlToUint8Array(challengeStr).buffer, user = Object.assign(Object.assign({}, userOpts), { id: base64UrlToUint8Array(userOpts.id).buffer }), result = Object.assign(Object.assign({}, restOptions), {
+    challenge,
+    user
+  });
+  if (excludeCredentials && excludeCredentials.length > 0) {
+    result.excludeCredentials = Array(excludeCredentials.length);
+    for (let i = 0;i < excludeCredentials.length; i++) {
+      let cred = excludeCredentials[i];
+      result.excludeCredentials[i] = Object.assign(Object.assign({}, cred), {
+        id: base64UrlToUint8Array(cred.id).buffer,
+        type: cred.type || "public-key",
+        transports: cred.transports
+      });
+    }
+  }
+  return result;
+}
+function deserializeCredentialRequestOptions(options) {
+  if (!options)
+    throw Error("Credential request options are required");
+  if (typeof PublicKeyCredential < "u" && "parseRequestOptionsFromJSON" in PublicKeyCredential && typeof PublicKeyCredential.parseRequestOptionsFromJSON === "function")
+    return PublicKeyCredential.parseRequestOptionsFromJSON(options);
+  let { challenge: challengeStr, allowCredentials } = options, restOptions = __rest(options, ["challenge", "allowCredentials"]), challenge = base64UrlToUint8Array(challengeStr).buffer, result = Object.assign(Object.assign({}, restOptions), { challenge });
+  if (allowCredentials && allowCredentials.length > 0) {
+    result.allowCredentials = Array(allowCredentials.length);
+    for (let i = 0;i < allowCredentials.length; i++) {
+      let cred = allowCredentials[i];
+      result.allowCredentials[i] = Object.assign(Object.assign({}, cred), {
+        id: base64UrlToUint8Array(cred.id).buffer,
+        type: cred.type || "public-key",
+        transports: cred.transports
+      });
+    }
+  }
+  return result;
+}
+function serializeCredentialCreationResponse(credential) {
+  var _a;
+  if ("toJSON" in credential && typeof credential.toJSON === "function")
+    return credential.toJSON();
+  let credentialWithAttachment = credential;
+  return {
+    id: credential.id,
+    rawId: credential.id,
+    response: {
+      attestationObject: bytesToBase64URL(new Uint8Array(credential.response.attestationObject)),
+      clientDataJSON: bytesToBase64URL(new Uint8Array(credential.response.clientDataJSON))
+    },
+    type: "public-key",
+    clientExtensionResults: credential.getClientExtensionResults(),
+    authenticatorAttachment: (_a = credentialWithAttachment.authenticatorAttachment) !== null && _a !== void 0 ? _a : void 0
+  };
+}
+function serializeCredentialRequestResponse(credential) {
+  var _a;
+  if ("toJSON" in credential && typeof credential.toJSON === "function")
+    return credential.toJSON();
+  let credentialWithAttachment = credential, clientExtensionResults = credential.getClientExtensionResults(), assertionResponse = credential.response;
+  return {
+    id: credential.id,
+    rawId: credential.id,
+    response: {
+      authenticatorData: bytesToBase64URL(new Uint8Array(assertionResponse.authenticatorData)),
+      clientDataJSON: bytesToBase64URL(new Uint8Array(assertionResponse.clientDataJSON)),
+      signature: bytesToBase64URL(new Uint8Array(assertionResponse.signature)),
+      userHandle: assertionResponse.userHandle ? bytesToBase64URL(new Uint8Array(assertionResponse.userHandle)) : void 0
+    },
+    type: "public-key",
+    clientExtensionResults,
+    authenticatorAttachment: (_a = credentialWithAttachment.authenticatorAttachment) !== null && _a !== void 0 ? _a : void 0
+  };
+}
+function isValidDomain(hostname) {
+  return hostname === "localhost" || /^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i.test(hostname);
+}
+function browserSupportsWebAuthn() {
+  var _a, _b;
+  return !!(isBrowser() && ("PublicKeyCredential" in window) && window.PublicKeyCredential && ("credentials" in navigator) && typeof ((_a = navigator === null || navigator === void 0 ? void 0 : navigator.credentials) === null || _a === void 0 ? void 0 : _a.create) === "function" && typeof ((_b = navigator === null || navigator === void 0 ? void 0 : navigator.credentials) === null || _b === void 0 ? void 0 : _b.get) === "function");
+}
+async function createCredential(options) {
+  try {
+    let response = await navigator.credentials.create(options);
+    if (!response)
+      return {
+        data: null,
+        error: new WebAuthnUnknownError("Empty credential response", response)
+      };
+    if (!(response instanceof PublicKeyCredential))
+      return {
+        data: null,
+        error: new WebAuthnUnknownError("Browser returned unexpected credential type", response)
+      };
+    return { data: response, error: null };
+  } catch (err) {
+    return {
+      data: null,
+      error: identifyRegistrationError({
+        error: err,
+        options
+      })
+    };
+  }
+}
+async function getCredential(options) {
+  try {
+    let response = await navigator.credentials.get(options);
+    if (!response)
+      return {
+        data: null,
+        error: new WebAuthnUnknownError("Empty credential response", response)
+      };
+    if (!(response instanceof PublicKeyCredential))
+      return {
+        data: null,
+        error: new WebAuthnUnknownError("Browser returned unexpected credential type", response)
+      };
+    return { data: response, error: null };
+  } catch (err) {
+    return {
+      data: null,
+      error: identifyAuthenticationError({
+        error: err,
+        options
+      })
+    };
+  }
+}
+var DEFAULT_CREATION_OPTIONS = {
+  hints: ["security-key"],
+  authenticatorSelection: {
+    authenticatorAttachment: "cross-platform",
+    requireResidentKey: !1,
+    userVerification: "preferred",
+    residentKey: "discouraged"
+  },
+  attestation: "direct"
+}, DEFAULT_REQUEST_OPTIONS = {
+  userVerification: "preferred",
+  hints: ["security-key"],
+  attestation: "direct"
+};
+function deepMerge(...sources) {
+  let isObject = (val) => val !== null && typeof val === "object" && !Array.isArray(val), isArrayBufferLike = (val) => val instanceof ArrayBuffer || ArrayBuffer.isView(val), result = {};
+  for (let source of sources) {
+    if (!source)
+      continue;
+    for (let key in source) {
+      let value = source[key];
+      if (value === void 0)
+        continue;
+      if (Array.isArray(value))
+        result[key] = value;
+      else if (isArrayBufferLike(value))
+        result[key] = value;
+      else if (isObject(value)) {
+        let existing = result[key];
+        if (isObject(existing))
+          result[key] = deepMerge(existing, value);
+        else
+          result[key] = deepMerge(value);
+      } else
+        result[key] = value;
+    }
+  }
+  return result;
+}
+function mergeCredentialCreationOptions(baseOptions, overrides) {
+  return deepMerge(DEFAULT_CREATION_OPTIONS, baseOptions, overrides || {});
+}
+function mergeCredentialRequestOptions(baseOptions, overrides) {
+  return deepMerge(DEFAULT_REQUEST_OPTIONS, baseOptions, overrides || {});
+}
+
+class WebAuthnApi {
+  constructor(client) {
+    this.client = client, this.enroll = this._enroll.bind(this), this.challenge = this._challenge.bind(this), this.verify = this._verify.bind(this), this.authenticate = this._authenticate.bind(this), this.register = this._register.bind(this);
+  }
+  async _enroll(params) {
+    return this.client.mfa.enroll(Object.assign(Object.assign({}, params), { factorType: "webauthn" }));
+  }
+  async _challenge({ factorId, webauthn, friendlyName, signal }, overrides) {
+    var _a;
+    try {
+      let { data: challengeResponse, error: challengeError } = await this.client.mfa.challenge({
+        factorId,
+        webauthn
+      });
+      if (!challengeResponse)
+        return { data: null, error: challengeError };
+      let abortSignal = signal !== null && signal !== void 0 ? signal : webAuthnAbortService.createNewAbortSignal();
+      if (challengeResponse.webauthn.type === "create") {
+        let { user } = challengeResponse.webauthn.credential_options.publicKey;
+        if (!user.name) {
+          let nameToUse = friendlyName;
+          if (!nameToUse) {
+            let userData = (await this.client.getUser()).data.user, fallbackName = ((_a = userData === null || userData === void 0 ? void 0 : userData.user_metadata) === null || _a === void 0 ? void 0 : _a.name) || (userData === null || userData === void 0 ? void 0 : userData.email) || (userData === null || userData === void 0 ? void 0 : userData.id) || "User";
+            user.name = `${user.id}:${fallbackName}`;
+          } else
+            user.name = `${user.id}:${nameToUse}`;
+        }
+        if (!user.displayName)
+          user.displayName = user.name;
+      }
+      switch (challengeResponse.webauthn.type) {
+        case "create": {
+          let options = mergeCredentialCreationOptions(challengeResponse.webauthn.credential_options.publicKey, overrides === null || overrides === void 0 ? void 0 : overrides.create), { data, error } = await createCredential({
+            publicKey: options,
+            signal: abortSignal
+          });
+          if (data)
+            return {
+              data: {
+                factorId,
+                challengeId: challengeResponse.id,
+                webauthn: {
+                  type: challengeResponse.webauthn.type,
+                  credential_response: data
+                }
+              },
+              error: null
+            };
+          return { data: null, error };
+        }
+        case "request": {
+          let options = mergeCredentialRequestOptions(challengeResponse.webauthn.credential_options.publicKey, overrides === null || overrides === void 0 ? void 0 : overrides.request), { data, error } = await getCredential(Object.assign(Object.assign({}, challengeResponse.webauthn.credential_options), { publicKey: options, signal: abortSignal }));
+          if (data)
+            return {
+              data: {
+                factorId,
+                challengeId: challengeResponse.id,
+                webauthn: {
+                  type: challengeResponse.webauthn.type,
+                  credential_response: data
+                }
+              },
+              error: null
+            };
+          return { data: null, error };
+        }
+      }
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      return {
+        data: null,
+        error: new AuthUnknownError("Unexpected error in challenge", error)
+      };
+    }
+  }
+  async _verify({ challengeId, factorId, webauthn }) {
+    return this.client.mfa.verify({
+      factorId,
+      challengeId,
+      webauthn
+    });
+  }
+  async _authenticate({ factorId, webauthn: { rpId = typeof window < "u" ? window.location.hostname : void 0, rpOrigins = typeof window < "u" ? [window.location.origin] : void 0, signal } = {} }, overrides) {
+    if (!rpId)
+      return {
+        data: null,
+        error: new AuthError("rpId is required for WebAuthn authentication")
+      };
+    try {
+      if (!browserSupportsWebAuthn())
+        return {
+          data: null,
+          error: new AuthUnknownError("Browser does not support WebAuthn", null)
+        };
+      let { data: challengeResponse, error: challengeError } = await this.challenge({
+        factorId,
+        webauthn: { rpId, rpOrigins },
+        signal
+      }, { request: overrides });
+      if (!challengeResponse)
+        return { data: null, error: challengeError };
+      let { webauthn } = challengeResponse;
+      return this._verify({
+        factorId,
+        challengeId: challengeResponse.challengeId,
+        webauthn: {
+          type: webauthn.type,
+          rpId,
+          rpOrigins,
+          credential_response: webauthn.credential_response
+        }
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      return {
+        data: null,
+        error: new AuthUnknownError("Unexpected error in authenticate", error)
+      };
+    }
+  }
+  async _register({ friendlyName, webauthn: { rpId = typeof window < "u" ? window.location.hostname : void 0, rpOrigins = typeof window < "u" ? [window.location.origin] : void 0, signal } = {} }, overrides) {
+    if (!rpId)
+      return {
+        data: null,
+        error: new AuthError("rpId is required for WebAuthn registration")
+      };
+    try {
+      if (!browserSupportsWebAuthn())
+        return {
+          data: null,
+          error: new AuthUnknownError("Browser does not support WebAuthn", null)
+        };
+      let { data: factor, error: enrollError } = await this._enroll({
+        friendlyName
+      });
+      if (!factor)
+        return await this.client.mfa.listFactors().then((factors) => {
+          var _a;
+          return (_a = factors.data) === null || _a === void 0 ? void 0 : _a.all.find((v) => v.factor_type === "webauthn" && v.friendly_name === friendlyName && v.status === "unverified");
+        }).then((factor) => factor ? this.client.mfa.unenroll({ factorId: factor === null || factor === void 0 ? void 0 : factor.id }) : void 0), { data: null, error: enrollError };
+      let { data: challengeResponse, error: challengeError } = await this._challenge({
+        factorId: factor.id,
+        friendlyName: factor.friendly_name,
+        webauthn: { rpId, rpOrigins },
+        signal
+      }, {
+        create: overrides
+      });
+      if (!challengeResponse)
+        return { data: null, error: challengeError };
+      return this._verify({
+        factorId: factor.id,
+        challengeId: challengeResponse.challengeId,
+        webauthn: {
+          rpId,
+          rpOrigins,
+          type: challengeResponse.webauthn.type,
+          credential_response: challengeResponse.webauthn.credential_response
+        }
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return { data: null, error };
+      return {
+        data: null,
+        error: new AuthUnknownError("Unexpected error in register", error)
+      };
+    }
+  }
+}
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/GoTrueClient.js
+polyfillGlobalThis();
+var DEFAULT_OPTIONS = {
+  url: GOTRUE_URL,
+  storageKey: STORAGE_KEY,
+  autoRefreshToken: !0,
+  persistSession: !0,
+  detectSessionInUrl: !0,
+  headers: DEFAULT_HEADERS2,
+  flowType: "implicit",
+  debug: !1,
+  hasCustomAuthorizationHeader: !1,
+  throwOnError: !1,
+  lockAcquireTimeout: 5000,
+  skipAutoInitialize: !1,
+  experimental: {}
+};
+var GLOBAL_JWKS = {}, deprecatedLockWarned = !1;
+
+class GoTrueClient {
+  get jwks() {
+    var _a, _b;
+    return (_b = (_a = GLOBAL_JWKS[this.storageKey]) === null || _a === void 0 ? void 0 : _a.jwks) !== null && _b !== void 0 ? _b : { keys: [] };
+  }
+  set jwks(value) {
+    GLOBAL_JWKS[this.storageKey] = Object.assign(Object.assign({}, GLOBAL_JWKS[this.storageKey]), { jwks: value });
+  }
+  get jwks_cached_at() {
+    var _a, _b;
+    return (_b = (_a = GLOBAL_JWKS[this.storageKey]) === null || _a === void 0 ? void 0 : _a.cachedAt) !== null && _b !== void 0 ? _b : Number.MIN_SAFE_INTEGER;
+  }
+  set jwks_cached_at(value) {
+    GLOBAL_JWKS[this.storageKey] = Object.assign(Object.assign({}, GLOBAL_JWKS[this.storageKey]), { cachedAt: value });
+  }
+  constructor(options) {
+    var _a, _b, _c;
+    this.userStorage = null, this.memoryStorage = null, this.stateChangeEmitters = /* @__PURE__ */ new Map, this.autoRefreshTicker = null, this.autoRefreshTickTimeout = null, this.visibilityChangedCallback = null, this.refreshingDeferred = null, this.lastRefreshFailure = null, this._sessionRemovalEpoch = 0, this.initializePromise = null, this._pendingInitNotifications = null, this.detectSessionInUrl = !0, this.hasCustomAuthorizationHeader = !1, this.suppressGetSessionWarning = !1, this.lock = null, this.lockAcquired = !1, this.pendingInLock = [], this.broadcastChannel = null, this.logger = console.log;
+    let settings = Object.assign(Object.assign({}, DEFAULT_OPTIONS), options);
+    if (this.storageKey = settings.storageKey, this.instanceID = (_a = GoTrueClient.nextInstanceID[this.storageKey]) !== null && _a !== void 0 ? _a : 0, GoTrueClient.nextInstanceID[this.storageKey] = this.instanceID + 1, this.logDebugMessages = !!settings.debug, typeof settings.debug === "function")
+      this.logger = settings.debug;
+    if (this.instanceID > 0 && isBrowser()) {
+      let message = `${this._logPrefix()} Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.`;
+      if (console.warn(message), this.logDebugMessages)
+        console.trace(message);
+    }
+    if (this.persistSession = settings.persistSession, this.autoRefreshToken = settings.autoRefreshToken, this.experimental = (_b = settings.experimental) !== null && _b !== void 0 ? _b : {}, this.admin = new GoTrueAdminApi({
+      url: settings.url,
+      headers: settings.headers,
+      fetch: settings.fetch,
+      experimental: this.experimental
+    }), this.url = settings.url, this.headers = settings.headers, this.fetch = resolveFetch3(settings.fetch), this.detectSessionInUrl = settings.detectSessionInUrl, this.flowType = settings.flowType, this.hasCustomAuthorizationHeader = settings.hasCustomAuthorizationHeader, this.throwOnError = settings.throwOnError, this.lockAcquireTimeout = settings.lockAcquireTimeout, settings.lock != null) {
+      if (this.lock = settings.lock, !deprecatedLockWarned)
+        deprecatedLockWarned = !0, console.warn(`${this._logPrefix()} The "lock" option is deprecated and will be removed in v3. The client now coordinates session refreshes without a lock, so most apps can drop the option. See https://github.com/supabase/supabase-js/blob/master/packages/core/auth-js/migrations/lockless-coordination.md`);
+    }
+    if (!this.jwks)
+      this.jwks = { keys: [] }, this.jwks_cached_at = Number.MIN_SAFE_INTEGER;
+    if (this.mfa = {
+      verify: this._verify.bind(this),
+      enroll: this._enroll.bind(this),
+      unenroll: this._unenroll.bind(this),
+      challenge: this._challenge.bind(this),
+      listFactors: this._listFactors.bind(this),
+      challengeAndVerify: this._challengeAndVerify.bind(this),
+      getAuthenticatorAssuranceLevel: this._getAuthenticatorAssuranceLevel.bind(this),
+      webauthn: new WebAuthnApi(this),
+      recoveryCodes: {
+        getStatus: this._getRecoveryCodesStatus.bind(this),
+        generate: this._generateRecoveryCodes.bind(this),
+        verify: this._verifyRecoveryCode.bind(this),
+        regenerate: this._regenerateRecoveryCodes.bind(this),
+        unenroll: this._unenrollRecoveryCodes.bind(this)
+      }
+    }, this.oauth = {
+      getAuthorizationDetails: this._getAuthorizationDetails.bind(this),
+      approveAuthorization: this._approveAuthorization.bind(this),
+      denyAuthorization: this._denyAuthorization.bind(this),
+      listGrants: this._listOAuthGrants.bind(this),
+      revokeGrant: this._revokeOAuthGrant.bind(this)
+    }, this.passkey = {
+      startRegistration: this._startPasskeyRegistration.bind(this),
+      verifyRegistration: this._verifyPasskeyRegistration.bind(this),
+      startAuthentication: this._startPasskeyAuthentication.bind(this),
+      verifyAuthentication: this._verifyPasskeyAuthentication.bind(this),
+      list: this._listPasskeys.bind(this),
+      update: this._updatePasskey.bind(this),
+      delete: this._deletePasskey.bind(this)
+    }, this.persistSession) {
+      if (settings.storage)
+        this.storage = settings.storage;
+      else if (supportsLocalStorage())
+        this.storage = globalThis.localStorage;
+      else
+        this.memoryStorage = {}, this.storage = memoryLocalStorageAdapter(this.memoryStorage);
+      if (settings.userStorage)
+        this.userStorage = settings.userStorage;
+    } else
+      this.memoryStorage = {}, this.storage = memoryLocalStorageAdapter(this.memoryStorage);
+    if (isBrowser() && globalThis.BroadcastChannel && this.persistSession && this.storageKey) {
+      try {
+        this.broadcastChannel = new globalThis.BroadcastChannel(this.storageKey);
+      } catch (e) {
+        console.error("Failed to create a new BroadcastChannel, multi-tab state changes will not be available", e);
+      }
+      (_c = this.broadcastChannel) === null || _c === void 0 || _c.addEventListener("message", async (event) => {
+        if (this._debug("received broadcast notification from other tab or client", event), event.data.event === "TOKEN_REFRESHED" || event.data.event === "SIGNED_IN")
+          this.lastRefreshFailure = null;
+        try {
+          await this._notifyAllSubscribers(event.data.event, event.data.session, !1);
+        } catch (error) {
+          this._debug("#broadcastChannel", "error", error);
+        }
+      });
+    }
+    if (!settings.skipAutoInitialize)
+      this.initialize().catch((error) => {
+        this._debug("#initialize()", "error", error);
+      });
+  }
+  isThrowOnErrorEnabled() {
+    return this.throwOnError;
+  }
+  _returnResult(result) {
+    if (this.throwOnError && result && result.error)
+      throw result.error;
+    return result;
+  }
+  _logPrefix() {
+    return `GoTrueClient@${this.storageKey}:${this.instanceID} (${version3}) ${(/* @__PURE__ */ new Date()).toISOString()}`;
+  }
+  _debug(...args) {
+    if (this.logDebugMessages)
+      this.logger(this._logPrefix(), ...args);
+    return this;
+  }
+  async initialize() {
+    var _a;
+    if (this.initializePromise)
+      return await this.initializePromise;
+    this._pendingInitNotifications = [], this.initializePromise = (async () => {
+      if (this.lock != null)
+        return await this._acquireLock(this.lockAcquireTimeout, async () => await this._initialize());
+      return await this._initialize();
+    })();
+    let result = await this.initializePromise, queue = (_a = this._pendingInitNotifications) !== null && _a !== void 0 ? _a : [];
+    this._pendingInitNotifications = null;
+    for (let n of queue)
+      await this._notifyAllSubscribers(n.event, n.session, n.broadcast);
+    return result;
+  }
+  async _initialize() {
+    var _a;
+    try {
+      let params = {}, callbackUrlType = "none";
+      if (isBrowser()) {
+        if (params = parseParametersFromURL(window.location.href), this._isImplicitGrantCallback(params))
+          callbackUrlType = "implicit";
+        else if (await this._isPKCECallback(params))
+          callbackUrlType = "pkce";
+      }
+      if (isBrowser() && this.detectSessionInUrl && callbackUrlType !== "none") {
+        let { data, error } = await this._getSessionFromURL(params, callbackUrlType);
+        if (error) {
+          if (this._debug("#_initialize()", "error detecting session from URL", error), isAuthImplicitGrantRedirectError(error)) {
+            let errorCode = (_a = error.details) === null || _a === void 0 ? void 0 : _a.code;
+            if (errorCode === "identity_already_exists" || errorCode === "identity_not_found" || errorCode === "single_identity_not_deletable")
+              return { error };
+          }
+          return { error };
+        }
+        let { session, redirectType } = data;
+        return this._debug("#_initialize()", "detected session in URL", session, "redirect type", redirectType), await this._saveSession(session), setTimeout(async () => {
+          if (redirectType === "recovery")
+            await this._notifyAllSubscribers("PASSWORD_RECOVERY", session);
+          else
+            await this._notifyAllSubscribers("SIGNED_IN", session);
+        }, 0), { error: null };
+      }
+      return await this._recoverAndRefresh(), { error: null };
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ error });
+      return this._returnResult({
+        error: new AuthUnknownError("Unexpected error during initialization", error)
+      });
+    } finally {
+      await this._handleVisibilityChange(), this._debug("#_initialize()", "end");
+    }
+  }
+  async signInAnonymously(credentials) {
+    var _a, _b, _c;
+    try {
+      let res = await _request(this.fetch, "POST", `${this.url}/signup`, {
+        headers: this.headers,
+        body: {
+          data: (_b = (_a = credentials === null || credentials === void 0 ? void 0 : credentials.options) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {},
+          gotrue_meta_security: { captcha_token: (_c = credentials === null || credentials === void 0 ? void 0 : credentials.options) === null || _c === void 0 ? void 0 : _c.captchaToken }
+        },
+        xform: _sessionResponse
+      }), { data, error } = res;
+      if (error || !data)
+        return this._returnResult({ data: { user: null, session: null }, error });
+      let { session, user } = data;
+      if (data.session)
+        await this._saveSession(data.session), await this._notifyAllSubscribers("SIGNED_IN", session);
+      return this._returnResult({ data: { user, session }, error: null });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: { user: null, session: null }, error });
+      throw error;
+    }
+  }
+  async signUp(credentials) {
+    var _a, _b, _c;
+    let flowId = null;
+    try {
+      let res;
+      if ("email" in credentials) {
+        let { email, password, options } = credentials, codeChallenge = null, codeChallengeMethod = null;
+        if (this.flowType === "pkce")
+          [codeChallenge, codeChallengeMethod, flowId] = await this._getCodeChallengeAndMethod();
+        res = await _request(this.fetch, "POST", `${this.url}/signup`, {
+          headers: this.headers,
+          redirectTo: this._maybeAppendFlowIdToRedirect(options === null || options === void 0 ? void 0 : options.emailRedirectTo, flowId),
+          body: {
+            email,
+            password,
+            data: (_a = options === null || options === void 0 ? void 0 : options.data) !== null && _a !== void 0 ? _a : {},
+            gotrue_meta_security: { captcha_token: options === null || options === void 0 ? void 0 : options.captchaToken },
+            code_challenge: codeChallenge,
+            code_challenge_method: codeChallengeMethod
+          },
+          xform: _sessionResponse
+        });
+      } else if ("phone" in credentials) {
+        let { phone, password, options } = credentials;
+        res = await _request(this.fetch, "POST", `${this.url}/signup`, {
+          headers: this.headers,
+          body: {
+            phone,
+            password,
+            data: (_b = options === null || options === void 0 ? void 0 : options.data) !== null && _b !== void 0 ? _b : {},
+            channel: (_c = options === null || options === void 0 ? void 0 : options.channel) !== null && _c !== void 0 ? _c : "sms",
+            gotrue_meta_security: { captcha_token: options === null || options === void 0 ? void 0 : options.captchaToken }
+          },
+          xform: _sessionResponse
+        });
+      } else
+        throw new AuthInvalidCredentialsError("You must provide either an email or phone number and a password");
+      let { data, error } = res;
+      if (error || !data)
+        return await removePKCEVerifier(this.storage, this.storageKey, flowId), this._returnResult({ data: { user: null, session: null }, error });
+      let { session, user } = data;
+      if (data.session)
+        await this._saveSession(data.session), await this._notifyAllSubscribers("SIGNED_IN", session);
+      return this._returnResult({ data: { user, session }, error: null });
+    } catch (error) {
+      if (await removePKCEVerifier(this.storage, this.storageKey, flowId), isAuthError(error))
+        return this._returnResult({ data: { user: null, session: null }, error });
+      throw error;
+    }
+  }
+  async signInWithPassword(credentials) {
+    try {
+      let res;
+      if ("email" in credentials) {
+        let { email, password, options } = credentials;
+        res = await _request(this.fetch, "POST", `${this.url}/token?grant_type=password`, {
+          headers: this.headers,
+          body: {
+            email,
+            password,
+            gotrue_meta_security: { captcha_token: options === null || options === void 0 ? void 0 : options.captchaToken }
+          },
+          xform: _sessionResponsePassword
+        });
+      } else if ("phone" in credentials) {
+        let { phone, password, options } = credentials;
+        res = await _request(this.fetch, "POST", `${this.url}/token?grant_type=password`, {
+          headers: this.headers,
+          body: {
+            phone,
+            password,
+            gotrue_meta_security: { captcha_token: options === null || options === void 0 ? void 0 : options.captchaToken }
+          },
+          xform: _sessionResponsePassword
+        });
+      } else
+        throw new AuthInvalidCredentialsError("You must provide either an email or phone number and a password");
+      let { data, error } = res;
+      if (error)
+        return this._returnResult({ data: { user: null, session: null }, error });
+      else if (!data || !data.session || !data.user) {
+        let invalidTokenError = new AuthInvalidTokenResponseError;
+        return this._returnResult({ data: { user: null, session: null }, error: invalidTokenError });
+      }
+      if (data.session)
+        await this._saveSession(data.session), await this._notifyAllSubscribers("SIGNED_IN", data.session);
+      return this._returnResult({
+        data: Object.assign({ user: data.user, session: data.session }, data.weak_password ? { weakPassword: data.weak_password } : null),
+        error
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: { user: null, session: null }, error });
+      throw error;
+    }
+  }
+  async signInWithOAuth(credentials) {
+    var _a, _b, _c, _d;
+    return await this._handleProviderSignIn(credentials.provider, {
+      redirectTo: (_a = credentials.options) === null || _a === void 0 ? void 0 : _a.redirectTo,
+      scopes: (_b = credentials.options) === null || _b === void 0 ? void 0 : _b.scopes,
+      queryParams: (_c = credentials.options) === null || _c === void 0 ? void 0 : _c.queryParams,
+      skipBrowserRedirect: (_d = credentials.options) === null || _d === void 0 ? void 0 : _d.skipBrowserRedirect
+    });
+  }
+  async exchangeCodeForSession(authCode, options) {
+    if (await this.initializePromise, this.lock != null)
+      return this._acquireLock(this.lockAcquireTimeout, async () => this._exchangeCodeForSession(authCode, options));
+    return this._exchangeCodeForSession(authCode, options);
+  }
+  async signInWithWeb3(credentials) {
+    let { chain } = credentials;
+    switch (chain) {
+      case "ethereum":
+        return await this.signInWithEthereum(credentials);
+      case "solana":
+        return await this.signInWithSolana(credentials);
+      default:
+        throw Error(`@supabase/auth-js: Unsupported chain "${chain}"`);
+    }
+  }
+  async signInWithEthereum(credentials) {
+    var _a, _b, _c, _d, _f, _g, _h, _j, _k, _l, _m;
+    let message, signature;
+    if ("message" in credentials)
+      message = credentials.message, signature = credentials.signature;
+    else {
+      let { chain, wallet, statement, options } = credentials, resolvedWallet;
+      if (!isBrowser()) {
+        if (typeof wallet !== "object" || !(options === null || options === void 0 ? void 0 : options.url))
+          throw Error("@supabase/auth-js: Both wallet and url must be specified in non-browser environments.");
+        resolvedWallet = wallet;
+      } else if (typeof wallet === "object")
+        resolvedWallet = wallet;
+      else {
+        let windowAny = window;
+        if ("ethereum" in windowAny && typeof windowAny.ethereum === "object" && "request" in windowAny.ethereum && typeof windowAny.ethereum.request === "function")
+          resolvedWallet = windowAny.ethereum;
+        else
+          throw Error("@supabase/auth-js: No compatible Ethereum wallet interface on the window object (window.ethereum) detected. Make sure the user already has a wallet installed and connected for this app. Prefer passing the wallet interface object directly to signInWithWeb3({ chain: 'ethereum', wallet: resolvedUserWallet }) instead.");
+      }
+      let url = new URL((_a = options === null || options === void 0 ? void 0 : options.url) !== null && _a !== void 0 ? _a : window.location.href), accounts = await resolvedWallet.request({
+        method: "eth_requestAccounts"
+      }).then((accs) => accs).catch(() => {
+        throw Error("@supabase/auth-js: Wallet method eth_requestAccounts is missing or invalid");
+      });
+      if (!accounts || accounts.length === 0)
+        throw Error("@supabase/auth-js: No accounts available. Please ensure the wallet is connected.");
+      let address = getAddress(accounts[0]), chainId = (_b = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _b === void 0 ? void 0 : _b.chainId;
+      if (!chainId) {
+        let chainIdHex = await resolvedWallet.request({
+          method: "eth_chainId"
+        });
+        chainId = fromHex(chainIdHex);
+      }
+      let siweMessage = {
+        domain: url.host,
+        address,
+        statement,
+        uri: url.href,
+        version: "1",
+        chainId,
+        nonce: (_c = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _c === void 0 ? void 0 : _c.nonce,
+        issuedAt: (_f = (_d = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _d === void 0 ? void 0 : _d.issuedAt) !== null && _f !== void 0 ? _f : /* @__PURE__ */ new Date,
+        expirationTime: (_g = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _g === void 0 ? void 0 : _g.expirationTime,
+        notBefore: (_h = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _h === void 0 ? void 0 : _h.notBefore,
+        requestId: (_j = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _j === void 0 ? void 0 : _j.requestId,
+        resources: (_k = options === null || options === void 0 ? void 0 : options.signInWithEthereum) === null || _k === void 0 ? void 0 : _k.resources
+      };
+      message = createSiweMessage(siweMessage), signature = await resolvedWallet.request({
+        method: "personal_sign",
+        params: [toHex(message), address]
+      });
+    }
+    try {
+      let { data, error } = await _request(this.fetch, "POST", `${this.url}/token?grant_type=web3`, {
+        headers: this.headers,
+        body: Object.assign({
+          chain: "ethereum",
+          message,
+          signature
+        }, ((_l = credentials.options) === null || _l === void 0 ? void 0 : _l.captchaToken) ? { gotrue_meta_security: { captcha_token: (_m = credentials.options) === null || _m === void 0 ? void 0 : _m.captchaToken } } : null),
+        xform: _sessionResponse
+      });
+      if (error)
+        throw error;
+      if (!data || !data.session || !data.user) {
+        let invalidTokenError = new AuthInvalidTokenResponseError;
+        return this._returnResult({ data: { user: null, session: null }, error: invalidTokenError });
+      }
+      if (data.session)
+        await this._saveSession(data.session), await this._notifyAllSubscribers("SIGNED_IN", data.session);
+      return this._returnResult({ data: Object.assign({}, data), error });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: { user: null, session: null }, error });
+      throw error;
+    }
+  }
+  async signInWithSolana(credentials) {
+    var _a, _b, _c, _d, _f, _g, _h, _j, _k, _l, _m, _o;
+    let message, signature;
+    if ("message" in credentials)
+      message = credentials.message, signature = credentials.signature;
+    else {
+      let { chain, wallet, statement, options } = credentials, resolvedWallet;
+      if (!isBrowser()) {
+        if (typeof wallet !== "object" || !(options === null || options === void 0 ? void 0 : options.url))
+          throw Error("@supabase/auth-js: Both wallet and url must be specified in non-browser environments.");
+        resolvedWallet = wallet;
+      } else if (typeof wallet === "object")
+        resolvedWallet = wallet;
+      else {
+        let windowAny = window;
+        if ("solana" in windowAny && typeof windowAny.solana === "object" && (("signIn" in windowAny.solana) && typeof windowAny.solana.signIn === "function" || ("signMessage" in windowAny.solana) && typeof windowAny.solana.signMessage === "function"))
+          resolvedWallet = windowAny.solana;
+        else
+          throw Error("@supabase/auth-js: No compatible Solana wallet interface on the window object (window.solana) detected. Make sure the user already has a wallet installed and connected for this app. Prefer passing the wallet interface object directly to signInWithWeb3({ chain: 'solana', wallet: resolvedUserWallet }) instead.");
+      }
+      let url = new URL((_a = options === null || options === void 0 ? void 0 : options.url) !== null && _a !== void 0 ? _a : window.location.href);
+      if ("signIn" in resolvedWallet && resolvedWallet.signIn) {
+        let output = await resolvedWallet.signIn(Object.assign(Object.assign(Object.assign({ issuedAt: (/* @__PURE__ */ new Date()).toISOString() }, options === null || options === void 0 ? void 0 : options.signInWithSolana), {
+          version: "1",
+          domain: url.host,
+          uri: url.href
+        }), statement ? { statement } : null)), outputToProcess;
+        if (Array.isArray(output) && output[0] && typeof output[0] === "object")
+          outputToProcess = output[0];
+        else if (output && typeof output === "object" && "signedMessage" in output && "signature" in output)
+          outputToProcess = output;
+        else
+          throw Error("@supabase/auth-js: Wallet method signIn() returned unrecognized value");
+        if ("signedMessage" in outputToProcess && "signature" in outputToProcess && (typeof outputToProcess.signedMessage === "string" || outputToProcess.signedMessage instanceof Uint8Array) && outputToProcess.signature instanceof Uint8Array)
+          message = typeof outputToProcess.signedMessage === "string" ? outputToProcess.signedMessage : (/* @__PURE__ */ new TextDecoder()).decode(outputToProcess.signedMessage), signature = outputToProcess.signature;
+        else
+          throw Error("@supabase/auth-js: Wallet method signIn() API returned object without signedMessage and signature fields");
+      } else {
+        if (!("signMessage" in resolvedWallet) || typeof resolvedWallet.signMessage !== "function" || !("publicKey" in resolvedWallet) || typeof resolvedWallet !== "object" || !resolvedWallet.publicKey || !("toBase58" in resolvedWallet.publicKey) || typeof resolvedWallet.publicKey.toBase58 !== "function")
+          throw Error("@supabase/auth-js: Wallet does not have a compatible signMessage() and publicKey.toBase58() API");
+        message = [
+          `${url.host} wants you to sign in with your Solana account:`,
+          resolvedWallet.publicKey.toBase58(),
+          ...statement ? ["", statement, ""] : [""],
+          "Version: 1",
+          `URI: ${url.href}`,
+          `Issued At: ${(_c = (_b = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _b === void 0 ? void 0 : _b.issuedAt) !== null && _c !== void 0 ? _c : (/* @__PURE__ */ new Date()).toISOString()}`,
+          ...((_d = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _d === void 0 ? void 0 : _d.notBefore) ? [`Not Before: ${options.signInWithSolana.notBefore}`] : [],
+          ...((_f = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _f === void 0 ? void 0 : _f.expirationTime) ? [`Expiration Time: ${options.signInWithSolana.expirationTime}`] : [],
+          ...((_g = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _g === void 0 ? void 0 : _g.chainId) ? [`Chain ID: ${options.signInWithSolana.chainId}`] : [],
+          ...((_h = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _h === void 0 ? void 0 : _h.nonce) ? [`Nonce: ${options.signInWithSolana.nonce}`] : [],
+          ...((_j = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _j === void 0 ? void 0 : _j.requestId) ? [`Request ID: ${options.signInWithSolana.requestId}`] : [],
+          ...((_l = (_k = options === null || options === void 0 ? void 0 : options.signInWithSolana) === null || _k === void 0 ? void 0 : _k.resources) === null || _l === void 0 ? void 0 : _l.length) ? [
+            "Resources",
+            ...options.signInWithSolana.resources.map((resource) => `- ${resource}`)
+          ] : []
+        ].join(`
+`);
+        let maybeSignature = await resolvedWallet.signMessage((/* @__PURE__ */ new TextEncoder()).encode(message), "utf8");
+        if (!maybeSignature || !(maybeSignature instanceof Uint8Array))
+          throw Error("@supabase/auth-js: Wallet signMessage() API returned an recognized value");
+        signature = maybeSignature;
+      }
+    }
+    try {
+      let { data, error } = await _request(this.fetch, "POST", `${this.url}/token?grant_type=web3`, {
+        headers: this.headers,
+        body: Object.assign({ chain: "solana", message, signature: bytesToBase64URL(signature) }, ((_m = credentials.options) === null || _m === void 0 ? void 0 : _m.captchaToken) ? { gotrue_meta_security: { captcha_token: (_o = credentials.options) === null || _o === void 0 ? void 0 : _o.captchaToken } } : null),
+        xform: _sessionResponse
+      });
+      if (error)
+        throw error;
+      if (!data || !data.session || !data.user) {
+        let invalidTokenError = new AuthInvalidTokenResponseError;
+        return this._returnResult({ data: { user: null, session: null }, error: invalidTokenError });
+      }
+      if (data.session)
+        await this._saveSession(data.session), await this._notifyAllSubscribers("SIGNED_IN", data.session);
+      return this._returnResult({ data: Object.assign({}, data), error });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: { user: null, session: null }, error });
+      throw error;
+    }
+  }
+  async _exchangeCodeForSession(authCode, options) {
+    let hasExplicitFlowId = (options === null || options === void 0 ? void 0 : options.flowId) != null, requestedFlowId = hasExplicitFlowId ? validatePKCEFlowId(options === null || options === void 0 ? void 0 : options.flowId) : isBrowser() ? validatePKCEFlowId(parseParametersFromURL(window.location.href)[PKCE_FLOW_ID_PARAM]) : null;
+    if (hasExplicitFlowId && !requestedFlowId)
+      this._debug("#_exchangeCodeForSession()", "provided flowId is not a valid flow id", options === null || options === void 0 ? void 0 : options.flowId);
+    let { verifier: storageItem, flowId } = hasExplicitFlowId && !requestedFlowId ? { verifier: null, flowId: null } : await retrievePKCEVerifier(this.storage, this.storageKey, requestedFlowId), [codeVerifier, redirectType] = (storageItem !== null && storageItem !== void 0 ? storageItem : "").split("/");
+    try {
+      if (!codeVerifier && this.flowType === "pkce")
+        throw new AuthPKCECodeVerifierMissingError;
+      let { data, error } = await _request(this.fetch, "POST", `${this.url}/token?grant_type=pkce`, {
+        headers: this.headers,
+        body: {
+          auth_code: authCode,
+          code_verifier: codeVerifier
+        },
+        xform: _sessionResponse
+      });
+      if (await removePKCEVerifier(this.storage, this.storageKey, flowId), error)
+        throw error;
+      if (!data || !data.session || !data.user) {
+        let invalidTokenError = new AuthInvalidTokenResponseError;
+        return this._returnResult({
+          data: { user: null, session: null, redirectType: null },
+          error: invalidTokenError
+        });
+      }
+      if (data.session)
+        await this._saveSession(data.session), await this._notifyAllSubscribers(redirectType === "recovery" ? "PASSWORD_RECOVERY" : "SIGNED_IN", data.session);
+      return this._returnResult({ data: Object.assign(Object.assign({}, data), { redirectType: redirectType !== null && redirectType !== void 0 ? redirectType : null }), error });
+    } catch (error) {
+      if (await removePKCEVerifier(this.storage, this.storageKey, flowId), isAuthError(error))
+        return this._returnResult({
+          data: { user: null, session: null, redirectType: null },
+          error
+        });
+      throw error;
+    }
+  }
+  async signInWithIdToken(credentials) {
+    try {
+      let { options, provider, token, access_token, nonce } = credentials, res = await _request(this.fetch, "POST", `${this.url}/token?grant_type=id_token`, {
+        headers: this.headers,
+        body: {
+          provider,
+          id_token: token,
+          access_token,
+          nonce,
+          gotrue_meta_security: { captcha_token: options === null || options === void 0 ? void 0 : options.captchaToken }
+        },
+        xform: _sessionResponse
+      }), { data, error } = res;
+      if (error)
+        return this._returnResult({ data: { user: null, session: null }, error });
+      else if (!data || !data.session || !data.user) {
+        let invalidTokenError = new AuthInvalidTokenResponseError;
+        return this._returnResult({ data: { user: null, session: null }, error: invalidTokenError });
+      }
+      if (data.session)
+        await this._saveSession(data.session), await this._notifyAllSubscribers("SIGNED_IN", data.session);
+      return this._returnResult({ data, error });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: { user: null, session: null }, error });
+      throw error;
+    }
+  }
+  async signInWithOtp(credentials) {
+    var _a, _b, _c, _d, _f;
+    let flowId = null;
+    try {
+      if ("email" in credentials) {
+        let { email, options } = credentials, codeChallenge = null, codeChallengeMethod = null;
+        if (this.flowType === "pkce")
+          [codeChallenge, codeChallengeMethod, flowId] = await this._getCodeChallengeAndMethod();
+        let { error } = await _request(this.fetch, "POST", `${this.url}/otp`, {
+          headers: this.headers,
+          body: {
+            email,
+            data: (_a = options === null || options === void 0 ? void 0 : options.data) !== null && _a !== void 0 ? _a : {},
+            create_user: (_b = options === null || options === void 0 ? void 0 : options.shouldCreateUser) !== null && _b !== void 0 ? _b : !0,
+            gotrue_meta_security: { captcha_token: options === null || options === void 0 ? void 0 : options.captchaToken },
+            code_challenge: codeChallenge,
+            code_challenge_method: codeChallengeMethod
+          },
+          redirectTo: this._maybeAppendFlowIdToRedirect(options === null || options === void 0 ? void 0 : options.emailRedirectTo, flowId)
+        });
+        return this._returnResult({ data: { user: null, session: null }, error });
+      }
+      if ("phone" in credentials) {
+        let { phone, options } = credentials, { data, error } = await _request(this.fetch, "POST", `${this.url}/otp`, {
+          headers: this.headers,
+          body: {
+            phone,
+            data: (_c = options === null || options === void 0 ? void 0 : options.data) !== null && _c !== void 0 ? _c : {},
+            create_user: (_d = options === null || options === void 0 ? void 0 : options.shouldCreateUser) !== null && _d !== void 0 ? _d : !0,
+            gotrue_meta_security: { captcha_token: options === null || options === void 0 ? void 0 : options.captchaToken },
+            channel: (_f = options === null || options === void 0 ? void 0 : options.channel) !== null && _f !== void 0 ? _f : "sms"
+          }
+        });
+        return this._returnResult({
+          data: { user: null, session: null, messageId: data === null || data === void 0 ? void 0 : data.message_id },
+          error
+        });
+      }
+      throw new AuthInvalidCredentialsError("You must provide either an email or phone number.");
+    } catch (error) {
+      if (await removePKCEVerifier(this.storage, this.storageKey, flowId), isAuthError(error))
+        return this._returnResult({ data: { user: null, session: null }, error });
+      throw error;
+    }
+  }
+  async verifyOtp(params) {
+    var _a, _b;
+    try {
+      let redirectTo = void 0, captchaToken = void 0;
+      if ("options" in params)
+        redirectTo = (_a = params.options) === null || _a === void 0 ? void 0 : _a.redirectTo, captchaToken = (_b = params.options) === null || _b === void 0 ? void 0 : _b.captchaToken;
+      let { data, error } = await _request(this.fetch, "POST", `${this.url}/verify`, {
+        headers: this.headers,
+        body: Object.assign(Object.assign({}, params), { gotrue_meta_security: { captcha_token: captchaToken } }),
+        redirectTo,
+        xform: _sessionResponse
+      });
+      if (error)
+        throw error;
+      if (!data)
+        throw Error("An error occurred on token verification.");
+      let { session, user } = data;
+      if (session === null || session === void 0 ? void 0 : session.access_token)
+        await this._saveSession(session), await this._notifyAllSubscribers(params.type == "recovery" ? "PASSWORD_RECOVERY" : "SIGNED_IN", session);
+      return this._returnResult({ data: { user, session }, error: null });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: { user: null, session: null }, error });
+      throw error;
+    }
+  }
+  async signInWithSSO(params) {
+    var _a, _b, _c, _d;
+    let flowId = null;
+    try {
+      let codeChallenge = null, codeChallengeMethod = null;
+      if (this.flowType === "pkce")
+        [codeChallenge, codeChallengeMethod, flowId] = await this._getCodeChallengeAndMethod();
+      let result = await _request(this.fetch, "POST", `${this.url}/sso`, {
+        body: Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, "providerId" in params ? { provider_id: params.providerId } : null), "domain" in params ? { domain: params.domain } : null), { redirect_to: this._maybeAppendFlowIdToRedirect((_a = params.options) === null || _a === void 0 ? void 0 : _a.redirectTo, flowId) }), ((_b = params === null || params === void 0 ? void 0 : params.options) === null || _b === void 0 ? void 0 : _b.captchaToken) ? { gotrue_meta_security: { captcha_token: params.options.captchaToken } } : null), { skip_http_redirect: !0, code_challenge: codeChallenge, code_challenge_method: codeChallengeMethod }),
+        headers: this.headers,
+        xform: _ssoResponse
+      });
+      if (((_c = result.data) === null || _c === void 0 ? void 0 : _c.url) && isBrowser() && !((_d = params.options) === null || _d === void 0 ? void 0 : _d.skipBrowserRedirect))
+        window.location.assign(result.data.url);
+      return this._returnResult(result);
+    } catch (error) {
+      if (await removePKCEVerifier(this.storage, this.storageKey, flowId), isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async reauthenticate() {
+    if (await this.initializePromise, this.lock != null)
+      return await this._acquireLock(this.lockAcquireTimeout, async () => await this._reauthenticate());
+    return await this._reauthenticate();
+  }
+  async _reauthenticate() {
+    try {
+      return await this._useSession(async (result) => {
+        let { data: { session }, error: sessionError } = result;
+        if (sessionError)
+          throw sessionError;
+        if (!session)
+          throw new AuthSessionMissingError;
+        let { error } = await _request(this.fetch, "GET", `${this.url}/reauthenticate`, {
+          headers: this.headers,
+          jwt: session.access_token
+        });
+        return this._returnResult({ data: { user: null, session: null }, error });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: { user: null, session: null }, error });
+      throw error;
+    }
+  }
+  async resend(credentials) {
+    let flowId = null;
+    try {
+      let endpoint = `${this.url}/resend`;
+      if ("email" in credentials) {
+        let { email, type, options } = credentials, codeChallenge = null, codeChallengeMethod = null;
+        if (this.flowType === "pkce")
+          [codeChallenge, codeChallengeMethod, flowId] = await this._getCodeChallengeAndMethod();
+        let { error } = await _request(this.fetch, "POST", endpoint, {
+          headers: this.headers,
+          body: {
+            email,
+            type,
+            gotrue_meta_security: { captcha_token: options === null || options === void 0 ? void 0 : options.captchaToken },
+            code_challenge: codeChallenge,
+            code_challenge_method: codeChallengeMethod
+          },
+          redirectTo: this._maybeAppendFlowIdToRedirect(options === null || options === void 0 ? void 0 : options.emailRedirectTo, flowId)
+        });
+        if (error)
+          await removePKCEVerifier(this.storage, this.storageKey, flowId);
+        return this._returnResult({ data: { user: null, session: null }, error });
+      } else if ("phone" in credentials) {
+        let { phone, type, options } = credentials, { data, error } = await _request(this.fetch, "POST", endpoint, {
+          headers: this.headers,
+          body: {
+            phone,
+            type,
+            gotrue_meta_security: { captcha_token: options === null || options === void 0 ? void 0 : options.captchaToken }
+          }
+        });
+        return this._returnResult({
+          data: { user: null, session: null, messageId: data === null || data === void 0 ? void 0 : data.message_id },
+          error
+        });
+      }
+      throw new AuthInvalidCredentialsError("You must provide either an email or phone number and a type");
+    } catch (error) {
+      if (await removePKCEVerifier(this.storage, this.storageKey, flowId), isAuthError(error))
+        return this._returnResult({ data: { user: null, session: null }, error });
+      throw error;
+    }
+  }
+  async getSession() {
+    if (await this.initializePromise, this.lock != null)
+      return await this._acquireLock(this.lockAcquireTimeout, async () => this._useSession(async (result) => result));
+    return await this._useSession(async (result) => result);
+  }
+  async _acquireLock(acquireTimeout, fn) {
+    this._debug("#_acquireLock", "begin", acquireTimeout);
+    try {
+      if (this.lockAcquired) {
+        let last = this.pendingInLock.length ? this.pendingInLock[this.pendingInLock.length - 1] : Promise.resolve(), result = (async () => (await last, await fn()))();
+        return this.pendingInLock.push((async () => {
+          try {
+            await result;
+          } catch (_e) {}
+        })()), result;
+      }
+      return await this.lock(`lock:${this.storageKey}`, acquireTimeout, async () => {
+        this._debug("#_acquireLock", "lock acquired for storage key", this.storageKey);
+        try {
+          this.lockAcquired = !0;
+          let result = fn();
+          this.pendingInLock.push((async () => {
+            try {
+              await result;
+            } catch (e) {}
+          })()), await result;
+          while (this.pendingInLock.length) {
+            let waitOn = [...this.pendingInLock];
+            await Promise.all(waitOn), this.pendingInLock.splice(0, waitOn.length);
+          }
+          return await result;
+        } finally {
+          this._debug("#_acquireLock", "lock released for storage key", this.storageKey), this.lockAcquired = !1;
+        }
+      });
+    } finally {
+      this._debug("#_acquireLock", "end");
+    }
+  }
+  async _useSession(fn) {
+    this._debug("#_useSession", "begin");
+    try {
+      let result = await this.__loadSession();
+      return await fn(result);
+    } finally {
+      this._debug("#_useSession", "end");
+    }
+  }
+  async __loadSession() {
+    if (this._debug("#__loadSession()", "begin"), this.lock != null && !this.lockAcquired)
+      this._debug("#__loadSession()", "used outside of an acquired lock!", Error().stack);
+    try {
+      let currentSession = null, maybeSession = await getItemAsync(this.storage, this.storageKey);
+      if (this._debug("#getSession()", "session from storage", maybeSession), maybeSession !== null)
+        if (this._isValidSession(maybeSession))
+          currentSession = maybeSession;
+        else
+          this._debug("#getSession()", "session from storage is not valid"), await this._removeSession();
+      if (!currentSession)
+        return { data: { session: null }, error: null };
+      let hasExpired = currentSession.expires_at ? currentSession.expires_at * 1000 - Date.now() < EXPIRY_MARGIN_MS : !1;
+      if (this._debug("#__loadSession()", `session has${hasExpired ? "" : " not"} expired`, "expires_at", currentSession.expires_at), !hasExpired)
+        return { data: { session: await this._hydrateSessionUser(currentSession) }, error: null };
+      let { data: session, error } = await this._callRefreshToken(currentSession.refresh_token);
+      if (error) {
+        let stored = await getItemAsync(this.storage, this.storageKey);
+        if (stored && this._isValidSession(stored) && stored.expires_at && stored.expires_at * 1000 > Date.now())
+          return this._returnResult({
+            data: { session: await this._hydrateSessionUser(stored) },
+            error: null
+          });
+        return this._returnResult({ data: { session: null }, error });
+      }
+      return this._returnResult({ data: { session }, error: null });
+    } finally {
+      this._debug("#__loadSession()", "end");
+    }
+  }
+  async _hydrateSessionUser(session) {
+    if (this.userStorage) {
+      let maybeUser = await getItemAsync(this.userStorage, this.storageKey + "-user");
+      session.user = (maybeUser === null || maybeUser === void 0 ? void 0 : maybeUser.user) ? maybeUser.user : userNotAvailableProxy();
+    }
+    if (this.storage.isServer && session.user && !session.user.__isUserNotAvailableProxy) {
+      let suppressWarningRef = { value: this.suppressGetSessionWarning };
+      if (session.user = insecureUserWarningProxy(session.user, suppressWarningRef), suppressWarningRef.value)
+        this.suppressGetSessionWarning = !0;
+    }
+    return session;
+  }
+  async getUser(jwt) {
+    if (jwt)
+      return await this._getUser(jwt);
+    await this.initializePromise;
+    let result;
+    if (this.lock != null)
+      result = await this._acquireLock(this.lockAcquireTimeout, async () => await this._getUser());
+    else
+      result = await this._getUser();
+    if (result.data.user)
+      this.suppressGetSessionWarning = !0;
+    return result;
+  }
+  async _getUser(jwt) {
+    try {
+      if (jwt)
+        return await _request(this.fetch, "GET", `${this.url}/user`, {
+          headers: this.headers,
+          jwt,
+          xform: _userResponse
+        });
+      return await this._useSession(async (result) => {
+        var _a, _b, _c;
+        let { data, error } = result;
+        if (error)
+          throw error;
+        if (!((_a = data.session) === null || _a === void 0 ? void 0 : _a.access_token) && !this.hasCustomAuthorizationHeader)
+          return { data: { user: null }, error: new AuthSessionMissingError };
+        return await _request(this.fetch, "GET", `${this.url}/user`, {
+          headers: this.headers,
+          jwt: (_c = (_b = data.session) === null || _b === void 0 ? void 0 : _b.access_token) !== null && _c !== void 0 ? _c : void 0,
+          xform: _userResponse
+        });
+      });
+    } catch (error) {
+      if (isAuthError(error)) {
+        if (isAuthSessionMissingError(error))
+          await this._removeSession();
+        return this._returnResult({ data: { user: null }, error });
+      }
+      throw error;
+    }
+  }
+  async updateUser(attributes, options = {}) {
+    if (await this.initializePromise, this.lock != null)
+      return await this._acquireLock(this.lockAcquireTimeout, async () => await this._updateUser(attributes, options));
+    return await this._updateUser(attributes, options);
+  }
+  async _updateUser(attributes, options = {}) {
+    let flowId = null;
+    try {
+      return await this._useSession(async (result) => {
+        let { data: sessionData, error: sessionError } = result;
+        if (sessionError)
+          throw sessionError;
+        if (!sessionData.session)
+          throw new AuthSessionMissingError;
+        let session = sessionData.session, codeChallenge = null, codeChallengeMethod = null;
+        if (this.flowType === "pkce" && attributes.email != null)
+          [codeChallenge, codeChallengeMethod, flowId] = await this._getCodeChallengeAndMethod();
+        let { data, error: userError } = await _request(this.fetch, "PUT", `${this.url}/user`, {
+          headers: this.headers,
+          redirectTo: this._maybeAppendFlowIdToRedirect(options === null || options === void 0 ? void 0 : options.emailRedirectTo, flowId),
+          body: Object.assign(Object.assign({}, attributes), { code_challenge: codeChallenge, code_challenge_method: codeChallengeMethod }),
+          jwt: session.access_token,
+          xform: _userResponse
+        });
+        if (userError)
+          throw userError;
+        return session.user = data.user, await this._saveSession(session), await this._notifyAllSubscribers("USER_UPDATED", session), this._returnResult({ data: { user: session.user }, error: null });
+      });
+    } catch (error) {
+      if (await removePKCEVerifier(this.storage, this.storageKey, flowId), isAuthError(error))
+        return this._returnResult({ data: { user: null }, error });
+      throw error;
+    }
+  }
+  async setSession(currentSession) {
+    if (await this.initializePromise, this.lock != null)
+      return await this._acquireLock(this.lockAcquireTimeout, async () => await this._setSession(currentSession));
+    return await this._setSession(currentSession);
+  }
+  async _setSession(currentSession) {
+    try {
+      if (!currentSession.access_token || !currentSession.refresh_token)
+        throw new AuthSessionMissingError;
+      let timeNow = Date.now() / 1000, expiresAt = timeNow, hasExpired = !0, session = null, { payload } = decodeJWT(currentSession.access_token);
+      if (payload.exp)
+        expiresAt = payload.exp, hasExpired = expiresAt <= timeNow;
+      if (hasExpired) {
+        let { data: refreshedSession, error } = await this._callRefreshToken(currentSession.refresh_token);
+        if (error)
+          return this._returnResult({ data: { user: null, session: null }, error });
+        if (!refreshedSession)
+          return { data: { user: null, session: null }, error: null };
+        session = refreshedSession;
+      } else {
+        let { data, error } = await this._getUser(currentSession.access_token);
+        if (error)
+          return this._returnResult({ data: { user: null, session: null }, error });
+        session = {
+          access_token: currentSession.access_token,
+          refresh_token: currentSession.refresh_token,
+          user: data.user,
+          token_type: "bearer",
+          expires_in: expiresAt - timeNow,
+          expires_at: expiresAt
+        }, await this._saveSession(session), await this._notifyAllSubscribers("SIGNED_IN", session);
+      }
+      return this._returnResult({ data: { user: session.user, session }, error: null });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: { session: null, user: null }, error });
+      throw error;
+    }
+  }
+  async refreshSession(currentSession) {
+    if (await this.initializePromise, this.lock != null)
+      return await this._acquireLock(this.lockAcquireTimeout, async () => await this._refreshSession(currentSession));
+    return await this._refreshSession(currentSession);
+  }
+  async _refreshSession(currentSession) {
+    try {
+      return await this._useSession(async (result) => {
+        var _a;
+        if (!currentSession) {
+          let { data, error } = result;
+          if (error)
+            throw error;
+          currentSession = (_a = data.session) !== null && _a !== void 0 ? _a : void 0;
+        }
+        if (!(currentSession === null || currentSession === void 0 ? void 0 : currentSession.refresh_token))
+          throw new AuthSessionMissingError;
+        let { data: session, error } = await this._callRefreshToken(currentSession.refresh_token);
+        if (error)
+          return this._returnResult({ data: { user: null, session: null }, error });
+        if (!session)
+          return this._returnResult({ data: { user: null, session: null }, error: null });
+        return this._returnResult({ data: { user: session.user, session }, error: null });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: { user: null, session: null }, error });
+      throw error;
+    }
+  }
+  async _getSessionFromURL(params, callbackUrlType) {
+    var _a;
+    try {
+      if (!isBrowser())
+        throw new AuthImplicitGrantRedirectError("No browser detected.");
+      if (params.error || params.error_description || params.error_code)
+        throw new AuthImplicitGrantRedirectError(params.error_description || "Error in URL with unspecified error_description", {
+          error: params.error || "unspecified_error",
+          code: params.error_code || "unspecified_code"
+        });
+      switch (callbackUrlType) {
+        case "implicit":
+          if (this.flowType === "pkce")
+            throw new AuthPKCEGrantCodeExchangeError("Not a valid PKCE flow url.");
+          break;
+        case "pkce":
+          if (this.flowType === "implicit")
+            throw new AuthImplicitGrantRedirectError("Not a valid implicit grant flow url.");
+          break;
+        default:
+      }
+      if (callbackUrlType === "pkce") {
+        if (this._debug("#_initialize()", "begin", "is PKCE flow", !0), !params.code)
+          throw new AuthPKCEGrantCodeExchangeError("No code detected.");
+        let { data, error } = await this._exchangeCodeForSession(params.code, {
+          flowId: params[PKCE_FLOW_ID_PARAM]
+        });
+        if (error)
+          throw error;
+        let url = new URL(window.location.href);
+        return url.searchParams.delete("code"), url.searchParams.delete(PKCE_FLOW_ID_PARAM), window.history.replaceState(window.history.state, "", url.toString()), {
+          data: { session: data.session, redirectType: (_a = data.redirectType) !== null && _a !== void 0 ? _a : null },
+          error: null
+        };
+      }
+      let { provider_token, provider_refresh_token, access_token, refresh_token, expires_in, expires_at, token_type } = params;
+      if (!access_token || !expires_in || !refresh_token || !token_type)
+        throw new AuthImplicitGrantRedirectError("No session defined in URL");
+      let timeNow = Math.round(Date.now() / 1000), expiresIn = parseInt(expires_in), expiresAt = timeNow + expiresIn;
+      if (expires_at)
+        expiresAt = parseInt(expires_at);
+      let actuallyExpiresIn = expiresAt - timeNow;
+      if (actuallyExpiresIn * 1000 <= AUTO_REFRESH_TICK_DURATION_MS)
+        console.warn(`@supabase/gotrue-js: Session as retrieved from URL expires in ${actuallyExpiresIn}s, should have been closer to ${expiresIn}s`);
+      let issuedAt = expiresAt - expiresIn;
+      if (timeNow - issuedAt >= 120)
+        console.warn("@supabase/gotrue-js: Session as retrieved from URL was issued over 120s ago, URL could be stale", issuedAt, expiresAt, timeNow);
+      else if (timeNow - issuedAt < 0)
+        console.warn("@supabase/gotrue-js: Session as retrieved from URL was issued in the future? Check the device clock for skew", issuedAt, expiresAt, timeNow);
+      let { data, error } = await this._getUser(access_token);
+      if (error)
+        throw error;
+      let session = {
+        provider_token,
+        provider_refresh_token,
+        access_token,
+        expires_in: expiresIn,
+        expires_at: expiresAt,
+        refresh_token,
+        token_type,
+        user: data.user
+      };
+      return window.location.hash = "", this._debug("#_getSessionFromURL()", "clearing window.location.hash"), this._returnResult({ data: { session, redirectType: params.type }, error: null });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: { session: null, redirectType: null }, error });
+      throw error;
+    }
+  }
+  _isImplicitGrantCallback(params) {
+    if (typeof this.detectSessionInUrl === "function")
+      return this.detectSessionInUrl(new URL(window.location.href), params);
+    return Boolean(params.access_token || params.error || params.error_description || params.error_code);
+  }
+  async _isPKCECallback(params) {
+    if (!params.code)
+      return !1;
+    let flowId = validatePKCEFlowId(params[PKCE_FLOW_ID_PARAM]);
+    if (flowId && await getItemAsync(this.storage, pkceVerifierSlotKey(this.storageKey, flowId)))
+      return !0;
+    return !!await getItemAsync(this.storage, `${this.storageKey}-code-verifier`);
+  }
+  async signOut(options = { scope: "global" }) {
+    if (await this.initializePromise, this.lock != null)
+      return await this._acquireLock(this.lockAcquireTimeout, async () => await this._signOut(options));
+    return await this._signOut(options);
+  }
+  async _signOut({ scope } = { scope: "global" }) {
+    return await this._useSession(async (result) => {
+      var _a;
+      let removeCurrentSession = async () => {
+        await this._removeSession();
+      }, { data, error: sessionError } = result;
+      if (sessionError && !isAuthSessionMissingError(sessionError))
+        return this._returnResult({ error: sessionError });
+      let accessToken = (_a = data.session) === null || _a === void 0 ? void 0 : _a.access_token;
+      if (accessToken) {
+        let { error } = await this.admin.signOut(accessToken, scope);
+        if (error) {
+          if (!(isAuthApiError(error) && (error.status === 404 || error.status === 401 || error.status === 403) || isAuthSessionMissingError(error))) {
+            if (scope !== "others")
+              await removeCurrentSession();
+            return this._returnResult({ error });
+          }
+        }
+      }
+      if (scope !== "others")
+        await removeCurrentSession();
+      return this._returnResult({ error: null });
+    });
+  }
+  onAuthStateChange(callback) {
+    let id = generateCallbackId(), subscription = {
+      id,
+      callback,
+      unsubscribe: () => {
+        this._debug("#unsubscribe()", "state change callback with id removed", id), this.stateChangeEmitters.delete(id);
+      }
+    };
+    return this._debug("#onAuthStateChange()", "registered callback with id", id), this.stateChangeEmitters.set(id, subscription), (async () => {
+      if (await this.initializePromise, this.lock != null)
+        await this._acquireLock(this.lockAcquireTimeout, async () => {
+          this._emitInitialSession(id);
+        });
+      else
+        await this._emitInitialSession(id);
+    })(), { data: { subscription } };
+  }
+  async _emitInitialSession(id) {
+    return await this._useSession(async (result) => {
+      var _a, _b;
+      try {
+        let { data: { session }, error } = result;
+        if (error)
+          throw error;
+        await ((_a = this.stateChangeEmitters.get(id)) === null || _a === void 0 ? void 0 : _a.callback("INITIAL_SESSION", session)), this._debug("INITIAL_SESSION", "callback id", id, "session", session);
+      } catch (err) {
+        if (await ((_b = this.stateChangeEmitters.get(id)) === null || _b === void 0 ? void 0 : _b.callback("INITIAL_SESSION", null)), this._debug("INITIAL_SESSION", "callback id", id, "error", err), isAuthRefreshDiscardedError(err))
+          return;
+        if (isAuthSessionMissingError(err) || isAuthRetryableFetchError(err) || isAuthApiError(err) && (err.code === "refresh_token_not_found" || err.code === "refresh_token_already_used" || err.code === "session_expired"))
+          console.warn(err);
+        else
+          console.error(err);
+      }
+    });
+  }
+  async resetPasswordForEmail(email, options = {}) {
+    let codeChallenge = null, codeChallengeMethod = null, flowId = null;
+    if (this.flowType === "pkce")
+      [codeChallenge, codeChallengeMethod, flowId] = await this._getCodeChallengeAndMethod(!0);
+    try {
+      return await _request(this.fetch, "POST", `${this.url}/recover`, {
+        body: {
+          email,
+          code_challenge: codeChallenge,
+          code_challenge_method: codeChallengeMethod,
+          gotrue_meta_security: { captcha_token: options.captchaToken }
+        },
+        headers: this.headers,
+        redirectTo: this._maybeAppendFlowIdToRedirect(options.redirectTo, flowId)
+      });
+    } catch (error) {
+      if (await removePKCEVerifier(this.storage, this.storageKey, flowId), isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async getUserIdentities() {
+    var _a;
+    try {
+      let { data, error } = await this.getUser();
+      if (error)
+        throw error;
+      return this._returnResult({ data: { identities: (_a = data.user.identities) !== null && _a !== void 0 ? _a : [] }, error: null });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async linkIdentity(credentials) {
+    if ("token" in credentials)
+      return this.linkIdentityIdToken(credentials);
+    return this.linkIdentityOAuth(credentials);
+  }
+  async linkIdentityOAuth(credentials) {
+    var _a;
+    let flowId = null;
+    try {
+      let { data, error } = await this._useSession(async (result) => {
+        var _a, _b, _c, _d, _f;
+        let { data, error } = result;
+        if (error)
+          throw error;
+        let { url, flowId: urlFlowId } = await this._getUrlForProvider(`${this.url}/user/identities/authorize`, credentials.provider, {
+          redirectTo: (_a = credentials.options) === null || _a === void 0 ? void 0 : _a.redirectTo,
+          scopes: (_b = credentials.options) === null || _b === void 0 ? void 0 : _b.scopes,
+          queryParams: (_c = credentials.options) === null || _c === void 0 ? void 0 : _c.queryParams,
+          skipBrowserRedirect: !0
+        });
+        return flowId = urlFlowId, await _request(this.fetch, "GET", url, {
+          headers: this.headers,
+          jwt: (_f = (_d = data.session) === null || _d === void 0 ? void 0 : _d.access_token) !== null && _f !== void 0 ? _f : void 0
+        });
+      });
+      if (error)
+        throw error;
+      if (isBrowser() && !((_a = credentials.options) === null || _a === void 0 ? void 0 : _a.skipBrowserRedirect))
+        window.location.assign(data === null || data === void 0 ? void 0 : data.url);
+      return this._returnResult({
+        data: { provider: credentials.provider, url: data === null || data === void 0 ? void 0 : data.url, flowId },
+        error: null
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({
+          data: { provider: credentials.provider, url: null, flowId },
+          error
+        });
+      throw error;
+    }
+  }
+  async linkIdentityIdToken(credentials) {
+    return await this._useSession(async (result) => {
+      var _a;
+      try {
+        let { error: sessionError, data: { session } } = result;
+        if (sessionError)
+          throw sessionError;
+        let { options, provider, token, access_token, nonce } = credentials, res = await _request(this.fetch, "POST", `${this.url}/token?grant_type=id_token`, {
+          headers: this.headers,
+          jwt: (_a = session === null || session === void 0 ? void 0 : session.access_token) !== null && _a !== void 0 ? _a : void 0,
+          body: {
+            provider,
+            id_token: token,
+            access_token,
+            nonce,
+            link_identity: !0,
+            gotrue_meta_security: { captcha_token: options === null || options === void 0 ? void 0 : options.captchaToken }
+          },
+          xform: _sessionResponse
+        }), { data, error } = res;
+        if (error)
+          return this._returnResult({ data: { user: null, session: null }, error });
+        else if (!data || !data.session || !data.user)
+          return this._returnResult({
+            data: { user: null, session: null },
+            error: new AuthInvalidTokenResponseError
+          });
+        if (data.session)
+          await this._saveSession(data.session), await this._notifyAllSubscribers("USER_UPDATED", data.session);
+        return this._returnResult({ data, error });
+      } catch (error) {
+        if (await removePKCEVerifier(this.storage, this.storageKey, null), isAuthError(error))
+          return this._returnResult({ data: { user: null, session: null }, error });
+        throw error;
+      }
+    });
+  }
+  async unlinkIdentity(identity) {
+    try {
+      return await this._useSession(async (result) => {
+        var _a, _b;
+        let { data, error } = result;
+        if (error)
+          throw error;
+        return await _request(this.fetch, "DELETE", `${this.url}/user/identities/${identity.identity_id}`, {
+          headers: this.headers,
+          jwt: (_b = (_a = data.session) === null || _a === void 0 ? void 0 : _a.access_token) !== null && _b !== void 0 ? _b : void 0
+        });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _refreshAccessToken(refreshToken) {
+    this._debug("#_refreshAccessToken()", "begin");
+    try {
+      let startedAt = Date.now();
+      return await retryable(async (attempt) => {
+        if (attempt > 0)
+          await sleep2(200 * Math.pow(2, attempt - 1));
+        return this._debug("#_refreshAccessToken()", "refreshing attempt", attempt), await _request(this.fetch, "POST", `${this.url}/token?grant_type=refresh_token`, {
+          body: { refresh_token: refreshToken },
+          headers: this.headers,
+          xform: _sessionResponse
+        });
+      }, (attempt, error) => {
+        let nextBackOffInterval = 200 * Math.pow(2, attempt);
+        return error && isAuthRetryableFetchError(error) && Date.now() + nextBackOffInterval - startedAt < AUTO_REFRESH_TICK_DURATION_MS;
+      });
+    } catch (error) {
+      if (this._debug("#_refreshAccessToken()", "error", error), isAuthError(error))
+        return this._returnResult({ data: { session: null, user: null }, error });
+      throw error;
+    } finally {
+      this._debug("#_refreshAccessToken()", "end");
+    }
+  }
+  _isValidSession(maybeSession) {
+    return typeof maybeSession === "object" && maybeSession !== null && "access_token" in maybeSession && "refresh_token" in maybeSession && "expires_at" in maybeSession;
+  }
+  async _handleProviderSignIn(provider, options) {
+    let { url, flowId } = await this._getUrlForProvider(`${this.url}/authorize`, provider, {
+      redirectTo: options.redirectTo,
+      scopes: options.scopes,
+      queryParams: options.queryParams
+    });
+    if (this._debug("#_handleProviderSignIn()", "provider", provider, "options", options, "url", url), isBrowser() && !options.skipBrowserRedirect)
+      window.location.assign(url);
+    return { data: { provider, url, flowId }, error: null };
+  }
+  async _recoverAndRefresh() {
+    var _a, _b;
+    let debugName = "#_recoverAndRefresh()";
+    this._debug("#_recoverAndRefresh()", "begin");
+    try {
+      let currentSession = await getItemAsync(this.storage, this.storageKey);
+      if (currentSession && this.userStorage) {
+        let maybeUser = await getItemAsync(this.userStorage, this.storageKey + "-user");
+        if (!this.storage.isServer && Object.is(this.storage, this.userStorage) && !maybeUser)
+          maybeUser = { user: currentSession.user }, await setItemAsync(this.userStorage, this.storageKey + "-user", maybeUser);
+        currentSession.user = (_a = maybeUser === null || maybeUser === void 0 ? void 0 : maybeUser.user) !== null && _a !== void 0 ? _a : userNotAvailableProxy();
+      } else if (currentSession && !currentSession.user) {
+        if (!currentSession.user) {
+          let separateUser = await getItemAsync(this.storage, this.storageKey + "-user");
+          if (separateUser && (separateUser === null || separateUser === void 0 ? void 0 : separateUser.user))
+            currentSession.user = separateUser.user, await removeItemAsync(this.storage, this.storageKey + "-user"), await setItemAsync(this.storage, this.storageKey, currentSession);
+          else
+            currentSession.user = userNotAvailableProxy();
+        }
+      }
+      if (this._debug("#_recoverAndRefresh()", "session from storage", currentSession), !this._isValidSession(currentSession)) {
+        if (this._debug("#_recoverAndRefresh()", "session is not valid"), currentSession !== null)
+          await this._removeSession();
+        return;
+      }
+      let expiresWithMargin = ((_b = currentSession.expires_at) !== null && _b !== void 0 ? _b : 1 / 0) * 1000 - Date.now() < EXPIRY_MARGIN_MS;
+      if (this._debug("#_recoverAndRefresh()", `session has${expiresWithMargin ? "" : " not"} expired with margin of ${EXPIRY_MARGIN_MS}s`), expiresWithMargin) {
+        if (this.autoRefreshToken && currentSession.refresh_token) {
+          let { error } = await this._callRefreshToken(currentSession.refresh_token);
+          if (error)
+            if (isAuthRefreshDiscardedError(error))
+              this._debug("#_recoverAndRefresh()", "refresh discarded by commit guard", error);
+            else
+              this._debug("#_recoverAndRefresh()", "refresh failed", error);
+        }
+      } else if (currentSession.user && currentSession.user.__isUserNotAvailableProxy === !0)
+        try {
+          let { data, error: userError } = await this._getUser(currentSession.access_token);
+          if (!userError && (data === null || data === void 0 ? void 0 : data.user))
+            currentSession.user = data.user, await this._saveSession(currentSession), await this._notifyAllSubscribers("SIGNED_IN", currentSession);
+          else
+            this._debug("#_recoverAndRefresh()", "could not get user data, skipping SIGNED_IN notification");
+        } catch (getUserError) {
+          console.error("Error getting user data:", getUserError), this._debug("#_recoverAndRefresh()", "error getting user data, skipping SIGNED_IN notification", getUserError);
+        }
+      else
+        await this._notifyAllSubscribers("SIGNED_IN", currentSession);
+    } catch (err) {
+      if (this._debug("#_recoverAndRefresh()", "error", err), isAuthRetryableFetchError(err))
+        console.warn(err);
+      else
+        console.error(err);
+      return;
+    } finally {
+      this._debug("#_recoverAndRefresh()", "end");
+    }
+  }
+  async _callRefreshToken(refreshToken) {
+    var _a, _b;
+    if (!refreshToken)
+      throw new AuthSessionMissingError;
+    if (this.refreshingDeferred)
+      return this.refreshingDeferred.promise;
+    if (this.lastRefreshFailure && this.lastRefreshFailure.refreshToken === refreshToken && Date.now() < this.lastRefreshFailure.expiresAt)
+      return this._debug("#_callRefreshToken()", "returning cached failure (cooldown active)"), this.lastRefreshFailure.result;
+    let debugName = "#_callRefreshToken()";
+    this._debug(debugName, "begin");
+    try {
+      this.refreshingDeferred = new Deferred, this.refreshingDeferred.promise.then(void 0, () => {});
+      let storedAtStart = await getItemAsync(this.storage, this.storageKey), { data, error } = await this._refreshAccessToken(refreshToken);
+      if (error)
+        throw error;
+      if (!data.session)
+        throw new AuthSessionMissingError;
+      let storedAfter = await getItemAsync(this.storage, this.storageKey);
+      if (storedAtStart !== null && (storedAfter === null || storedAfter.refresh_token !== storedAtStart.refresh_token)) {
+        this._debug(debugName, "commit guard: storage changed since refresh started, discarding rotated tokens", {
+          startedWith: "present",
+          nowHolds: storedAfter ? "replaced" : "cleared"
+        });
+        let discarded = {
+          data: null,
+          error: new AuthRefreshDiscardedError
+        };
+        return this.refreshingDeferred.resolve(discarded), discarded;
+      }
+      let epochBeforeSave = this._sessionRemovalEpoch;
+      if (await this._saveSession(data.session), this._sessionRemovalEpoch !== epochBeforeSave) {
+        if (this._debug(debugName, "commit guard (post-save): _removeSession ran during _saveSession, undoing write"), await removeItemAsync(this.storage, this.storageKey), this.userStorage)
+          await removeItemAsync(this.userStorage, this.storageKey + "-user");
+        let discarded = {
+          data: null,
+          error: new AuthRefreshDiscardedError
+        };
+        return this.refreshingDeferred.resolve(discarded), discarded;
+      }
+      await this._notifyAllSubscribers("TOKEN_REFRESHED", data.session);
+      let result = { data: data.session, error: null };
+      return this.lastRefreshFailure = null, this.refreshingDeferred.resolve(result), result;
+    } catch (error) {
+      if (this._debug(debugName, "error", error), isAuthError(error)) {
+        let result = { data: null, error };
+        if (!isAuthRetryableFetchError(error)) {
+          let storedNow = await getItemAsync(this.storage, this.storageKey);
+          if (!!((storedNow === null || storedNow === void 0 ? void 0 : storedNow.expires_at) && storedNow.expires_at * 1000 > Date.now()))
+            this._debug(debugName, "proactive refresh failed, access token still valid — preserving session");
+          else
+            await this._removeSession();
+        }
+        return this.lastRefreshFailure = {
+          refreshToken,
+          result,
+          expiresAt: Date.now() + REFRESH_FAILURE_COOLDOWN_MS
+        }, (_a = this.refreshingDeferred) === null || _a === void 0 || _a.resolve(result), result;
+      }
+      throw (_b = this.refreshingDeferred) === null || _b === void 0 || _b.reject(error), error;
+    } finally {
+      this.refreshingDeferred = null, this._debug(debugName, "end");
+    }
+  }
+  async _notifyAllSubscribers(event, session, broadcast = !0) {
+    if (this._pendingInitNotifications !== null && broadcast) {
+      this._pendingInitNotifications.push({ event, session, broadcast });
+      return;
+    }
+    let debugName = `#_notifyAllSubscribers(${event})`;
+    this._debug(debugName, "begin", session, `broadcast = ${broadcast}`);
+    try {
+      if (this.broadcastChannel && broadcast)
+        this.broadcastChannel.postMessage({ event, session });
+      let errors = [], promises = Array.from(this.stateChangeEmitters.values()).map(async (x) => {
+        try {
+          await x.callback(event, session);
+        } catch (e) {
+          errors.push(e);
+        }
+      });
+      if (await Promise.all(promises), errors.length > 0) {
+        for (let i = 0;i < errors.length; i += 1)
+          console.error(errors[i]);
+        throw errors[0];
+      }
+    } finally {
+      this._debug(debugName, "end");
+    }
+  }
+  async _saveSession(session) {
+    this._debug("#_saveSession()", session), this.suppressGetSessionWarning = !0;
+    let sessionToProcess = Object.assign({}, session), userIsProxy = sessionToProcess.user && sessionToProcess.user.__isUserNotAvailableProxy === !0;
+    if (this.userStorage) {
+      if (!userIsProxy && sessionToProcess.user)
+        await setItemAsync(this.userStorage, this.storageKey + "-user", {
+          user: sessionToProcess.user
+        });
+      let mainSessionData = Object.assign({}, sessionToProcess);
+      delete mainSessionData.user;
+      let clonedMainSessionData = deepClone(mainSessionData);
+      await setItemAsync(this.storage, this.storageKey, clonedMainSessionData);
+    } else {
+      let clonedSession = deepClone(sessionToProcess);
+      await setItemAsync(this.storage, this.storageKey, clonedSession);
+    }
+  }
+  async _removeSession() {
+    if (this._sessionRemovalEpoch += 1, this._debug("#_removeSession()"), this.lastRefreshFailure = null, this.suppressGetSessionWarning = !1, await removeItemAsync(this.storage, this.storageKey), await removeAllPKCEVerifiers(this.storage, this.storageKey), await removeItemAsync(this.storage, this.storageKey + "-user"), this.userStorage)
+      await removeItemAsync(this.userStorage, this.storageKey + "-user");
+    await this._notifyAllSubscribers("SIGNED_OUT", null);
+  }
+  _removeVisibilityChangedCallback() {
+    this._debug("#_removeVisibilityChangedCallback()");
+    let callback = this.visibilityChangedCallback;
+    this.visibilityChangedCallback = null;
+    try {
+      if (callback && isBrowser() && (window === null || window === void 0 ? void 0 : window.removeEventListener))
+        window.removeEventListener("visibilitychange", callback);
+    } catch (e) {
+      console.error("removing visibilitychange callback failed", e);
+    }
+  }
+  async _startAutoRefresh() {
+    await this._stopAutoRefresh(), this._debug("#_startAutoRefresh()");
+    let ticker = setInterval(() => this._autoRefreshTokenTick(), AUTO_REFRESH_TICK_DURATION_MS);
+    if (this.autoRefreshTicker = ticker, ticker && typeof ticker === "object" && typeof ticker.unref === "function")
+      ticker.unref();
+    else if (typeof Deno < "u" && typeof Deno.unrefTimer === "function")
+      Deno.unrefTimer(ticker);
+    let timeout = setTimeout(async () => {
+      await this.initializePromise, await this._autoRefreshTokenTick();
+    }, 0);
+    if (this.autoRefreshTickTimeout = timeout, timeout && typeof timeout === "object" && typeof timeout.unref === "function")
+      timeout.unref();
+    else if (typeof Deno < "u" && typeof Deno.unrefTimer === "function")
+      Deno.unrefTimer(timeout);
+  }
+  async _stopAutoRefresh() {
+    this._debug("#_stopAutoRefresh()");
+    let ticker = this.autoRefreshTicker;
+    if (this.autoRefreshTicker = null, ticker)
+      clearInterval(ticker);
+    let timeout = this.autoRefreshTickTimeout;
+    if (this.autoRefreshTickTimeout = null, timeout)
+      clearTimeout(timeout);
+  }
+  async startAutoRefresh() {
+    this._removeVisibilityChangedCallback(), await this._startAutoRefresh();
+  }
+  async stopAutoRefresh() {
+    this._removeVisibilityChangedCallback(), await this._stopAutoRefresh();
+  }
+  async dispose() {
+    var _a;
+    this._removeVisibilityChangedCallback(), await this._stopAutoRefresh(), (_a = this.broadcastChannel) === null || _a === void 0 || _a.close(), this.broadcastChannel = null, this.stateChangeEmitters.clear();
+  }
+  async _autoRefreshTokenTick() {
+    if (this._debug("#_autoRefreshTokenTick()", "begin"), this.lock != null) {
+      try {
+        await this._acquireLock(0, async () => {
+          try {
+            let now = Date.now();
+            try {
+              return await this._useSession(async (result) => {
+                let { data: { session } } = result;
+                if (!session || !session.refresh_token || !session.expires_at) {
+                  this._debug("#_autoRefreshTokenTick()", "no session");
+                  return;
+                }
+                let expiresInTicks = Math.floor((session.expires_at * 1000 - now) / AUTO_REFRESH_TICK_DURATION_MS);
+                if (this._debug("#_autoRefreshTokenTick()", `access token expires in ${expiresInTicks} ticks, a tick lasts ${AUTO_REFRESH_TICK_DURATION_MS}ms, refresh threshold is ${AUTO_REFRESH_TICK_THRESHOLD} ticks`), expiresInTicks <= AUTO_REFRESH_TICK_THRESHOLD)
+                  await this._callRefreshToken(session.refresh_token);
+              });
+            } catch (e) {
+              console.error("Auto refresh tick failed with error. This is likely a transient error.", e);
+            }
+          } finally {
+            this._debug("#_autoRefreshTokenTick()", "end");
+          }
+        });
+      } catch (e) {
+        if (e instanceof LockAcquireTimeoutError)
+          this._debug("auto refresh token tick lock not available");
+        else
+          throw e;
+      }
+      return;
+    }
+    if (this.refreshingDeferred !== null) {
+      this._debug("#_autoRefreshTokenTick()", "refresh already in flight, skipping");
+      return;
+    }
+    try {
+      let now = Date.now();
+      try {
+        await this._useSession(async (result) => {
+          let { data: { session } } = result;
+          if (!session || !session.refresh_token || !session.expires_at) {
+            this._debug("#_autoRefreshTokenTick()", "no session");
+            return;
+          }
+          let expiresInTicks = Math.floor((session.expires_at * 1000 - now) / AUTO_REFRESH_TICK_DURATION_MS);
+          if (this._debug("#_autoRefreshTokenTick()", `access token expires in ${expiresInTicks} ticks, a tick lasts ${AUTO_REFRESH_TICK_DURATION_MS}ms, refresh threshold is ${AUTO_REFRESH_TICK_THRESHOLD} ticks`), expiresInTicks <= AUTO_REFRESH_TICK_THRESHOLD)
+            await this._callRefreshToken(session.refresh_token);
+        });
+      } catch (e) {
+        console.error("Auto refresh tick failed with error. This is likely a transient error.", e);
+      }
+    } finally {
+      this._debug("#_autoRefreshTokenTick()", "end");
+    }
+  }
+  async _handleVisibilityChange() {
+    if (this._debug("#_handleVisibilityChange()"), !isBrowser() || !(window === null || window === void 0 ? void 0 : window.addEventListener)) {
+      if (this.autoRefreshToken)
+        this.startAutoRefresh();
+      return !1;
+    }
+    try {
+      this.visibilityChangedCallback = async () => {
+        try {
+          await this._onVisibilityChanged(!1);
+        } catch (error) {
+          this._debug("#visibilityChangedCallback", "error", error);
+        }
+      }, window === null || window === void 0 || window.addEventListener("visibilitychange", this.visibilityChangedCallback), await this._onVisibilityChanged(!0);
+    } catch (error) {
+      console.error("_handleVisibilityChange", error);
+    }
+  }
+  async _onVisibilityChanged(calledFromInitialize) {
+    let methodName = `#_onVisibilityChanged(${calledFromInitialize})`;
+    if (this._debug(methodName, "visibilityState", document.visibilityState), document.visibilityState === "visible") {
+      if (this.autoRefreshToken)
+        this._startAutoRefresh();
+      if (!calledFromInitialize)
+        if (await this.initializePromise, this.lock != null)
+          await this._acquireLock(this.lockAcquireTimeout, async () => {
+            if (document.visibilityState !== "visible") {
+              this._debug(methodName, "acquired the lock to recover the session, but the browser visibilityState is no longer visible, aborting");
+              return;
+            }
+            await this._recoverAndRefresh();
+          });
+        else {
+          if (document.visibilityState !== "visible") {
+            this._debug(methodName, "visibilityState is no longer visible, skipping recovery");
+            return;
+          }
+          await this._recoverAndRefresh();
+        }
+    } else if (document.visibilityState === "hidden") {
+      if (this.autoRefreshToken)
+        this._stopAutoRefresh();
+    }
+  }
+  async _getUrlForProvider(url, provider, options) {
+    let redirectTo = options === null || options === void 0 ? void 0 : options.redirectTo, codeChallenge = null, codeChallengeMethod = null, flowId = null;
+    if (this.flowType === "pkce")
+      [codeChallenge, codeChallengeMethod, flowId] = await this._getCodeChallengeAndMethod(), redirectTo = this._maybeAppendFlowIdToRedirect(redirectTo, flowId);
+    let urlParams = [`provider=${encodeURIComponent(provider)}`];
+    if (redirectTo)
+      urlParams.push(`redirect_to=${encodeURIComponent(redirectTo)}`);
+    if (options === null || options === void 0 ? void 0 : options.scopes)
+      urlParams.push(`scopes=${encodeURIComponent(options.scopes)}`);
+    if (codeChallenge != null && codeChallengeMethod != null) {
+      let flowParams = new URLSearchParams({
+        code_challenge: `${encodeURIComponent(codeChallenge)}`,
+        code_challenge_method: `${encodeURIComponent(codeChallengeMethod)}`
+      });
+      urlParams.push(flowParams.toString());
+    }
+    if (options === null || options === void 0 ? void 0 : options.queryParams) {
+      let query = new URLSearchParams(options.queryParams);
+      urlParams.push(query.toString());
+    }
+    if (options === null || options === void 0 ? void 0 : options.skipBrowserRedirect)
+      urlParams.push(`skip_http_redirect=${options.skipBrowserRedirect}`);
+    return { url: `${url}?${urlParams.join("&")}`, flowId };
+  }
+  _maybeAppendFlowIdToRedirect(redirectTo, flowId) {
+    if (!redirectTo || !flowId || !this.experimental.appendPkceFlowIdToRedirects)
+      return redirectTo !== null && redirectTo !== void 0 ? redirectTo : void 0;
+    return appendFlowIdToRedirectTo(redirectTo, flowId);
+  }
+  async _getCodeChallengeAndMethod(isPasswordRecovery = !1) {
+    return getCodeChallengeAndMethod(this.storage, this.storageKey, isPasswordRecovery, (evictedFlowId) => this._debug("#_getCodeChallengeAndMethod()", "evicted oldest pending PKCE verifier slot", evictedFlowId));
+  }
+  async _unenroll(params) {
+    try {
+      return await this._useSession(async (result) => {
+        var _a;
+        let { data: sessionData, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        return await _request(this.fetch, "DELETE", `${this.url}/factors/${params.factorId}`, {
+          headers: this.headers,
+          jwt: (_a = sessionData === null || sessionData === void 0 ? void 0 : sessionData.session) === null || _a === void 0 ? void 0 : _a.access_token
+        });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _enroll(params) {
+    try {
+      return await this._useSession(async (result) => {
+        var _a, _b;
+        let { data: sessionData, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        let body = Object.assign({ friendly_name: params.friendlyName, factor_type: params.factorType }, params.factorType === "phone" ? { phone: params.phone } : params.factorType === "totp" ? { issuer: params.issuer } : {}), { data, error } = await _request(this.fetch, "POST", `${this.url}/factors`, {
+          body,
+          headers: this.headers,
+          jwt: (_a = sessionData === null || sessionData === void 0 ? void 0 : sessionData.session) === null || _a === void 0 ? void 0 : _a.access_token
+        });
+        if (error)
+          return this._returnResult({ data: null, error });
+        if (params.factorType === "totp" && data.type === "totp" && ((_b = data === null || data === void 0 ? void 0 : data.totp) === null || _b === void 0 ? void 0 : _b.qr_code))
+          data.totp.qr_code = `data:image/svg+xml;utf-8,${data.totp.qr_code}`;
+        return this._returnResult({ data, error: null });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _verify(params) {
+    let run = async () => {
+      try {
+        return await this._useSession(async (result) => {
+          var _a;
+          let { data: sessionData, error: sessionError } = result;
+          if (sessionError)
+            return this._returnResult({ data: null, error: sessionError });
+          let body = Object.assign({ challenge_id: params.challengeId }, "webauthn" in params ? {
+            webauthn: Object.assign(Object.assign({}, params.webauthn), { credential_response: params.webauthn.type === "create" ? serializeCredentialCreationResponse(params.webauthn.credential_response) : serializeCredentialRequestResponse(params.webauthn.credential_response) })
+          } : { code: params.code }), { data, error } = await _request(this.fetch, "POST", `${this.url}/factors/${params.factorId}/verify`, {
+            body,
+            headers: this.headers,
+            jwt: (_a = sessionData === null || sessionData === void 0 ? void 0 : sessionData.session) === null || _a === void 0 ? void 0 : _a.access_token
+          });
+          if (error)
+            return this._returnResult({ data: null, error });
+          return await this._saveSession(Object.assign({ expires_at: Math.round(Date.now() / 1000) + data.expires_in }, data)), await this._notifyAllSubscribers("MFA_CHALLENGE_VERIFIED", data), this._returnResult({ data, error });
+        });
+      } catch (error) {
+        if (isAuthError(error))
+          return this._returnResult({ data: null, error });
+        throw error;
+      }
+    };
+    if (this.lock != null)
+      return this._acquireLock(this.lockAcquireTimeout, run);
+    return run();
+  }
+  async _challenge(params) {
+    let run = async () => {
+      try {
+        return await this._useSession(async (result) => {
+          var _a;
+          let { data: sessionData, error: sessionError } = result;
+          if (sessionError)
+            return this._returnResult({ data: null, error: sessionError });
+          let response = await _request(this.fetch, "POST", `${this.url}/factors/${params.factorId}/challenge`, {
+            body: params,
+            headers: this.headers,
+            jwt: (_a = sessionData === null || sessionData === void 0 ? void 0 : sessionData.session) === null || _a === void 0 ? void 0 : _a.access_token
+          });
+          if (response.error)
+            return response;
+          let { data } = response;
+          if (data.type !== "webauthn")
+            return { data, error: null };
+          switch (data.webauthn.type) {
+            case "create":
+              return {
+                data: Object.assign(Object.assign({}, data), { webauthn: Object.assign(Object.assign({}, data.webauthn), { credential_options: Object.assign(Object.assign({}, data.webauthn.credential_options), { publicKey: deserializeCredentialCreationOptions(data.webauthn.credential_options.publicKey) }) }) }),
+                error: null
+              };
+            case "request":
+              return {
+                data: Object.assign(Object.assign({}, data), { webauthn: Object.assign(Object.assign({}, data.webauthn), { credential_options: Object.assign(Object.assign({}, data.webauthn.credential_options), { publicKey: deserializeCredentialRequestOptions(data.webauthn.credential_options.publicKey) }) }) }),
+                error: null
+              };
+          }
+        });
+      } catch (error) {
+        if (isAuthError(error))
+          return this._returnResult({ data: null, error });
+        throw error;
+      }
+    };
+    if (this.lock != null)
+      return this._acquireLock(this.lockAcquireTimeout, run);
+    return run();
+  }
+  async _challengeAndVerify(params) {
+    let { data: challengeData, error: challengeError } = await this._challenge({
+      factorId: params.factorId
+    });
+    if (challengeError)
+      return this._returnResult({ data: null, error: challengeError });
+    return await this._verify({
+      factorId: params.factorId,
+      challengeId: challengeData.id,
+      code: params.code
+    });
+  }
+  async _listFactors() {
+    var _a;
+    let { data: { user }, error: userError } = await this.getUser();
+    if (userError)
+      return { data: null, error: userError };
+    let data = {
+      all: [],
+      phone: [],
+      totp: [],
+      webauthn: [],
+      recovery_code: []
+    };
+    for (let factor of (_a = user === null || user === void 0 ? void 0 : user.factors) !== null && _a !== void 0 ? _a : [])
+      if (data.all.push(factor), factor.status === "verified" && factor.factor_type in data && Array.isArray(data[factor.factor_type]))
+        data[factor.factor_type].push(factor);
+    return {
+      data,
+      error: null
+    };
+  }
+  async _getAuthenticatorAssuranceLevel(jwt) {
+    var _a, _b, _c, _d;
+    if (jwt)
+      try {
+        let { payload } = decodeJWT(jwt), currentLevel = null;
+        if (payload.aal)
+          currentLevel = payload.aal;
+        let nextLevel = currentLevel, { data: { user }, error: userError } = await this.getUser(jwt);
+        if (userError)
+          return this._returnResult({ data: null, error: userError });
+        if (((_b = (_a = user === null || user === void 0 ? void 0 : user.factors) === null || _a === void 0 ? void 0 : _a.filter((factor) => factor.status === "verified")) !== null && _b !== void 0 ? _b : []).length > 0)
+          nextLevel = "aal2";
+        let currentAuthenticationMethods = payload.amr || [];
+        return { data: { currentLevel, nextLevel, currentAuthenticationMethods }, error: null };
+      } catch (error) {
+        if (isAuthError(error))
+          return this._returnResult({ data: null, error });
+        throw error;
+      }
+    let { data: { session }, error: sessionError } = await this.getSession();
+    if (sessionError)
+      return this._returnResult({ data: null, error: sessionError });
+    if (!session)
+      return {
+        data: { currentLevel: null, nextLevel: null, currentAuthenticationMethods: [] },
+        error: null
+      };
+    let { payload } = decodeJWT(session.access_token), currentLevel = null;
+    if (payload.aal)
+      currentLevel = payload.aal;
+    let nextLevel = currentLevel;
+    if (((_d = (_c = session.user.factors) === null || _c === void 0 ? void 0 : _c.filter((factor) => factor.status === "verified")) !== null && _d !== void 0 ? _d : []).length > 0)
+      nextLevel = "aal2";
+    let currentAuthenticationMethods = payload.amr || [];
+    return { data: { currentLevel, nextLevel, currentAuthenticationMethods }, error: null };
+  }
+  async _getRecoveryCodesStatus() {
+    assertRecoveryCodesExperimentalEnabled(this.experimental);
+    try {
+      return await this._useSession(async (result) => {
+        var _a;
+        let { data: sessionData, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        let { data, error } = await _request(this.fetch, "GET", `${this.url}/factors/recovery-codes`, {
+          headers: this.headers,
+          jwt: (_a = sessionData === null || sessionData === void 0 ? void 0 : sessionData.session) === null || _a === void 0 ? void 0 : _a.access_token
+        });
+        if (error)
+          return this._returnResult({ data: null, error });
+        return this._returnResult({ data, error: null });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _generateRecoveryCodes(params) {
+    assertRecoveryCodesExperimentalEnabled(this.experimental);
+    try {
+      return await this._useSession(async (result) => {
+        var _a;
+        let { data: sessionData, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        let { data, error } = await _request(this.fetch, "POST", `${this.url}/factors/recovery-codes`, {
+          body: (params === null || params === void 0 ? void 0 : params.friendlyName) ? { friendly_name: params.friendlyName } : void 0,
+          headers: this.headers,
+          jwt: (_a = sessionData === null || sessionData === void 0 ? void 0 : sessionData.session) === null || _a === void 0 ? void 0 : _a.access_token
+        });
+        if (error)
+          return this._returnResult({ data: null, error });
+        return this._returnResult({ data, error: null });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _verifyRecoveryCode(params) {
+    assertRecoveryCodesExperimentalEnabled(this.experimental);
+    let run = async () => {
+      try {
+        return await this._useSession(async (result) => {
+          var _a;
+          let { data: sessionData, error: sessionError } = result;
+          if (sessionError)
+            return this._returnResult({ data: null, error: sessionError });
+          let { data, error } = await _request(this.fetch, "POST", `${this.url}/factors/recovery-codes/verify`, {
+            body: { code: params.code },
+            headers: this.headers,
+            jwt: (_a = sessionData === null || sessionData === void 0 ? void 0 : sessionData.session) === null || _a === void 0 ? void 0 : _a.access_token
+          });
+          if (error)
+            return this._returnResult({ data: null, error });
+          let session = Object.assign({ expires_at: expiresAt(data.expires_in) }, data);
+          return await this._saveSession(session), await this._notifyAllSubscribers("MFA_CHALLENGE_VERIFIED", session), this._returnResult({ data, error: null });
+        });
+      } catch (error) {
+        if (isAuthError(error))
+          return this._returnResult({ data: null, error });
+        throw error;
+      }
+    };
+    if (this.lock != null)
+      return this._acquireLock(this.lockAcquireTimeout, run);
+    return run();
+  }
+  async _regenerateRecoveryCodes() {
+    assertRecoveryCodesExperimentalEnabled(this.experimental);
+    try {
+      return await this._useSession(async (result) => {
+        var _a;
+        let { data: sessionData, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        let { data, error } = await _request(this.fetch, "POST", `${this.url}/factors/recovery-codes/regenerate`, {
+          headers: this.headers,
+          jwt: (_a = sessionData === null || sessionData === void 0 ? void 0 : sessionData.session) === null || _a === void 0 ? void 0 : _a.access_token
+        });
+        if (error)
+          return this._returnResult({ data: null, error });
+        return this._returnResult({ data, error: null });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _unenrollRecoveryCodes() {
+    assertRecoveryCodesExperimentalEnabled(this.experimental);
+    try {
+      return await this._useSession(async (result) => {
+        var _a;
+        let { data: sessionData, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        let { data, error } = await _request(this.fetch, "DELETE", `${this.url}/factors/recovery-codes`, {
+          headers: this.headers,
+          jwt: (_a = sessionData === null || sessionData === void 0 ? void 0 : sessionData.session) === null || _a === void 0 ? void 0 : _a.access_token
+        });
+        if (error)
+          return this._returnResult({ data: null, error });
+        return this._returnResult({ data, error: null });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _getAuthorizationDetails(authorizationId) {
+    try {
+      return await this._useSession(async (result) => {
+        let { data: { session }, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        if (!session)
+          return this._returnResult({ data: null, error: new AuthSessionMissingError });
+        return await _request(this.fetch, "GET", `${this.url}/oauth/authorizations/${authorizationId}`, {
+          headers: this.headers,
+          jwt: session.access_token,
+          xform: (data) => ({ data, error: null })
+        });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _approveAuthorization(authorizationId, options) {
+    try {
+      return await this._useSession(async (result) => {
+        let { data: { session }, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        if (!session)
+          return this._returnResult({ data: null, error: new AuthSessionMissingError });
+        let response = await _request(this.fetch, "POST", `${this.url}/oauth/authorizations/${authorizationId}/consent`, {
+          headers: this.headers,
+          jwt: session.access_token,
+          body: { action: "approve" },
+          xform: (data) => ({ data, error: null })
+        });
+        if (response.data && response.data.redirect_url) {
+          if (isBrowser() && !(options === null || options === void 0 ? void 0 : options.skipBrowserRedirect))
+            window.location.assign(response.data.redirect_url);
+        }
+        return response;
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _denyAuthorization(authorizationId, options) {
+    try {
+      return await this._useSession(async (result) => {
+        let { data: { session }, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        if (!session)
+          return this._returnResult({ data: null, error: new AuthSessionMissingError });
+        let response = await _request(this.fetch, "POST", `${this.url}/oauth/authorizations/${authorizationId}/consent`, {
+          headers: this.headers,
+          jwt: session.access_token,
+          body: { action: "deny" },
+          xform: (data) => ({ data, error: null })
+        });
+        if (response.data && response.data.redirect_url) {
+          if (isBrowser() && !(options === null || options === void 0 ? void 0 : options.skipBrowserRedirect))
+            window.location.assign(response.data.redirect_url);
+        }
+        return response;
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _listOAuthGrants() {
+    try {
+      return await this._useSession(async (result) => {
+        let { data: { session }, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        if (!session)
+          return this._returnResult({ data: null, error: new AuthSessionMissingError });
+        return await _request(this.fetch, "GET", `${this.url}/user/oauth/grants`, {
+          headers: this.headers,
+          jwt: session.access_token,
+          xform: (data) => ({ data, error: null })
+        });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _revokeOAuthGrant(options) {
+    try {
+      return await this._useSession(async (result) => {
+        let { data: { session }, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        if (!session)
+          return this._returnResult({ data: null, error: new AuthSessionMissingError });
+        return await _request(this.fetch, "DELETE", `${this.url}/user/oauth/grants`, {
+          headers: this.headers,
+          jwt: session.access_token,
+          query: { client_id: options.clientId },
+          noResolveJson: !0
+        }), { data: {}, error: null };
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async fetchJwk(kid, jwks = { keys: [] }) {
+    let jwk = jwks.keys.find((key) => key.kid === kid);
+    if (jwk)
+      return jwk;
+    let now = Date.now();
+    if (jwk = this.jwks.keys.find((key) => key.kid === kid), jwk && this.jwks_cached_at + JWKS_TTL > now)
+      return jwk;
+    let { data, error } = await _request(this.fetch, "GET", `${this.url}/.well-known/jwks.json`, {
+      headers: this.headers
+    });
+    if (error)
+      throw error;
+    if (!data.keys || data.keys.length === 0)
+      return null;
+    if (this.jwks = data, this.jwks_cached_at = now, jwk = data.keys.find((key) => key.kid === kid), !jwk)
+      return null;
+    return jwk;
+  }
+  async getClaims(jwt, options = {}) {
+    try {
+      let token = jwt;
+      if (!token) {
+        let { data, error } = await this.getSession();
+        if (error || !data.session)
+          return this._returnResult({ data: null, error });
+        token = data.session.access_token;
+      }
+      let { header, payload, signature, raw: { header: rawHeader, payload: rawPayload } } = decodeJWT(token);
+      if (!(options === null || options === void 0 ? void 0 : options.allowExpired))
+        try {
+          validateExp(payload.exp);
+        } catch (e) {
+          throw new AuthInvalidJwtError(e instanceof Error ? e.message : "JWT validation failed");
+        }
+      let signingKey = !header.alg || header.alg.startsWith("HS") || !header.kid || !(("crypto" in globalThis) && ("subtle" in globalThis.crypto)) ? null : await this.fetchJwk(header.kid, (options === null || options === void 0 ? void 0 : options.keys) ? { keys: options.keys } : options === null || options === void 0 ? void 0 : options.jwks);
+      if (!signingKey) {
+        let { error } = await this.getUser(token);
+        if (error)
+          throw error;
+        return {
+          data: {
+            claims: payload,
+            header,
+            signature
+          },
+          error: null
+        };
+      }
+      let algorithm = getAlgorithm(header.alg), publicKey = await crypto.subtle.importKey("jwk", signingKey, algorithm, !0, [
+        "verify"
+      ]);
+      if (!await crypto.subtle.verify(algorithm, publicKey, signature, stringToUint8Array(`${rawHeader}.${rawPayload}`)))
+        throw new AuthInvalidJwtError("Invalid JWT signature");
+      return {
+        data: {
+          claims: payload,
+          header,
+          signature
+        },
+        error: null
+      };
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async signInWithPasskey(credentials) {
+    var _a, _b, _c, _d;
+    try {
+      if (!browserSupportsWebAuthn())
+        return this._returnResult({
+          data: null,
+          error: new AuthUnknownError("Browser does not support WebAuthn", null)
+        });
+      let { data: options, error: optionsError } = await this._startPasskeyAuthentication({
+        options: { captchaToken: (_a = credentials === null || credentials === void 0 ? void 0 : credentials.options) === null || _a === void 0 ? void 0 : _a.captchaToken }
+      });
+      if (optionsError || !options)
+        return this._returnResult({ data: null, error: optionsError });
+      let publicKeyOptions = deserializeCredentialRequestOptions(options.options), signal = (_c = (_b = credentials === null || credentials === void 0 ? void 0 : credentials.options) === null || _b === void 0 ? void 0 : _b.signal) !== null && _c !== void 0 ? _c : webAuthnAbortService.createNewAbortSignal(), { data: credential, error: credentialError } = await getCredential({
+        publicKey: publicKeyOptions,
+        signal,
+        mediation: (_d = credentials === null || credentials === void 0 ? void 0 : credentials.options) === null || _d === void 0 ? void 0 : _d.mediation
+      });
+      if (credentialError || !credential)
+        return this._returnResult({
+          data: null,
+          error: credentialError !== null && credentialError !== void 0 ? credentialError : new AuthUnknownError("WebAuthn ceremony failed", null)
+        });
+      let serialized = serializeCredentialRequestResponse(credential);
+      return this._verifyPasskeyAuthentication({
+        challengeId: options.challenge_id,
+        credential: serialized
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async registerPasskey(credentials) {
+    var _a, _b;
+    try {
+      if (!browserSupportsWebAuthn())
+        return this._returnResult({
+          data: null,
+          error: new AuthUnknownError("Browser does not support WebAuthn", null)
+        });
+      let { data: options, error: optionsError } = await this._startPasskeyRegistration();
+      if (optionsError || !options)
+        return this._returnResult({ data: null, error: optionsError });
+      let publicKeyOptions = deserializeCredentialCreationOptions(options.options), signal = (_b = (_a = credentials === null || credentials === void 0 ? void 0 : credentials.options) === null || _a === void 0 ? void 0 : _a.signal) !== null && _b !== void 0 ? _b : webAuthnAbortService.createNewAbortSignal(), { data: credential, error: credentialError } = await createCredential({
+        publicKey: publicKeyOptions,
+        signal
+      });
+      if (credentialError || !credential)
+        return this._returnResult({
+          data: null,
+          error: credentialError !== null && credentialError !== void 0 ? credentialError : new AuthUnknownError("WebAuthn ceremony failed", null)
+        });
+      let serialized = serializeCredentialCreationResponse(credential);
+      return this._verifyPasskeyRegistration({
+        challengeId: options.challenge_id,
+        credential: serialized
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _startPasskeyRegistration() {
+    try {
+      return await this._useSession(async (result) => {
+        let { data: { session }, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        if (!session)
+          return this._returnResult({ data: null, error: new AuthSessionMissingError });
+        let { data, error } = await _request(this.fetch, "POST", `${this.url}/passkeys/registration/options`, {
+          headers: this.headers,
+          jwt: session.access_token,
+          body: {}
+        });
+        if (error)
+          return this._returnResult({ data: null, error });
+        return this._returnResult({ data, error: null });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _verifyPasskeyRegistration(params) {
+    try {
+      return await this._useSession(async (result) => {
+        let { data: { session }, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        if (!session)
+          return this._returnResult({ data: null, error: new AuthSessionMissingError });
+        let { data, error } = await _request(this.fetch, "POST", `${this.url}/passkeys/registration/verify`, {
+          headers: this.headers,
+          jwt: session.access_token,
+          body: {
+            challenge_id: params.challengeId,
+            credential: params.credential
+          }
+        });
+        if (error)
+          return this._returnResult({ data: null, error });
+        return this._returnResult({ data, error: null });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _startPasskeyAuthentication(params) {
+    var _a;
+    try {
+      let { data, error } = await _request(this.fetch, "POST", `${this.url}/passkeys/authentication/options`, {
+        headers: this.headers,
+        body: {
+          gotrue_meta_security: { captcha_token: (_a = params === null || params === void 0 ? void 0 : params.options) === null || _a === void 0 ? void 0 : _a.captchaToken }
+        }
+      });
+      if (error)
+        return this._returnResult({ data: null, error });
+      return this._returnResult({ data, error: null });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _verifyPasskeyAuthentication(params) {
+    try {
+      let { data, error } = await _request(this.fetch, "POST", `${this.url}/passkeys/authentication/verify`, {
+        headers: this.headers,
+        body: {
+          challenge_id: params.challengeId,
+          credential: params.credential
+        },
+        xform: _sessionResponse
+      });
+      if (error)
+        return this._returnResult({ data: null, error });
+      if (data.session)
+        await this._saveSession(data.session), await this._notifyAllSubscribers("SIGNED_IN", data.session);
+      return this._returnResult({ data, error: null });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _listPasskeys() {
+    try {
+      return await this._useSession(async (result) => {
+        let { data: { session }, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        if (!session)
+          return this._returnResult({ data: null, error: new AuthSessionMissingError });
+        let { data, error } = await _request(this.fetch, "GET", `${this.url}/passkeys`, {
+          headers: this.headers,
+          jwt: session.access_token,
+          xform: (data) => ({ data, error: null })
+        });
+        if (error)
+          return this._returnResult({ data: null, error });
+        return this._returnResult({ data, error: null });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _updatePasskey(params) {
+    try {
+      return await this._useSession(async (result) => {
+        let { data: { session }, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        if (!session)
+          return this._returnResult({ data: null, error: new AuthSessionMissingError });
+        let { data, error } = await _request(this.fetch, "PATCH", `${this.url}/passkeys/${params.passkeyId}`, {
+          headers: this.headers,
+          jwt: session.access_token,
+          body: { friendly_name: params.friendlyName }
+        });
+        if (error)
+          return this._returnResult({ data: null, error });
+        return this._returnResult({ data, error: null });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+  async _deletePasskey(params) {
+    try {
+      return await this._useSession(async (result) => {
+        let { data: { session }, error: sessionError } = result;
+        if (sessionError)
+          return this._returnResult({ data: null, error: sessionError });
+        if (!session)
+          return this._returnResult({ data: null, error: new AuthSessionMissingError });
+        let { error } = await _request(this.fetch, "DELETE", `${this.url}/passkeys/${params.passkeyId}`, {
+          headers: this.headers,
+          jwt: session.access_token,
+          noResolveJson: !0
+        });
+        if (error)
+          return this._returnResult({ data: null, error });
+        return this._returnResult({ data: null, error: null });
+      });
+    } catch (error) {
+      if (isAuthError(error))
+        return this._returnResult({ data: null, error });
+      throw error;
+    }
+  }
+}
+GoTrueClient.nextInstanceID = {};
+var GoTrueClient_default = GoTrueClient;
+
+// ../persist/node_modules/@supabase/auth-js/dist/module/AuthClient.js
+var AuthClient = GoTrueClient_default, AuthClient_default = AuthClient;
+// ../persist/node_modules/@supabase/supabase-js/dist/index.mjs
+var version4 = "2.118.0", JS_ENV = "", JS_RUNTIME_VERSION;
+if (typeof Deno < "u")
+  JS_ENV = "deno", JS_RUNTIME_VERSION = (_Deno$version = Deno.version) === null || _Deno$version === void 0 ? void 0 : _Deno$version.deno;
+else if (typeof document < "u")
+  JS_ENV = "web";
+else if (typeof navigator < "u" && navigator.product === "ReactNative")
+  JS_ENV = "react-native";
+else {
+  JS_ENV = "node";
+  let _process = globalThis.process;
+  JS_RUNTIME_VERSION = _process === null || _process === void 0 || (_process$version = _process.version) === null || _process$version === void 0 ? void 0 : _process$version.replace(/^v/, "");
+}
+var _Deno$version, _process$version, _runtimeMeta = [`runtime=${JS_ENV}`];
+if (JS_RUNTIME_VERSION)
+  _runtimeMeta.push(`runtime-version=${JS_RUNTIME_VERSION}`);
+var DEFAULT_HEADERS3 = { "X-Client-Info": `supabase-js/${version4}; ${_runtimeMeta.join("; ")}` }, DEFAULT_GLOBAL_OPTIONS = { headers: DEFAULT_HEADERS3 }, DEFAULT_DB_OPTIONS = { schema: "public" }, DEFAULT_AUTH_OPTIONS = {
+  autoRefreshToken: !0,
+  persistSession: !0,
+  detectSessionInUrl: !0,
+  flowType: "implicit"
+}, DEFAULT_REALTIME_OPTIONS = {}, DEFAULT_TRACE_PROPAGATION_OPTIONS = {
+  enabled: !1,
+  respectSamplingDecision: !0
+};
+function parseTraceParent(traceparent) {
+  if (!traceparent || typeof traceparent !== "string")
+    return null;
+  let parts = traceparent.split("-");
+  if (parts.length !== 4)
+    return null;
+  let [version$1, traceId, parentId, traceFlags] = parts;
+  if (version$1.length !== 2 || traceId.length !== 32 || parentId.length !== 16 || traceFlags.length !== 2)
+    return null;
+  let hexRegex = /^[0-9a-f]+$/i;
+  if (!hexRegex.test(version$1) || !hexRegex.test(traceId) || !hexRegex.test(parentId) || !hexRegex.test(traceFlags))
+    return null;
+  if (traceId === "00000000000000000000000000000000" || parentId === "0000000000000000")
+    return null;
+  return {
+    version: version$1,
+    traceId,
+    parentId,
+    traceFlags,
+    isSampled: (parseInt(traceFlags, 16) & 1) === 1
+  };
+}
+function shouldPropagateToTarget(targetUrl, targets) {
+  if (!targetUrl || !targets || targets.length === 0)
+    return !1;
+  let url;
+  if (targetUrl instanceof URL)
+    url = targetUrl;
+  else
+    try {
+      url = new URL(targetUrl);
+    } catch (error) {
+      return !1;
+    }
+  for (let target of targets)
+    try {
+      if (typeof target === "string") {
+        if (matchStringTarget(url.hostname, target))
+          return !0;
+      } else if (target instanceof RegExp) {
+        if (target.test(url.hostname))
+          return !0;
+      } else if (typeof target === "function") {
+        if (target(url))
+          return !0;
+      }
+    } catch (error) {
+      continue;
+    }
+  return !1;
+}
+function matchStringTarget(hostname, target) {
+  if (target === hostname)
+    return !0;
+  if (target.startsWith("*.")) {
+    let domain = target.slice(2);
+    if (hostname.endsWith(domain)) {
+      if (hostname === domain || hostname.endsWith("." + domain))
+        return !0;
+    }
+  }
+  return !1;
+}
+function getDefaultPropagationTargets(supabaseUrl) {
+  let targets = [];
+  try {
+    let url = new URL(supabaseUrl);
+    targets.push(url.hostname);
+  } catch (error) {}
+  return targets.push("*.supabase.co", "*.supabase.in"), targets.push("localhost", "127.0.0.1", "[::1]"), targets;
+}
+function _typeof3(o) {
+  return _typeof3 = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(o$1) {
+    return typeof o$1;
+  } : function(o$1) {
+    return o$1 && typeof Symbol == "function" && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
+  }, _typeof3(o);
+}
+function toPrimitive3(t, r) {
+  if (_typeof3(t) != "object" || !t)
+    return t;
+  var e = t[Symbol.toPrimitive];
+  if (e !== void 0) {
+    var i = e.call(t, r || "default");
+    if (_typeof3(i) != "object")
+      return i;
+    throw TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (r === "string" ? String : Number)(t);
+}
+function toPropertyKey3(t) {
+  var i = toPrimitive3(t, "string");
+  return _typeof3(i) == "symbol" ? i : i + "";
+}
+function _defineProperty3(e, r, t) {
+  return (r = toPropertyKey3(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
+}
+function ownKeys3(e, r) {
+  var t = Object.keys(e);
+  if (Object.getOwnPropertySymbols) {
+    var o = Object.getOwnPropertySymbols(e);
+    r && (o = o.filter(function(r$1) {
+      return Object.getOwnPropertyDescriptor(e, r$1).enumerable;
+    })), t.push.apply(t, o);
+  }
+  return t;
+}
+function _objectSpread23(e) {
+  for (var r = 1;r < arguments.length; r++) {
+    var t = arguments[r] != null ? arguments[r] : {};
+    r % 2 ? ownKeys3(Object(t), !0).forEach(function(r$1) {
+      _defineProperty3(e, r$1, t[r$1]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys3(Object(t)).forEach(function(r$1) {
+      Object.defineProperty(e, r$1, Object.getOwnPropertyDescriptor(t, r$1));
+    });
+  }
+  return e;
+}
+var resolveFetch4 = (customFetch) => {
+  if (customFetch)
+    return (...args) => customFetch(...args);
+  return (...args) => fetch(...args);
+}, resolveHeadersConstructor = () => Headers, isNewApiKey = (key) => key.startsWith("sb_publishable_") || key.startsWith("sb_secret_"), TEMP_KEY_PREFIX = "sb_temp_", warnedKeySubtypes = /* @__PURE__ */ new Set, checkApiKeyFormat = (key) => {
+  var _key$match$, _key$match;
+  if (!key.startsWith("sb_") || isNewApiKey(key) || key.startsWith(TEMP_KEY_PREFIX))
+    return;
+  let subtype = (_key$match$ = (_key$match = key.match(/^sb_[a-zA-Z0-9]+_/)) === null || _key$match === void 0 ? void 0 : _key$match[0]) !== null && _key$match$ !== void 0 ? _key$match$ : "unknown";
+  if (warnedKeySubtypes.has(subtype))
+    return;
+  warnedKeySubtypes.add(subtype), console.warn("@supabase/supabase-js: Unrecognized Supabase API key format. The client will proceed and send this key as-is; if you see authentication errors you may need to upgrade @supabase/supabase-js to a version that recognizes this key type.");
+}, fetchWithAuth = (supabaseKey, supabaseUrl, getAccessToken, customFetch, tracePropagationOptions, options) => {
+  let fetch$1 = resolveFetch4(customFetch), HeadersConstructor = resolveHeadersConstructor(), traceEnabled = (tracePropagationOptions === null || tracePropagationOptions === void 0 ? void 0 : tracePropagationOptions.enabled) === !0, respectSampling = (tracePropagationOptions === null || tracePropagationOptions === void 0 ? void 0 : tracePropagationOptions.respectSamplingDecision) !== !1, traceTargets = traceEnabled ? getDefaultPropagationTargets(supabaseUrl) : null, allowKeyAsBearer = !((options === null || options === void 0 ? void 0 : options.omitApiKeyAsBearer) && isNewApiKey(supabaseKey));
+  return async (input, init) => {
+    let realToken = await getAccessToken(), headers = new HeadersConstructor(init === null || init === void 0 ? void 0 : init.headers);
+    if (!headers.has("apikey"))
+      headers.set("apikey", supabaseKey);
+    if (!headers.has("Authorization")) {
+      let bearer = realToken !== null && realToken !== void 0 ? realToken : allowKeyAsBearer ? supabaseKey : null;
+      if (bearer)
+        headers.set("Authorization", `Bearer ${bearer}`);
+    }
+    if (traceTargets) {
+      let traceHeaders = getTraceHeaders(input, traceTargets, respectSampling);
+      if (traceHeaders) {
+        if (traceHeaders.traceparent && !headers.has("traceparent"))
+          headers.set("traceparent", traceHeaders.traceparent);
+        if (traceHeaders.tracestate && !headers.has("tracestate"))
+          headers.set("tracestate", traceHeaders.tracestate);
+        if (traceHeaders.baggage && !headers.has("baggage"))
+          headers.set("baggage", traceHeaders.baggage);
+      }
+    }
+    return fetch$1(input, _objectSpread23(_objectSpread23({}, init), {}, { headers }));
+  };
+}, warnedMissingTracingRuntime = !1, warnedNonW3CPropagator = !1;
+function getTraceHeaders(input, targets, respectSampling) {
+  let extractTraceContext = getTraceContextExtractor();
+  if (!extractTraceContext) {
+    if (!warnedMissingTracingRuntime)
+      warnedMissingTracingRuntime = !0, console.warn("@supabase/supabase-js: tracePropagation is enabled but the tracing runtime is not loaded, so trace headers will not be attached. Add `import '@supabase/supabase-js/tracing'` at your application entry point (requires the OpenTelemetry API package to be installed). The CDN/UMD build does not support trace propagation.");
+    return null;
+  }
+  if (!shouldPropagateToTarget(typeof input === "string" ? input : input instanceof URL ? input : input.url, targets))
+    return null;
+  let traceContext = extractTraceContext();
+  if (!traceContext || !traceContext.traceparent) {
+    var _traceContext$carrier;
+    if ((traceContext === null || traceContext === void 0 || (_traceContext$carrier = traceContext.carrierKeys) === null || _traceContext$carrier === void 0 ? void 0 : _traceContext$carrier.length) && !warnedNonW3CPropagator) {
+      warnedNonW3CPropagator = !0;
+      let sentryHint = traceContext.carrierKeys.includes("sentry-trace") ? " Sentry detected: set `propagateTraceparent: true` in Sentry.init() to emit it." : " Configure your tracing SDK to emit W3C trace context on outgoing requests.";
+      console.warn(`@supabase/supabase-js: tracePropagation is enabled and a tracing SDK is active, but its propagator wrote [${traceContext.carrierKeys.join(", ")}] and no W3C traceparent header, so trace headers will not be attached.` + sentryHint);
+    }
+    return null;
+  }
+  if (respectSampling) {
+    let parsed = parseTraceParent(traceContext.traceparent);
+    if (parsed && !parsed.isSampled)
+      return { traceparent: traceContext.traceparent };
+  }
+  return traceContext;
+}
+function normalizeTracePropagation(value) {
+  return typeof value === "boolean" ? { enabled: value } : value;
+}
+function ensureTrailingSlash(url) {
+  return url.endsWith("/") ? url : url + "/";
+}
+var warnedTopLevelSchema = !1;
+function checkTopLevelSchemaOption(options) {
+  if (warnedTopLevelSchema)
+    return;
+  if (typeof options !== "object" || options === null || !("schema" in options) || options.schema === void 0)
+    return;
+  warnedTopLevelSchema = !0, console.warn(`@supabase/supabase-js: The "schema" option must be nested under "db", e.g. createClient(url, key, { db: { schema: 'myschema' } }). A top-level "schema" is ignored and queries go to the default schema.`);
+}
+function applySettingDefaults(options, defaults) {
+  var _DEFAULT_GLOBAL_OPTIO, _globalOptions$header, _ref, _tracePropagationOpti, _ref2, _tracePropagationOpti2;
+  let { db: dbOptions, auth: authOptions, realtime: realtimeOptions, global: globalOptions } = options, { db: DEFAULT_DB_OPTIONS$1, auth: DEFAULT_AUTH_OPTIONS$1, realtime: DEFAULT_REALTIME_OPTIONS$1, global: DEFAULT_GLOBAL_OPTIONS$1 } = defaults, tracePropagationOptions = normalizeTracePropagation(options.tracePropagation), DEFAULT_TRACE_PROPAGATION_OPTIONS$1 = normalizeTracePropagation(defaults.tracePropagation), result = {
+    db: _objectSpread23(_objectSpread23({}, DEFAULT_DB_OPTIONS$1), dbOptions),
+    auth: _objectSpread23(_objectSpread23({}, DEFAULT_AUTH_OPTIONS$1), authOptions),
+    realtime: _objectSpread23(_objectSpread23({}, DEFAULT_REALTIME_OPTIONS$1), realtimeOptions),
+    storage: {},
+    global: _objectSpread23(_objectSpread23(_objectSpread23({}, DEFAULT_GLOBAL_OPTIONS$1), globalOptions), {}, { headers: _objectSpread23(_objectSpread23({}, (_DEFAULT_GLOBAL_OPTIO = DEFAULT_GLOBAL_OPTIONS$1 === null || DEFAULT_GLOBAL_OPTIONS$1 === void 0 ? void 0 : DEFAULT_GLOBAL_OPTIONS$1.headers) !== null && _DEFAULT_GLOBAL_OPTIO !== void 0 ? _DEFAULT_GLOBAL_OPTIO : {}), (_globalOptions$header = globalOptions === null || globalOptions === void 0 ? void 0 : globalOptions.headers) !== null && _globalOptions$header !== void 0 ? _globalOptions$header : {}) }),
+    tracePropagation: {
+      enabled: (_ref = (_tracePropagationOpti = tracePropagationOptions === null || tracePropagationOptions === void 0 ? void 0 : tracePropagationOptions.enabled) !== null && _tracePropagationOpti !== void 0 ? _tracePropagationOpti : DEFAULT_TRACE_PROPAGATION_OPTIONS$1 === null || DEFAULT_TRACE_PROPAGATION_OPTIONS$1 === void 0 ? void 0 : DEFAULT_TRACE_PROPAGATION_OPTIONS$1.enabled) !== null && _ref !== void 0 ? _ref : !1,
+      respectSamplingDecision: (_ref2 = (_tracePropagationOpti2 = tracePropagationOptions === null || tracePropagationOptions === void 0 ? void 0 : tracePropagationOptions.respectSamplingDecision) !== null && _tracePropagationOpti2 !== void 0 ? _tracePropagationOpti2 : DEFAULT_TRACE_PROPAGATION_OPTIONS$1 === null || DEFAULT_TRACE_PROPAGATION_OPTIONS$1 === void 0 ? void 0 : DEFAULT_TRACE_PROPAGATION_OPTIONS$1.respectSamplingDecision) !== null && _ref2 !== void 0 ? _ref2 : !0
+    },
+    accessToken: async () => ""
+  };
+  if (options.accessToken)
+    result.accessToken = options.accessToken;
+  else
+    delete result.accessToken;
+  return result;
+}
+function validateSupabaseUrl(supabaseUrl) {
+  let trimmedUrl = supabaseUrl === null || supabaseUrl === void 0 ? void 0 : supabaseUrl.trim();
+  if (!trimmedUrl)
+    throw Error("supabaseUrl is required.");
+  if (!trimmedUrl.match(/^https?:\/\//i))
+    throw Error("Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.");
+  try {
+    return new URL(ensureTrailingSlash(trimmedUrl));
+  } catch (_unused) {
+    throw Error("Invalid supabaseUrl: Provided URL is malformed.");
+  }
+}
+var SupabaseAuthClient = class extends AuthClient_default {
+  constructor(options) {
+    super(options);
+  }
+}, SupabaseClient = class {
+  constructor(supabaseUrl, supabaseKey, options) {
+    var _settings$auth$storag, _settings$global$head;
+    this.supabaseUrl = supabaseUrl, this.supabaseKey = supabaseKey;
+    let baseUrl = validateSupabaseUrl(supabaseUrl);
+    if (!supabaseKey)
+      throw Error("supabaseKey is required.");
+    checkApiKeyFormat(supabaseKey), checkTopLevelSchemaOption(options), this.realtimeUrl = new URL("realtime/v1", baseUrl), this.realtimeUrl.protocol = this.realtimeUrl.protocol.replace("http", "ws"), this.authUrl = new URL("auth/v1", baseUrl), this.storageUrl = new URL("storage/v1", baseUrl), this.functionsUrl = new URL("functions/v1", baseUrl);
+    let defaultStorageKey = `sb-${baseUrl.hostname.split(".")[0]}-auth-token`, DEFAULTS = {
+      db: DEFAULT_DB_OPTIONS,
+      realtime: DEFAULT_REALTIME_OPTIONS,
+      auth: _objectSpread23(_objectSpread23({}, DEFAULT_AUTH_OPTIONS), {}, { storageKey: defaultStorageKey }),
+      global: DEFAULT_GLOBAL_OPTIONS,
+      tracePropagation: DEFAULT_TRACE_PROPAGATION_OPTIONS
+    }, settings = applySettingDefaults(options !== null && options !== void 0 ? options : {}, DEFAULTS);
+    if (this.settings = settings, this.storageKey = (_settings$auth$storag = settings.auth.storageKey) !== null && _settings$auth$storag !== void 0 ? _settings$auth$storag : "", this.headers = (_settings$global$head = settings.global.headers) !== null && _settings$global$head !== void 0 ? _settings$global$head : {}, !settings.accessToken) {
+      var _settings$auth;
+      this.auth = this._initSupabaseAuthClient((_settings$auth = settings.auth) !== null && _settings$auth !== void 0 ? _settings$auth : {}, this.headers, settings.global.fetch);
+    } else
+      this.accessToken = settings.accessToken, this.auth = new Proxy({}, { get: (_, prop) => {
+        throw Error(`@supabase/supabase-js: Supabase Client is configured with the accessToken option, accessing supabase.auth.${String(prop)} is not possible`);
+      } });
+    if (this.fetch = fetchWithAuth(supabaseKey, supabaseUrl, this._getSessionToken.bind(this), settings.global.fetch, settings.tracePropagation), this.functionsFetch = fetchWithAuth(supabaseKey, supabaseUrl, this._getSessionToken.bind(this), settings.global.fetch, settings.tracePropagation, { omitApiKeyAsBearer: !0 }), this.realtime = this._initRealtimeClient(_objectSpread23({
+      headers: this.headers,
+      accessToken: this._getAccessToken.bind(this),
+      fetch: this.fetch
+    }, settings.realtime)), this.accessToken)
+      Promise.resolve(this.accessToken()).then((token) => this.realtime.setAuth(token)).catch((e) => console.warn("Failed to set initial Realtime auth token:", e));
+    if (this.rest = new PostgrestClient(new URL("rest/v1", baseUrl).href, {
+      headers: this.headers,
+      schema: settings.db.schema,
+      fetch: this.fetch,
+      timeout: settings.db.timeout,
+      urlLengthLimit: settings.db.urlLengthLimit,
+      retry: settings.db.retry
+    }), this.storage = new StorageClient(this.storageUrl.href, this.headers, this.fetch, options === null || options === void 0 ? void 0 : options.storage), !settings.accessToken)
+      this._listenForAuthEvents();
+  }
+  get functions() {
+    return new FunctionsClient(this.functionsUrl.href, {
+      headers: this.headers,
+      customFetch: this.functionsFetch
+    });
+  }
+  from(relation) {
+    return this.rest.from(relation);
+  }
+  schema(schema) {
+    return this.rest.schema(schema);
+  }
+  getOpenApiSpec() {
+    return this.rest.getOpenApiSpec();
+  }
+  rpc(fn, args = {}, options = {
+    head: !1,
+    get: !1,
+    count: void 0
+  }) {
+    return this.rest.rpc(fn, args, options);
+  }
+  channel(name, opts = { config: {} }) {
+    return this.realtime.channel(name, opts);
+  }
+  getChannels() {
+    return this.realtime.getChannels();
+  }
+  removeChannel(channel) {
+    return this.realtime.removeChannel(channel);
+  }
+  removeAllChannels() {
+    return this.realtime.removeAllChannels();
+  }
+  async _getSessionToken() {
+    var _this = this, _data$session$access_, _data$session;
+    if (_this.accessToken)
+      return await _this.accessToken();
+    let { data } = await _this.auth.getSession();
+    return (_data$session$access_ = (_data$session = data.session) === null || _data$session === void 0 ? void 0 : _data$session.access_token) !== null && _data$session$access_ !== void 0 ? _data$session$access_ : null;
+  }
+  async _getAccessToken() {
+    var _this2 = this, _await$this$_getSessi;
+    return (_await$this$_getSessi = await _this2._getSessionToken()) !== null && _await$this$_getSessi !== void 0 ? _await$this$_getSessi : _this2.supabaseKey;
+  }
+  _initSupabaseAuthClient({ autoRefreshToken, persistSession, detectSessionInUrl, storage, userStorage, storageKey, flowType, lock, debug, throwOnError, experimental, lockAcquireTimeout, skipAutoInitialize }, headers, fetch$1) {
+    let authHeaders = {
+      Authorization: `Bearer ${this.supabaseKey}`,
+      apikey: `${this.supabaseKey}`
+    };
+    return new SupabaseAuthClient({
+      url: this.authUrl.href,
+      headers: _objectSpread23(_objectSpread23({}, authHeaders), headers),
+      storageKey,
+      autoRefreshToken,
+      persistSession,
+      detectSessionInUrl,
+      storage,
+      userStorage,
+      flowType,
+      lock,
+      debug,
+      throwOnError,
+      experimental,
+      fetch: fetch$1,
+      lockAcquireTimeout,
+      skipAutoInitialize,
+      hasCustomAuthorizationHeader: Object.keys(this.headers).some((key) => key.toLowerCase() === "authorization")
+    });
+  }
+  _initRealtimeClient(options) {
+    return new RealtimeClient(this.realtimeUrl.href, _objectSpread23(_objectSpread23({}, options), {}, { params: _objectSpread23(_objectSpread23({}, { apikey: this.supabaseKey }), options === null || options === void 0 ? void 0 : options.params) }));
+  }
+  _listenForAuthEvents() {
+    return this.auth.onAuthStateChange((event, session) => {
+      this._handleTokenChanged(event, "CLIENT", session === null || session === void 0 ? void 0 : session.access_token);
+    });
+  }
+  _handleTokenChanged(event, source, token) {
+    if ((event === "TOKEN_REFRESHED" || event === "SIGNED_IN" || event === "INITIAL_SESSION") && this.changedAccessToken !== token)
+      this.changedAccessToken = token, this.realtime.setAuth(token);
+    else if (event === "SIGNED_OUT") {
+      if (this.realtime.setAuth(), source == "STORAGE")
+        this.auth.signOut();
+      this.changedAccessToken = void 0;
+    }
+  }
+}, createClient = (supabaseUrl, supabaseKey, options) => new SupabaseClient(supabaseUrl, supabaseKey, options);
+function shouldShowDeprecationWarning() {
+  if (typeof window < "u" || globalThis.Deno !== void 0)
+    return !1;
+  let _process = globalThis.process;
+  if (!_process)
+    return !1;
+  let processVersion = _process.version;
+  if (processVersion === void 0 || processVersion === null)
+    return !1;
+  let versionMatch = processVersion.match(/^v(\d+)\./);
+  if (!versionMatch)
+    return !1;
+  return parseInt(versionMatch[1], 10) <= 20;
+}
+if (shouldShowDeprecationWarning())
+  console.warn("⚠️  Node.js 20 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 22 or later. For more information, visit: https://github.com/orgs/supabase/discussions/45715");
+
+// src/integrations/supabase/previewAuthStorage.ts
+function readBrokerReply(data, requestId) {
+  if (typeof data !== "object" || data === null)
+    return null;
+  if (!("type" in data) || data.type !== "lovable-preview-auth:result")
+    return null;
+  if (!("requestId" in data) || data.requestId !== requestId)
+    return null;
+  return {
+    ok: "ok" in data && Boolean(data.ok),
+    value: "value" in data && typeof data.value === "string" ? data.value : null
+  };
+}
+function brokeredPreviewStorage() {
+  if (typeof window > "u")
+    return;
+  let host = location.hostname, onPreviewZone = ["lovableproject.com", "lovableproject-dev.com", "lovable.app", "gpt-eng.com", "gptengineer.run"].some((z) => host === z || host.endsWith("." + z)), UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", projectId = onPreviewZone ? new RegExp("^(?:id-preview(?:-[a-z0-9]+)?|project)--(" + UUID + ")(?:-dev)?(?=\\.|$)", "i").exec(host)?.[1] ?? new RegExp("^live--(" + UUID + ")(?:-thr_[a-z0-9]+)?(?=\\.|$)", "i").exec(host)?.[1] ?? new RegExp("^(" + UUID + ")(?=[.-])", "i").exec(host)?.[1] : void 0, parentWindow = window.parent;
+  if (!projectId || !(parentWindow !== null && parentWindow !== window))
+    return localStorage;
+  let dev = host.endsWith(".lovableproject-dev.com") || host.endsWith(".gpt-eng.com"), EDITOR = dev ? /^https:\/\/([a-z0-9-]+\.)*(lovable\.dev|gptengineer\.app)$|^http:\/\/localhost:3000$/ : /^https:\/\/([a-z0-9-]+\.)*(lovable\.dev|gptengineer\.app)$/, ancestor = location.ancestorOrigins?.[0] ?? (document.referrer ? new URL(document.referrer).origin : ""), editorOrigins = ancestor && EDITOR.test(ancestor) ? [ancestor] : dev ? ["https://lovable.dev", "http://localhost:3000"] : ["https://lovable.dev"], TIMEOUT = 2000, newId = () => Math.random().toString(36).slice(2) + Date.now().toString(36), request = (type, key, value) => new Promise((resolve) => {
+    let requestId = newId(), done = !1, finish = (reply) => {
+      if (done)
+        return;
+      done = !0, clearTimeout(timer), window.removeEventListener("message", onMessage), resolve(reply);
+    }, onMessage = (e) => {
+      if (!editorOrigins.includes(e.origin))
+        return;
+      let reply = readBrokerReply(e.data, requestId);
+      if (reply)
+        finish(reply);
+    };
+    window.addEventListener("message", onMessage);
+    let timer = setTimeout(() => {
+      finish(null);
+    }, TIMEOUT), msg = { type, requestId, projectId, key };
+    if (value !== void 0)
+      msg.value = value;
+    for (let origin of editorOrigins)
+      window.parent.postMessage(msg, origin);
+  }), firstGet = !0, RETRY_DELAY = 250, readLocal = (key) => {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return;
+    }
+  };
+  return {
+    getItem: async (key) => {
+      let local = readLocal(key), res = await request("lovable-preview-auth:get", key, local ?? void 0);
+      if (!res && firstGet)
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY)), res = await request("lovable-preview-auth:get", key, local ?? void 0);
+      if (firstGet = !1, res?.ok && res.value !== null) {
+        if (res.value === "") {
+          if (local !== void 0 && readLocal(key) === local)
+            localStorage.removeItem(key);
+          return null;
+        }
+        if (local === null && readLocal(key) === null)
+          try {
+            localStorage.setItem(key, res.value);
+          } catch {}
+        return res.value;
+      }
+      return localStorage.getItem(key);
+    },
+    setItem: (key, value) => (localStorage.setItem(key, value), request("lovable-preview-auth:set", key, value).then((res) => {
+      if (res?.ok && res.value !== null && localStorage.getItem(key) === value)
+        if (res.value === "")
+          localStorage.removeItem(key);
+        else
+          localStorage.setItem(key, res.value);
+    })),
+    removeItem: (key) => {
+      let local = readLocal(key);
+      return localStorage.removeItem(key), request("lovable-preview-auth:remove", key, local ?? void 0).then(() => {});
+    }
+  };
+}
+
+// src/integrations/supabase/client.ts
+function isNewSupabaseApiKey(value) {
+  return value.startsWith("sb_publishable_") || value.startsWith("sb_secret_");
+}
+function serverSupabaseUrl(publicUrl, supabaseKey) {
+  if (typeof window < "u" || typeof process > "u")
+    return;
+  let serverUrl = process.env.SUPABASE_URL?.replace(/\/+$/, "");
+  if (!serverUrl || serverUrl === publicUrl || process.env.SUPABASE_PUBLISHABLE_KEY !== supabaseKey)
+    return;
+  return serverUrl;
+}
+function createSupabaseFetch(supabaseUrl, supabaseKey) {
+  let publicUrl = supabaseUrl.replace(/\/+$/, ""), serverUrl = serverSupabaseUrl(publicUrl, supabaseKey);
+  return (input, init) => {
+    let headers = new Headers(typeof Request < "u" && input instanceof Request ? input.headers : void 0);
+    if (init?.headers)
+      new Headers(init.headers).forEach((value, key) => headers.set(key, value));
+    if (isNewSupabaseApiKey(supabaseKey) && headers.get("Authorization") === `Bearer ${supabaseKey}`)
+      headers.delete("Authorization");
+    if (headers.set("apikey", supabaseKey), serverUrl) {
+      let url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      if (url.startsWith(`${publicUrl}/`)) {
+        let target = serverUrl + url.slice(publicUrl.length), request = typeof input === "string" || input instanceof URL ? target : new Request(target, input);
+        return fetch(request, { ...init, headers });
+      }
+    }
+    return fetch(input, { ...init, headers });
+  };
+}
+function createSupabaseClient() {
+  return createClient("https://lpdnkicitxsoigqmwdlt.supabase.co", "sb_publishable_mk13174jXny_cJaEZCpeWg_H9Ewj0Nj", {
+    global: {
+      fetch: createSupabaseFetch("https://lpdnkicitxsoigqmwdlt.supabase.co", "sb_publishable_mk13174jXny_cJaEZCpeWg_H9Ewj0Nj")
+    },
+    auth: {
+      storage: brokeredPreviewStorage(),
+      persistSession: !0,
+      autoRefreshToken: !0
+    }
+  });
+}
+var _supabase, supabase = new Proxy({}, {
+  get(_, prop, receiver) {
+    if (!_supabase)
+      _supabase = createSupabaseClient();
+    return Reflect.get(_supabase, prop, receiver);
+  }
+});
+
+// src/lib/buddy-session.client.ts
+var nativeFetch = window.fetch.bind(window), recentQuestions = /* @__PURE__ */ new Map, endpoints = /* @__PURE__ */ new Set(["/api/public/chat", "/api/public/buddy-chat", "/api/public/teach", "/api/public/diagram", "/api/public/picture", "/api/public/visitor-session"]);
+window.fetch = async (input, init) => {
+  let url = new URL(typeof input === "string" ? input : input instanceof URL ? input.href : input.url, window.location.href);
+  if (url.origin !== window.location.origin || !endpoints.has(url.pathname))
+    return nativeFetch(input, init);
+  let { data } = await supabase.auth.getSession(), headers = new Headers(input instanceof Request ? input.headers : init?.headers);
+  if (data.session)
+    headers.set("Authorization", `Bearer ${data.session.access_token}`);
+  if (url.pathname !== "/api/public/visitor-session" && !headers.has("X-Request-ID")) {
+    let fingerprint = url.pathname + (typeof init?.body === "string" ? init.body : "");
+    for (let [key, value] of recentQuestions)
+      if (Date.now() - value.at > 120000)
+        recentQuestions.delete(key);
+    let recent = recentQuestions.get(fingerprint) ?? { id: crypto.randomUUID(), at: Date.now() };
+    recentQuestions.set(fingerprint, recent), headers.set("X-Request-ID", recent.id);
+  }
+  let response = await nativeFetch(input, { ...init, headers });
+  if (url.pathname !== "/api/public/visitor-session")
+    updateStatus().catch(() => {});
+  return response;
+};
+async function updateStatus() {
+  let response = await window.fetch("/api/public/visitor-session"), result = await response.json(), strip = document.getElementById("visitor-ai-status");
+  if (!strip) {
+    strip = document.createElement("div"), strip.id = "visitor-ai-status", strip.setAttribute("role", "status"), strip.className = "visitor-ai-status";
+    let header = document.querySelector("header");
+    if (header)
+      header.insertAdjacentElement("afterend", strip);
+  }
+  strip.replaceChildren();
+  let link = document.createElement("a");
+  if (link.href = "/account", link.textContent = response.ok ? "AI account & daily usage" : "An adult needs to sign in and connect their AI account", strip.append(link), response.ok && result.level !== "ok") {
+    let warning = document.createElement("span");
+    warning.setAttribute("role", "alert"), warning.textContent = result.level === "warn" ? " · 80% of your daily budget reached" : " · Your daily budget reached", strip.append(warning);
+  }
+}
+var css = document.createElement("style");
+css.textContent = ".visitor-ai-status{font:inherit;font-size:13px;padding:8px 12px;flex:none}.visitor-ai-status a{color:inherit;text-decoration:underline}";
+document.head.append(css);
+updateStatus().catch(() => {});
+window.fetch("/api/public/visitor-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ path: window.location.pathname }) }).catch(() => {});
