@@ -613,7 +613,7 @@ textarea { box-sizing: border-box; }
         !/<script|<foreignObject|<iframe|<image|<use[\s>]|javascript:|\son[a-z]+\s*=|href\s*=|<!ENTITY|<!DOCTYPE/i.test(svg);
       if (!ok) return '<p class="drawing">I could not draw that picture, but the steps above still work.</p>';
       if (!/^<svg[^>]*\sxmlns\s*=/i.test(svg)) svg = svg.replace(/^<svg/i, '<svg xmlns="http://www.w3.org/2000/svg"');
-      return '<div class="viz" role="button" tabindex="0" title="Tap to make bigger" onclick="this.classList.toggle('big')"><img alt="A picture drawn by BrainBoost Buddy to explain the idea" src="data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '"></div>';
+      return '<div class="viz" role="button" tabindex="0" title="Tap to make bigger" onclick="this.classList.toggle(\'big\')"><img alt="A picture drawn by BrainBoost Buddy to explain the idea" src="data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '"></div>';
     }
     return '<pre class="art">' + esc(code) + '</pre>';
   }
