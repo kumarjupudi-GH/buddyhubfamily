@@ -62,6 +62,6 @@
   ];
   function getLevel(id) { return levels.find(l=>l.id===id) || levels[0]; }
   const api = { levels, lessons, getLevel, lessonsFor:id=>lessons.filter(l=>getLevel(id).lessons.includes(l.id)) };
-  if (typeof window !== 'undefined') { window.ART_CURRICULUM = api; window.LESSONS.push(...lessons); }
+  if (typeof window !== 'undefined') { window.ART_CURRICULUM = api; if (window.LESSONS) window.LESSONS.push(...lessons); }
   if (typeof module !== 'undefined') module.exports = api;
 })();
