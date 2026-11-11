@@ -1418,7 +1418,16 @@ textarea { box-sizing: border-box; }
         }
         fetch("/api/public/chat", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: (function () {
+            var h = { "Content-Type": "application/json" };
+            try {
+              for (var i = 0; i < localStorage.length; i++) {
+                var k = localStorage.key(i);
+                if (/^sb-.*-auth-token$/.test(k)) { var t = JSON.parse(localStorage.getItem(k)); if (t && t.access_token) h.Authorization = "Bearer " + t.access_token; }
+              }
+            } catch (e) {}
+            return h;
+          })(),
           body: JSON.stringify({ messages: msgs }),
           signal: opts.signal
         }).then(function (r) {

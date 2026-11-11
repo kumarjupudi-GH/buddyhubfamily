@@ -8,6 +8,13 @@
       "when": 1794336894204,
       "tag": "0000_profiles_and_has_role",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794433569408,
+      "tag": "0001_migration",
+      "breakpoints": true
     }
   ]
 }

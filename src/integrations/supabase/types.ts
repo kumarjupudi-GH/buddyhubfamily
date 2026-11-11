@@ -143,6 +143,27 @@ export type Database = {
         }
         Relationships: []
       }
+      homework_daily_usage: {
+        Row: {
+          day: string
+          questions: number
+          usd: number
+          user_id: string
+        }
+        Insert: {
+          day?: string
+          questions?: number
+          usd?: number
+          user_id: string
+        }
+        Update: {
+          day?: string
+          questions?: number
+          usd?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -319,6 +340,7 @@ export type Database = {
       }
       ensure_intro_allowance: { Args: { _user: string }; Returns: undefined }
       has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }
+      homework_used_today: { Args: { _user: string }; Returns: number }
       is_usage_admin: { Args: never; Returns: boolean }
       monthly_ai_usage: {
         Args: never
@@ -326,6 +348,10 @@ export type Database = {
           provider: string
           total: number
         }[]
+      }
+      record_homework_question: {
+        Args: { _usd: number; _user: string }
+        Returns: undefined
       }
       reserve_sponsor_spend: {
         Args: {
