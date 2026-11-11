@@ -14,6 +14,13 @@ const SYSTEM_PROMPT = [
 
 const MAX_TURNS = 40;
 export const DAILY_QUESTION_LIMIT = 50;
+export const VISITOR_DAILY_LIMIT = 5;
+
+async function visitorId(request: Request) {
+  const ip = request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("hw:" + ip));
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
 // Estimated price per token (USD) for the answer model.
 const USD_IN = 3 / 1_000_000;
 const USD_OUT = 15 / 1_000_000;
@@ -81,6 +88,21 @@ export const Route = createFileRoute("/api/public/chat")({
               error: {
                 code: "rate_limited",
                 message: `You've used all ${DAILY_QUESTION_LIMIT} questions for today. Come back tomorrow!`,
+              },
+            });
+          }
+        }
+        if (!userId) {
+          const { supabaseAdmin: admin } = await import("@/integrations/supabase/client.server");
+          const { data: ok } = await admin.rpc("take_anon_homework_question", {
+            _visitor: await visitorId(request),
+            _limit: VISITOR_DAILY_LIMIT,
+          });
+          if (!ok) {
+            return json(429, {
+              error: {
+                code: "rate_limited",
+                message: `You've used your ${VISITOR_DAILY_LIMIT} free questions for today. Sign in on the home page to get ${DAILY_QUESTION_LIMIT} a day!`,
               },
             });
           }
