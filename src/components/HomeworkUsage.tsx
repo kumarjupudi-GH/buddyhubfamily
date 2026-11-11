@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-const LIMIT = 50;
+const LIMIT = 25;
 
 export function HomeworkUsage() {
   const [usage, setUsage] = useState<{ q: number; usd: number } | null>(null);
