@@ -143,6 +143,24 @@ export type Database = {
         }
         Relationships: []
       }
+      homework_anon_usage: {
+        Row: {
+          day: string
+          questions: number
+          visitor: string
+        }
+        Insert: {
+          day?: string
+          questions?: number
+          visitor: string
+        }
+        Update: {
+          day?: string
+          questions?: number
+          visitor?: string
+        }
+        Relationships: []
+      }
       homework_daily_usage: {
         Row: {
           day: string
@@ -370,6 +388,10 @@ export type Database = {
         Returns: undefined
       }
       sponsor_balance: { Args: { _user: string }; Returns: Json }
+      take_anon_homework_question: {
+        Args: { _limit: number; _visitor: string }
+        Returns: boolean
+      }
       visitor_daily_totals: { Args: never; Returns: Json }
     }
     Enums: {
