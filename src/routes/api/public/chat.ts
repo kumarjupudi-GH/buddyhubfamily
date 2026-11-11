@@ -13,6 +13,18 @@ const SYSTEM_PROMPT = [
 ].join(" ");
 
 const MAX_TURNS = 40;
+export const DAILY_QUESTION_LIMIT = 50;
+// Estimated price per token (USD) for the answer model.
+const USD_IN = 3 / 1_000_000;
+const USD_OUT = 15 / 1_000_000;
+
+async function signedInUser(request: Request): Promise<string | null> {
+  const auth = request.headers.get("authorization");
+  if (!auth?.startsWith("Bearer ")) return null;
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data } = await supabaseAdmin.auth.getUser(auth.slice(7));
+  return data.user?.id ?? null;
+}
 
 function normalizeMessages(raw: unknown) {
   if (!Array.isArray(raw) || raw.length === 0) return null;
@@ -53,8 +65,28 @@ export const Route = createFileRoute("/api/public/chat")({
             error: { code: "invalid_request", message: "messages must be a list of user/assistant turns." },
           });
         }
+        let userId: string | null = null;
         try {
-          const { text, truncated } = await askClaude({
+          userId = await signedInUser(request);
+        } catch {
+          userId = null;
+        }
+        const { supabaseAdmin } = userId
+          ? await import("@/integrations/supabase/client.server")
+          : { supabaseAdmin: null };
+        if (userId && supabaseAdmin) {
+          const { data: used } = await supabaseAdmin.rpc("homework_used_today", { _user: userId });
+          if ((used ?? 0) >= DAILY_QUESTION_LIMIT) {
+            return json(429, {
+              error: {
+                code: "rate_limited",
+                message: `You've used all ${DAILY_QUESTION_LIMIT} questions for today. Come back tomorrow!`,
+              },
+            });
+          }
+        }
+        try {
+          const { text, truncated, inputTokens, outputTokens } = await askClaude({
             model: "anthropic/claude-sonnet-5",
             system: SYSTEM_PROMPT,
             messages,
@@ -62,6 +94,10 @@ export const Route = createFileRoute("/api/public/chat")({
           });
           if (!text.trim()) {
             return json(502, { error: { code: "upstream_error", message: "The AI sent an empty answer." } });
+          }
+          if (userId && supabaseAdmin) {
+            const usd = inputTokens * USD_IN + outputTokens * USD_OUT;
+            await supabaseAdmin.rpc("record_homework_question", { _user: userId, _usd: usd });
           }
           return json(200, { text, truncated });
         } catch (e: any) {

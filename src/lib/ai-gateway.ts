@@ -6,7 +6,7 @@ export async function askClaude(options: {
   system: string;
   messages: Array<{ role: "user" | "assistant"; content: string }>;
   maxTokens: number;
-}): Promise<{ text: string; truncated: boolean }> {
+}): Promise<{ text: string; truncated: boolean; inputTokens: number; outputTokens: number }> {
   const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) {
     throw Object.assign(new Error("AI is not configured."), { status: 500 });
@@ -45,6 +45,8 @@ export async function askClaude(options: {
   let buffer = "";
   let text = "";
   let truncated = false;
+  let inputTokens = 0;
+  let outputTokens = 0;
 
   const handleEvent = (raw: string) => {
     const dataLine = raw
@@ -58,6 +60,12 @@ export async function askClaude(options: {
       evt = JSON.parse(payload);
     } catch {
       return;
+    }
+    if (evt.type === "message_start" && evt.message?.usage) {
+      inputTokens = evt.message.usage.input_tokens ?? 0;
+    }
+    if (evt.type === "message_delta" && evt.usage?.output_tokens) {
+      outputTokens = evt.usage.output_tokens;
     }
     if (evt.type === "content_block_delta" && evt.delta?.type === "text_delta") {
       text += evt.delta.text;
@@ -84,5 +92,5 @@ export async function askClaude(options: {
   }
   if (buffer.trim()) handleEvent(buffer);
 
-  return { text, truncated };
+  return { text, truncated, inputTokens, outputTokens };
 }
