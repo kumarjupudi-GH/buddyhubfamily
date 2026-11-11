@@ -13,7 +13,7 @@ const SYSTEM_PROMPT = [
 ].join(" ");
 
 const MAX_TURNS = 40;
-export const DAILY_QUESTION_LIMIT = 50;
+export const DAILY_QUESTION_LIMIT = 25;
 export const VISITOR_DAILY_LIMIT = 5;
 
 async function visitorId(request: Request) {
