@@ -143,6 +143,104 @@ export type Database = {
         }
         Relationships: []
       }
+      app_feedback: {
+        Row: {
+          admin_notes: string
+          app_id: string
+          category: string
+          created_at: string
+          description: string
+          helpful: boolean | null
+          id: string
+          ratings: Json
+          reason: string | null
+          screenshot_path: string | null
+          status: string
+          submission_id: string
+        }
+        Insert: {
+          admin_notes?: string
+          app_id: string
+          category: string
+          created_at?: string
+          description?: string
+          helpful?: boolean | null
+          id: string
+          ratings?: Json
+          reason?: string | null
+          screenshot_path?: string | null
+          status?: string
+          submission_id: string
+        }
+        Update: {
+          admin_notes?: string
+          app_id?: string
+          category?: string
+          created_at?: string
+          description?: string
+          helpful?: boolean | null
+          id?: string
+          ratings?: Json
+          reason?: string | null
+          screenshot_path?: string | null
+          status?: string
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "app_feedback_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "feedback_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feedback_rate_limits: {
+        Row: {
+          count: number
+          visitor: string
+          window_start: string
+        }
+        Insert: {
+          count?: number
+          visitor: string
+          window_start?: string
+        }
+        Update: {
+          count?: number
+          visitor?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
+      feedback_submissions: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          user_id: string | null
+          wants_response: boolean
+        }
+        Insert: {
+          created_at?: string
+          email?: string
+          id: string
+          name?: string
+          user_id?: string | null
+          wants_response?: boolean
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          user_id?: string | null
+          wants_response?: boolean
+        }
+        Relationships: []
+      }
       homework_anon_usage: {
         Row: {
           day: string
@@ -357,6 +455,7 @@ export type Database = {
         Returns: string
       }
       ensure_intro_allowance: { Args: { _user: string }; Returns: undefined }
+      feedback_upload_allowed: { Args: { _path: string }; Returns: boolean }
       has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }
       homework_used_today: { Args: { _user: string }; Returns: number }
       is_usage_admin: { Args: never; Returns: boolean }
@@ -383,11 +482,46 @@ export type Database = {
         }
         Returns: string
       }
+      save_feedback_batch: {
+        Args: {
+          _batch: string
+          _email: string
+          _entries: Json
+          _name: string
+          _response: boolean
+          _user: string
+          _visitor: string
+        }
+        Returns: undefined
+      }
+      save_feedback_request: {
+        Args: {
+          _batch: string
+          _email: string
+          _entries: Json
+          _name: string
+          _response: boolean
+          _user: string
+          _visitor: string
+        }
+        Returns: undefined
+      }
       settle_sponsor_spend: {
         Args: { _cost: number; _id: string }
         Returns: undefined
       }
       sponsor_balance: { Args: { _user: string }; Returns: Json }
+      submit_app_feedback: {
+        Args: {
+          _batch: string
+          _email: string
+          _entries: Json
+          _name: string
+          _response: boolean
+          _visitor: string
+        }
+        Returns: undefined
+      }
       take_anon_homework_question: {
         Args: { _limit: number; _visitor: string }
         Returns: boolean

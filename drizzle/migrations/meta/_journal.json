@@ -22,6 +22,27 @@
       "when": 1794433715258,
       "tag": "0002_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794456977651,
+      "tag": "0003_universal_feedback",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794457247439,
+      "tag": "0004_restrict_feedback_submission_access",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794457285286,
+      "tag": "0005_feedback_optional_user",
+      "breakpoints": true
     }
   ]
 }

@@ -11,10 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as FeedbackRouteImport } from './routes/feedback'
+import { Route as FeedbackManagementRouteImport } from './routes/feedback-management'
+import { Route as FeedbackQuickRouteImport } from './routes/feedback-quick'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ComingSoonSlugRouteImport } from './routes/coming-soon.$slug'
 import { Route as ApiPublicBuddyChatRouteImport } from './routes/api/public/buddy-chat'
 import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
+import { Route as ApiPublicFeedbackRouteImport } from './routes/api/public/feedback'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as ApiPublicTeachRouteImport } from './routes/api/public/teach'
 
@@ -26,6 +30,21 @@ const IndexRoute = IndexRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackRoute = FeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackManagementRoute = FeedbackManagementRouteImport.update({
+  id: '/feedback-management',
+  path: '/feedback-management',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackQuickRoute = FeedbackQuickRouteImport.update({
+  id: '/feedback-quick',
+  path: '/feedback-quick',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -48,6 +67,11 @@ const ApiPublicChatRoute = ApiPublicChatRouteImport.update({
   path: '/api/public/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicFeedbackRoute = ApiPublicFeedbackRouteImport.update({
+  id: '/api/public/feedback',
+  path: '/api/public/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
   id: '/api/public/health',
   path: '/api/public/health',
@@ -62,20 +86,28 @@ const ApiPublicTeachRoute = ApiPublicTeachRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/feedback': typeof FeedbackRoute
+  '/feedback-management': typeof FeedbackManagementRoute
+  '/feedback-quick': typeof FeedbackQuickRoute
   '/reset-password': typeof ResetPasswordRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/feedback': typeof ApiPublicFeedbackRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/feedback': typeof FeedbackRoute
+  '/feedback-management': typeof FeedbackManagementRoute
+  '/feedback-quick': typeof FeedbackQuickRoute
   '/reset-password': typeof ResetPasswordRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/feedback': typeof ApiPublicFeedbackRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
 }
@@ -83,10 +115,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/feedback': typeof FeedbackRoute
+  '/feedback-management': typeof FeedbackManagementRoute
+  '/feedback-quick': typeof FeedbackQuickRoute
   '/reset-password': typeof ResetPasswordRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
   '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/feedback': typeof ApiPublicFeedbackRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/teach': typeof ApiPublicTeachRoute
 }
@@ -95,30 +131,42 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/feedback'
+    | '/feedback-management'
+    | '/feedback-quick'
     | '/reset-password'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
+    | '/api/public/feedback'
     | '/api/public/health'
     | '/api/public/teach'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/feedback'
+    | '/feedback-management'
+    | '/feedback-quick'
     | '/reset-password'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
+    | '/api/public/feedback'
     | '/api/public/health'
     | '/api/public/teach'
   id:
     | '__root__'
     | '/'
     | '/auth'
+    | '/feedback'
+    | '/feedback-management'
+    | '/feedback-quick'
     | '/reset-password'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
     | '/api/public/chat'
+    | '/api/public/feedback'
     | '/api/public/health'
     | '/api/public/teach'
   fileRoutesById: FileRoutesById
@@ -126,10 +174,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  FeedbackRoute: typeof FeedbackRoute
+  FeedbackManagementRoute: typeof FeedbackManagementRoute
+  FeedbackQuickRoute: typeof FeedbackQuickRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ComingSoonSlugRoute: typeof ComingSoonSlugRoute
   ApiPublicBuddyChatRoute: typeof ApiPublicBuddyChatRoute
   ApiPublicChatRoute: typeof ApiPublicChatRoute
+  ApiPublicFeedbackRoute: typeof ApiPublicFeedbackRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicTeachRoute: typeof ApiPublicTeachRoute
 }
@@ -148,6 +200,27 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback-management': {
+      id: '/feedback-management'
+      path: '/feedback-management'
+      fullPath: '/feedback-management'
+      preLoaderRoute: typeof FeedbackManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback-quick': {
+      id: '/feedback-quick'
+      path: '/feedback-quick'
+      fullPath: '/feedback-quick'
+      preLoaderRoute: typeof FeedbackQuickRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -178,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/feedback': {
+      id: '/api/public/feedback'
+      path: '/api/public/feedback'
+      fullPath: '/api/public/feedback'
+      preLoaderRoute: typeof ApiPublicFeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/health': {
       id: '/api/public/health'
       path: '/api/public/health'
@@ -198,10 +278,14 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  FeedbackRoute: FeedbackRoute,
+  FeedbackManagementRoute: FeedbackManagementRoute,
+  FeedbackQuickRoute: FeedbackQuickRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ComingSoonSlugRoute: ComingSoonSlugRoute,
   ApiPublicBuddyChatRoute: ApiPublicBuddyChatRoute,
   ApiPublicChatRoute: ApiPublicChatRoute,
+  ApiPublicFeedbackRoute: ApiPublicFeedbackRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicTeachRoute: ApiPublicTeachRoute,
 }

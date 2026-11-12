@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
 
 export function AccountMenu() {
   const [user, setUser] = useState<User | null>(null);
   const [admin, setAdmin] = useState(false);
   const [open, setOpen] = useState(false);
+  const feedbackCount = useQuery({ queryKey: ["new-feedback-count", user?.id], enabled: admin, queryFn: async () => {
+    const { count, error } = await supabase.from("app_feedback").select("id", { count: "exact", head: true }).eq("status", "New");
+    if (error) throw error;
+    return count || 0;
+  } });
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
     const { data } = supabase.auth.onAuthStateChange((_e, s) => setUser(s?.user ?? null));
@@ -31,6 +38,7 @@ export function AccountMenu() {
         <div className="absolute right-0 z-10 mt-2 w-56 rounded-xl border border-border bg-card p-3 text-left text-sm shadow-lg">
           <p className="truncate text-muted-foreground">{user.email}</p>
           <p className="mt-1 font-semibold">{admin ? "Proprietor" : "Registered user"}</p>
+          {admin && <Button asChild variant="outline" className="mt-3 w-full"><a href="/feedback-management">Feedback {feedbackCount.data !== undefined ? `(${feedbackCount.data} new)` : ""}</a></Button>}
           <button
             onClick={async () => {
               await supabase.auth.signOut();
