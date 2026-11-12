@@ -494,6 +494,18 @@ export type Database = {
         }
         Returns: undefined
       }
+      save_feedback_request: {
+        Args: {
+          _batch: string
+          _email: string
+          _entries: Json
+          _name: string
+          _response: boolean
+          _user: string
+          _visitor: string
+        }
+        Returns: undefined
+      }
       settle_sponsor_spend: {
         Args: { _cost: number; _id: string }
         Returns: undefined

@@ -36,6 +36,13 @@
       "when": 1794457247439,
       "tag": "0004_restrict_feedback_submission_access",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794457285286,
+      "tag": "0005_feedback_optional_user",
+      "breakpoints": true
     }
   ]
 }
