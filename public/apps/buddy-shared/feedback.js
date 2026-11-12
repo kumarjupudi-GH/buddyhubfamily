@@ -4,9 +4,12 @@
     var app = data.apps.find(function (a) { return a.href && a.href !== '/' && location.pathname.replace(/\/$/, '/index.html') === a.href; });
     if (!app) return;
     var style = document.createElement('style');
-    style.textContent = '.family-feedback-link{position:fixed;right:14px;bottom:14px;z-index:1000;padding:8px 12px;border:1px solid var(--border,var(--line));border-radius:8px;background:var(--card,var(--paper));color:var(--foreground,var(--ink));font:600 13px system-ui;text-decoration:none}.family-quick-feedback{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.family-quick-feedback a{font:13px system-ui;color:inherit;text-decoration:none;border:1px solid var(--border,var(--line));border-radius:6px;padding:5px 9px}';
+    style.textContent = '.family-feedback-link{display:inline-flex;padding:8px 12px;border:1px solid var(--border,var(--line));border-radius:8px;background:var(--card,var(--surface));color:var(--foreground,var(--ink));font:600 13px system-ui;text-decoration:none}.family-quick-feedback{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.family-quick-feedback a{font:13px system-ui;color:inherit;text-decoration:none;border:1px solid var(--border,var(--line));border-radius:6px;padding:5px 9px}';
     document.head.appendChild(style);
-    var link = document.createElement('a'); link.href = '/feedback?app=' + encodeURIComponent(app.slug); link.textContent = '💬 Feedback'; link.className = 'family-feedback-link'; document.body.appendChild(link);
+    var link = document.createElement('a'); link.href = '/feedback?app=' + encodeURIComponent(app.slug); link.textContent = '💬 Feedback'; link.className = 'family-feedback-link';
+    var tools = document.querySelector('.tools');
+    if (tools) tools.appendChild(link);
+    else { link.style.cssText = 'position:fixed;left:10px;top:10px;z-index:9999'; document.body.appendChild(link); }
     var pending = new WeakSet();
     function attach(node) {
       if (!node.isConnected || node.querySelector('.family-quick-feedback') || !node.textContent.trim() || node.querySelector('.dots,.err') || /thinking|let me think/i.test(node.textContent)) return;

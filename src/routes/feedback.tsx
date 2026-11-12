@@ -15,7 +15,7 @@ export const Route = createFileRoute("/feedback")({
 function fresh(app = "family"): FeedbackEntry {
   return { id: crypto.randomUUID(), app_id: app, category: "General Feedback", ratings: {}, description: "", helpful: null, reason: null, screenshot_path: null };
 }
-export function Stars({ label, value, onChange }: { label: string; value?: number; onChange: (n: number) => void }) {
+export function Stars({ label, value, onChange }: { label: string; value: number | undefined; onChange: (n: number) => void }) {
   return <div className="flex flex-wrap items-center justify-between gap-2 py-2"><span className="text-sm">{label}</span><div role="group" aria-label={label} className="flex shrink-0">{[1,2,3,4,5].map(n => <Button key={n} type="button" variant="ghost" size="icon" aria-label={`${label}: ${n} star${n>1?"s":""}`} aria-pressed={value === n} onClick={() => onChange(n)} className={value && n <= value ? "text-primary" : "text-muted-foreground"}><Star className={value && n <= value ? "fill-current" : ""} /></Button>)}</div></div>;
 }
 function FeedbackPage() {
