@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as FeedbackRouteImport } from './routes/feedback'
+import { Route as FeedbackManagementRouteImport } from './routes/feedback-management'
+import { Route as FeedbackQuickRouteImport } from './routes/feedback-quick'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ComingSoonSlugRouteImport } from './routes/coming-soon.$slug'
 import { Route as ApiPublicBuddyChatRouteImport } from './routes/api/public/buddy-chat'
@@ -33,6 +35,16 @@ const AuthRoute = AuthRouteImport.update({
 const FeedbackRoute = FeedbackRouteImport.update({
   id: '/feedback',
   path: '/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackManagementRoute = FeedbackManagementRouteImport.update({
+  id: '/feedback-management',
+  path: '/feedback-management',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackQuickRoute = FeedbackQuickRouteImport.update({
+  id: '/feedback-quick',
+  path: '/feedback-quick',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -75,6 +87,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/feedback': typeof FeedbackRoute
+  '/feedback-management': typeof FeedbackManagementRoute
+  '/feedback-quick': typeof FeedbackQuickRoute
   '/reset-password': typeof ResetPasswordRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
@@ -87,6 +101,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/feedback': typeof FeedbackRoute
+  '/feedback-management': typeof FeedbackManagementRoute
+  '/feedback-quick': typeof FeedbackQuickRoute
   '/reset-password': typeof ResetPasswordRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
@@ -100,6 +116,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/feedback': typeof FeedbackRoute
+  '/feedback-management': typeof FeedbackManagementRoute
+  '/feedback-quick': typeof FeedbackQuickRoute
   '/reset-password': typeof ResetPasswordRoute
   '/coming-soon/$slug': typeof ComingSoonSlugRoute
   '/api/public/buddy-chat': typeof ApiPublicBuddyChatRoute
@@ -114,6 +132,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/feedback'
+    | '/feedback-management'
+    | '/feedback-quick'
     | '/reset-password'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
@@ -126,6 +146,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/feedback'
+    | '/feedback-management'
+    | '/feedback-quick'
     | '/reset-password'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
@@ -138,6 +160,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/feedback'
+    | '/feedback-management'
+    | '/feedback-quick'
     | '/reset-password'
     | '/coming-soon/$slug'
     | '/api/public/buddy-chat'
@@ -151,6 +175,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   FeedbackRoute: typeof FeedbackRoute
+  FeedbackManagementRoute: typeof FeedbackManagementRoute
+  FeedbackQuickRoute: typeof FeedbackQuickRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ComingSoonSlugRoute: typeof ComingSoonSlugRoute
   ApiPublicBuddyChatRoute: typeof ApiPublicBuddyChatRoute
@@ -181,6 +207,20 @@ declare module '@tanstack/react-router' {
       path: '/feedback'
       fullPath: '/feedback'
       preLoaderRoute: typeof FeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback-management': {
+      id: '/feedback-management'
+      path: '/feedback-management'
+      fullPath: '/feedback-management'
+      preLoaderRoute: typeof FeedbackManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback-quick': {
+      id: '/feedback-quick'
+      path: '/feedback-quick'
+      fullPath: '/feedback-quick'
+      preLoaderRoute: typeof FeedbackQuickRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -239,6 +279,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   FeedbackRoute: FeedbackRoute,
+  FeedbackManagementRoute: FeedbackManagementRoute,
+  FeedbackQuickRoute: FeedbackQuickRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ComingSoonSlugRoute: ComingSoonSlugRoute,
   ApiPublicBuddyChatRoute: ApiPublicBuddyChatRoute,
