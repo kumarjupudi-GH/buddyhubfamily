@@ -19,6 +19,7 @@ export const Route = createFileRoute("/api/public/feedback")({
         const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
         if (!url || !key) throw new Error("Feedback unavailable");
         const bearer = request.headers.get("authorization");
+        let userId: string | null = null;
         const client = createClient<Database>(url, key, {
           auth: { persistSession: false, autoRefreshToken: false },
           global: { headers: bearer ? { Authorization: bearer } : {}, fetch: (input, init) => {
@@ -31,12 +32,14 @@ export const Route = createFileRoute("/api/public/feedback")({
         if (bearer) {
           const { data, error } = await client.auth.getUser(bearer.replace(/^Bearer /, ""));
           if (error || !data.user) return Response.json({ error: "Sign in again or submit signed out" }, { status: 401 });
+          userId = data.user.id;
         }
         const identity = request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
         const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`feedback:${identity}`));
         const visitor = Array.from(new Uint8Array(bytes)).map(b => b.toString(16).padStart(2, "0")).join("");
         const value = parsed.data;
-        const { error } = await client.rpc("submit_app_feedback", { _batch: value.batch, _name: value.name, _email: value.email, _response: value.wants_response, _entries: value.entries, _visitor: visitor });
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { error } = await supabaseAdmin.rpc("save_feedback_batch", { _batch: value.batch, _user: userId, _name: value.name, _email: value.email, _response: value.wants_response, _entries: value.entries, _visitor: visitor });
         if (error) return Response.json({ error: "Could not save feedback. Please try again later." }, { status: 400 });
         return Response.json({ saved: true });
       } catch {
