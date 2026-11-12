@@ -12,3 +12,4 @@
 - Apps under public/apps open independently with no profiles, trackers or dashboards, so any buddy works on its own.
 - New family buddies are a small index.html config on public/apps/buddy-shared engine, with personas server-side in src/lib/buddies.ts, so prompts stay private and buddies stay consistent.
 - The home puzzle is generated from src/lib/buddy-catalog.ts; a null href routes to /coming-soon/$slug so new buddies never break links.
+- Feedback uses registry-driven shared forms and a standalone static-app adapter; atomic rate-limited submissions and administrator-only RLS keep feedback private without changing AI calls.

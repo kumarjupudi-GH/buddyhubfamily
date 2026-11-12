@@ -4,3 +4,5 @@
 - [x] Remove leftover tracker reference from ArtBuddy
 - [ ] Split ArtBuddy into its own project (needs user: remix project — I can't create new projects)
 - [x] Home button on every app (BrainBoost, ArtBuddy) back to home page
+- [ ] Universal multi-entry feedback, KPI ratings, private screenshots, quick response feedback, and administrator reporting
+- [ ] Optional critical-feedback email notifications (requires a configured recipient and email delivery service)
