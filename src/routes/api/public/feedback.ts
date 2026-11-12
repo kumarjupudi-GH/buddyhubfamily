@@ -39,7 +39,7 @@ export const Route = createFileRoute("/api/public/feedback")({
         const visitor = Array.from(new Uint8Array(bytes)).map(b => b.toString(16).padStart(2, "0")).join("");
         const value = parsed.data;
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { error } = await supabaseAdmin.rpc("save_feedback_batch", { _batch: value.batch, _user: userId, _name: value.name, _email: value.email, _response: value.wants_response, _entries: value.entries, _visitor: visitor });
+        const { error } = await supabaseAdmin.rpc("save_feedback_request", { _batch: value.batch, _user: userId || "", _name: value.name, _email: value.email, _response: value.wants_response, _entries: value.entries, _visitor: visitor });
         if (error) return Response.json({ error: "Could not save feedback. Please try again later." }, { status: 400 });
         return Response.json({ saved: true });
       } catch {
